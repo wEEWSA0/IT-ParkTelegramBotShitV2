@@ -6,8 +6,13 @@ public class Teacher
     public string Name { get; set; }
     public long ChatId { get; set; }
     public string InviteCode { get; set; }
-    
-    public Teacher() { } // переделать
+
+    public Teacher()
+    {
+        Id = -1;
+        Name = "";
+        InviteCode = "";
+    }
     public Teacher(int id, string name, long chatId, string inviteCode)
     {
         Id = id;

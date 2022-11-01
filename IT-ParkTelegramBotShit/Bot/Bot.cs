@@ -19,6 +19,11 @@ public class Bot
         _botClient = new TelegramBotClient("5655889814:AAEdVK___v3pjwLwxycXJaYsFtdFnMOvMyA");
         _cancellationTokenSource = new CancellationTokenSource();
 
+        if (!BotMessageManager.Create(_botClient, _cancellationTokenSource))
+        {
+            throw new Exception("Not working, error");
+        }
+        
         Logger.Info("Выполнена инициализация TelegramBotClient");
     }
 
@@ -54,6 +59,7 @@ public class Bot
         else
         {
             Logger.Error("Ошибка получение имени бота");
+            userName = "";
         }
         
         return userName;

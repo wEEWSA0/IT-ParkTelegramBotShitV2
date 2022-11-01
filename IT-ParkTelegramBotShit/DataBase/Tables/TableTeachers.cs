@@ -11,29 +11,12 @@ public class TableTeachers
     {
         _connection = connection;
     }
-
-/*
-    public bool AddNew(Teacher teacher)
-    {
-        if (!CheckInviteCodeUnique(teacher))
-        {
-            return false;
-        }
-
-        string sqlRequest = $"INSERT INTO Teachers (name, invite_code) VALUES ('{teacher.Name}', '{teacher.InviteCode}')";
-
-        NpgsqlCommand command = new NpgsqlCommand(sqlRequest, _connection);
-
-        command.ExecuteNonQuery();
-
-        return true;
-    }
-*/
+    
     public List<Teacher> GetTeachers() // не используется
     {
         List<Teacher> teachers = new List<Teacher>();
 
-        string sqlRequest = $"SELECT name, invite_code FROM teachers"; // $"SELECT * FROM teachers WHERE id={findId}" 
+        string sqlRequest = $"SELECT name, invite_code FROM teachers";
 
         NpgsqlCommand command = new NpgsqlCommand(sqlRequest, _connection);
 
@@ -53,10 +36,8 @@ public class TableTeachers
         return teachers;
     }
 
-    public Teacher TryGetTeacherByChatId(out bool isEnabled, long chatId)
+    public bool TryGetTeacherByChatId(out Teacher teacher, long chatId)
     {
-        isEnabled = true;
-
         string sqlRequest = $"SELECT * FROM teachers WHERE chat_id = {chatId}";
 
         NpgsqlCommand command = new NpgsqlCommand(sqlRequest, _connection);
@@ -65,31 +46,29 @@ public class TableTeachers
 
         if (!dataReader.HasRows)
         {
-            isEnabled = false;
+            teacher = new Teacher();
 
-            return new Teacher();
+            return false;
         }
         
         int id = dataReader.GetInt32(dataReader.GetOrdinal("id"));
         string name = dataReader.GetString(dataReader.GetOrdinal("name"));
         string code = dataReader.GetString(dataReader.GetOrdinal("invite_code"));
 
-        Teacher teacher = new Teacher(id, name, chatId, code);
+        teacher = new Teacher(id, name, chatId, code);
         
         dataReader.Close();
 
-        return teacher;
+        return true;
     }
     
-    public Teacher TryJoinTeacherAccountByInviteCode(out bool isEnabled, long chatId, string inviteCode)
+    public bool TryJoinTeacherAccountByInviteCode(out Teacher teacher, long chatId, string inviteCode)
     {
-        isEnabled = true;
-
         if (!IsCorrectInviteCode(inviteCode))
         {
-            isEnabled = false;
+            teacher = new Teacher();
 
-            return new Teacher();
+            return false;
         }
 
         string sqlRequest = $"SELECT * FROM teachers WHERE invite_code = '{inviteCode}'";
@@ -102,13 +81,13 @@ public class TableTeachers
         string name = dataReader.GetString(dataReader.GetOrdinal("name"));
         string code = dataReader.GetString(dataReader.GetOrdinal("invite_code"));
 
-        Teacher teacher = new Teacher(id, name, chatId, code);
+        teacher = new Teacher(id, name, chatId, code);
         
         UpdateChatIdByTeacherId(id, chatId);
         
         dataReader.Close();
 
-        return teacher;
+        return true;
     }
 
     private void UpdateChatIdByTeacherId(int id, long chatId)
@@ -144,29 +123,4 @@ public class TableTeachers
 
         return false;
     }
-
-    /*private bool CheckInviteCode(Teacher teacher)
-    {
-        string sqlRequest = $"SELECT invite_code FROM teachers";
-
-        NpgsqlCommand command = new NpgsqlCommand(sqlRequest, _connection);
-
-        NpgsqlDataReader dataReader = command.ExecuteReader();
-
-        while (dataReader.Read())
-        {
-            string code = dataReader.GetString(dataReader.GetOrdinal("invite_code"));
-
-            if (teacher.InviteCode == code)
-            {
-                dataReader.Close();
-
-                return false;
-            }
-        }
-
-        dataReader.Close();
-
-        return true;
-    }*/
 }

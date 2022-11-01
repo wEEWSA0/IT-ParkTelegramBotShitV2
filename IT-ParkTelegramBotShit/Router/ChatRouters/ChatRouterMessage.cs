@@ -1,3 +1,4 @@
+using IT_ParkTelegramBotShit.Bot;
 using IT_ParkTelegramBotShit.Router.Auxiliary;
 using IT_ParkTelegramBotShit.Service.ChatServices;
 using NLog;
@@ -19,16 +20,16 @@ public class ChatRouterMessage
         _servicesManager = new MessageServiceManager();
     }
 
-    public Task Route(long chatId, Message message, ITelegramBotClient botClient, CancellationToken cancellationToken)
+    public MessageToSend Route(long chatId, Message message)
     {
         Logger.Info($"Старт метода Route для chatId = {chatId}");
 
         TransmittedData transmittedData = _chatsRouter.GetUserTransmittedData(chatId);
 
-        Task task = _servicesManager.ProcessBotUpdate(chatId, transmittedData, message, botClient, cancellationToken);
+        MessageToSend messageToSend = _servicesManager.ProcessBotUpdate(chatId, transmittedData, message);
 
         Logger.Info($"Выполнен метода Route для chatId = {chatId}");
 
-        return task;
+        return messageToSend;
     }
 }

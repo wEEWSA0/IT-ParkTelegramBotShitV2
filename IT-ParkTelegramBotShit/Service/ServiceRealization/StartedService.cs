@@ -1,3 +1,6 @@
+using IT_ParkTelegramBotShit.Bot;
+using IT_ParkTelegramBotShit.DataBase;
+using IT_ParkTelegramBotShit.DataBase.Entities;
 using IT_ParkTelegramBotShit.Router.Auxiliary;
 using IT_ParkTelegramBotShit.Util;
 using NLog;
@@ -11,81 +14,42 @@ public class StartedService
 {
     private static ILogger Logger = LogManager.GetCurrentClassLogger();
     
-    public Task ProcessCommandStart(long chatId, TransmittedData transmittedData, Message message,
-        ITelegramBotClient botClient, CancellationToken cancellationToken)
+    public MessageToSend ProcessCommandStart(long chatId, TransmittedData transmittedData, Message message)
     {
-        Logger.Info($"Старт метода ProcessCommandStart для chatId = {chatId}");
-
         string requestMessageText = message.Text;
 
         string responseMessageText = StateStringsStorage.Empty;
 
         if (requestMessageText != StateStringsStorage.Start)
         {
-            responseMessageText = ReplyTextsStorage.CmsStart;
-
-            Logger.Info($"Команда не распознана. Метод ProcessCommandStart. chatId = {chatId}");
-
-            Task taskError = botClient.SendTextMessageAsync(
-                chatId: chatId,
-                text: responseMessageText,
-                cancellationToken: cancellationToken);
-
-            Logger.Info($"Отправлено сообщение об ошибке пользователю. Метод ProcessCommandStart. chatId = {chatId}");
-
-            return taskError;
+            responseMessageText = ReplyTextsStorage.ErrorInput;
         }
-
-        transmittedData.State = State.EnterCode;
+        else
+        {
+            transmittedData.State = State.EnterCode;
         
-        responseMessageText = ReplyTextsStorage.CmsStart;
-
-        Task taskSuccess = botClient.SendTextMessageAsync(
-            chatId: chatId,
-            text: responseMessageText,
-            cancellationToken: cancellationToken);
-
-        Logger.Info($"Отправлено корректное сообщение пользователю. Метод ProcessCommandStart. chatId = {chatId}");
-
-        return taskSuccess;
+            responseMessageText = ReplyTextsStorage.CmsStart;
+        }
+        
+        return new MessageToSend(responseMessageText);
     }
     
-    public Task ProcessCommandEnterCode(long chatId, TransmittedData transmittedData, Message message,
-        ITelegramBotClient botClient, CancellationToken cancellationToken)
+    public MessageToSend ProcessCommandEnterCode(long chatId, TransmittedData transmittedData, Message message)
     {
-        Logger.Info($"Старт метода ProcessCommandStart для chatId = {chatId}");
-
         string requestMessageText = message.Text;
 
         string responseMessageText = StateStringsStorage.Empty;
 
-        if (true) // проверка кода в бд
+        if (DbManager.GetInstance().TableTeachers.TryJoinTeacherAccountByInviteCode(out Teacher teacher, chatId, requestMessageText))
+        {
+            // учитель
+        }
+        // else if:   тоже самое для учеников
+        else
         {
             responseMessageText = ReplyTextsStorage.NotValidCode;
-
-            Logger.Info($"Команда не распознана. Метод ProcessCommandStart. chatId = {chatId}");
-
-            Task taskError = botClient.SendTextMessageAsync(
-                chatId: chatId,
-                text: responseMessageText,
-                cancellationToken: cancellationToken);
-
-            Logger.Info($"Отправлено сообщение об ошибке пользователю. Метод ProcessCommandStart. chatId = {chatId}");
-
-            return taskError;
         }
 
-        transmittedData.State = State.EnterCode;
-        
-        responseMessageText = ReplyTextsStorage.CmsStart;
-
-        Task taskSuccess = botClient.SendTextMessageAsync(
-            chatId: chatId,
-            text: responseMessageText,
-            cancellationToken: cancellationToken);
-
-        Logger.Info($"Отправлено корректное сообщение пользователю. Метод ProcessCommandStart. chatId = {chatId}");
-
-        return taskSuccess;
+        return new MessageToSend(responseMessageText);
     }
 }

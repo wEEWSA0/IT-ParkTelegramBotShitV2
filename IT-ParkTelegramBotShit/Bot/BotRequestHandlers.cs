@@ -34,7 +34,9 @@ public class BotRequestHandlers
                     chatId = update.Message.Chat.Id;
                     Logger.Debug($"Тип входящего сообщения от chatId = {chatId} - UpdateType.Message");
                     
-                    await _chatsRouter.RouterMessage.Route(chatId, update.Message, botClient, cancellationToken);
+                    MessageToSend messageToSend = _chatsRouter.RouterMessage.Route(chatId, update.Message);
+                    
+                    BotMessageManager.GetInstance().GetChatIdMessageManager(chatId).AddMessageToStack(messageToSend);
                 }
                 break;
 
@@ -50,6 +52,8 @@ public class BotRequestHandlers
                 }
                 break;
         }
+        
+        BotMessageManager.GetInstance().GetChatIdMessageManager(chatId).SendAllMessages();
         
         Logger.Info($"Выполенна обработка входящего сообщения от chatId = {chatId} в методе HandleUpdateAsync");
     }
