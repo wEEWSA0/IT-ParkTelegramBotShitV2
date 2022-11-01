@@ -43,12 +43,12 @@ public class BotRequestHandlers
             case UpdateType.CallbackQuery:
                 if (update.CallbackQuery != null)
                 {
-                    if (update.CallbackQuery.Message == null) {return;}
+                   /* if (update.CallbackQuery.Message == null) {return;}
                     
                     chatId = update.CallbackQuery.Message.Chat.Id;
                     Logger.Debug($"Тип входящего сообщения chatId = {chatId} - UpdateType.CallbackQuery");
 
-                    await _chatsRouter.RouterCallbackQuery.Route(chatId, update.CallbackQuery, botClient, cancellationToken);
+                    await _chatsRouter.RouterCallbackQuery.Route(chatId, update.CallbackQuery, botClient, cancellationToken);*/
                 }
                 break;
         }

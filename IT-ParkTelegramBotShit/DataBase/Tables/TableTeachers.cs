@@ -47,7 +47,9 @@ public class TableTeachers
         if (!dataReader.HasRows)
         {
             teacher = new Teacher();
-
+            
+            dataReader.Close();
+            
             return false;
         }
         
@@ -67,7 +69,7 @@ public class TableTeachers
         if (!IsCorrectInviteCode(inviteCode))
         {
             teacher = new Teacher();
-
+            
             return false;
         }
 
