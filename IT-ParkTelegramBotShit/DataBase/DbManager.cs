@@ -7,12 +7,16 @@ namespace IT_ParkTelegramBotShit.DataBase;
 public class DbManager
 {
     public TableTeachers TableTeachers { get; private set; }
+    public TableStudents TableStudents { get; private set; }
+    public TableCourses TableCourses { get; private set; }
 
     public DbManager()
     {
         NpgsqlConnection connection = DbConnector.GetInstance().Connection;
 
         TableTeachers = new TableTeachers(connection);
+        TableStudents = new TableStudents(connection);
+        TableCourses = new TableCourses(connection);
     }
 
     private static DbManager _dbManager = null;

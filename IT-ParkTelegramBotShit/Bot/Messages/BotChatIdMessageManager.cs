@@ -43,17 +43,17 @@ public class BotChatIdMessageManager
         _messagesToSend.Enqueue(message);
     }
 
-    public void SendAllMessages()
+    public async void SendAllMessages()
     {
         while (_messagesToSend.Count > 0)
         {
-            SendMessage(_messagesToSend.Dequeue());
+            await SendMessage(_messagesToSend.Dequeue());
         }
     }
     
-    private void SendMessage(MessageToSend message)
+    private Task SendMessage(MessageToSend message)
     {
-        Task task = _botClient.SendTextMessageAsync(
+        return _botClient.SendTextMessageAsync(
             chatId: _chatId,
             text: message.Text,
             replyMarkup: message.InlineKeyboardMarkup,

@@ -14,6 +14,8 @@ public class BotMessageManager
     {
         _botClient = client;
         _cancellationTokenSource = token;
+
+        _messageWithChatId = new Dictionary<long, BotChatIdMessageManager>();
     }
     
     public static BotMessageManager GetInstance()
@@ -40,7 +42,7 @@ public class BotMessageManager
 
     public BotChatIdMessageManager GetChatIdMessageManager(long chatId)
     {
-        if (_messageWithChatId[chatId] == null)
+        if (!_messageWithChatId.ContainsKey(chatId))
         {
             _messageWithChatId[chatId] = new BotChatIdMessageManager(_botClient, _cancellationTokenSource, chatId);
         }

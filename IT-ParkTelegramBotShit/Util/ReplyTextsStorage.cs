@@ -14,4 +14,7 @@ public class ReplyTextsStorage
     
     public static string CmsStart =
         "Для начала работы с ботом введите код ";
+    
+    public static string FatalError =
+        "Сбои в работе бота!";
 }

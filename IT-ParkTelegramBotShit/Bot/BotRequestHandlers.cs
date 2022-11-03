@@ -33,8 +33,9 @@ public class BotRequestHandlers
                 {
                     chatId = update.Message.Chat.Id;
                     Logger.Debug($"Тип входящего сообщения от chatId = {chatId} - UpdateType.Message");
-                    
-                    MessageToSend messageToSend = _chatsRouter.RouterMessage.Route(chatId, update.Message);
+
+                    MessageToSend messageToSend =
+                        await Task.Run(() => _chatsRouter.RouterMessage.Route(chatId, update.Message), cancellationToken);
                     
                     BotMessageManager.GetInstance().GetChatIdMessageManager(chatId).AddMessageToStack(messageToSend);
                 }

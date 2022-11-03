@@ -9,7 +9,7 @@ public class CallbackQueryServiceManager
 {
     private static ILogger Logger = LogManager.GetCurrentClassLogger();
     
-    private Dictionary<State, Func<long, TransmittedData, CallbackQuery, ITelegramBotClient, CancellationToken, Task>>
+    private Dictionary<States, Func<long, TransmittedData, CallbackQuery, ITelegramBotClient, CancellationToken, Task>>
         _stateServiceMethodPairs;
 
     //private MainMenuService _mainMenuService;
@@ -19,7 +19,7 @@ public class CallbackQueryServiceManager
         // _mainMenuService = new MainMenuService();
 
         _stateServiceMethodPairs =
-            new Dictionary<State, Func<long, TransmittedData, CallbackQuery, ITelegramBotClient, CancellationToken, Task>>();
+            new Dictionary<States, Func<long, TransmittedData, CallbackQuery, ITelegramBotClient, CancellationToken, Task>>();
 /*
         _stateServiceMethodPairs[State.WaitingCommandStart] = _mainMenuService.ProcessCommandStart;
         _stateServiceMethodPairs[State.WaitingClickOnInlineButtonInMenuMain] =

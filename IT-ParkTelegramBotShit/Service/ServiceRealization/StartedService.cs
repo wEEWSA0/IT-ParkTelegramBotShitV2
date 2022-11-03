@@ -26,7 +26,7 @@ public class StartedService
         }
         else
         {
-            transmittedData.State = State.EnterCode;
+            transmittedData.State.GlobalState = States.GlobalStates.EnterCode;
         
             responseMessageText = ReplyTextsStorage.CmsStart;
         }
@@ -44,7 +44,10 @@ public class StartedService
         {
             // учитель
         }
-        // else if:   тоже самое для учеников
+        else if (DbManager.GetInstance().TableCourses.TryGetCourseByStudentInviteCode(out Course course, requestMessageText))
+        {
+            // ученик
+        }
         else
         {
             responseMessageText = ReplyTextsStorage.NotValidCode;

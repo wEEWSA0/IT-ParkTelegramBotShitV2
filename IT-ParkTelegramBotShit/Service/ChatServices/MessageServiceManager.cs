@@ -1,6 +1,8 @@
 using IT_ParkTelegramBotShit.Bot;
 using IT_ParkTelegramBotShit.Router.Auxiliary;
+using IT_ParkTelegramBotShit.Service.ServiceManager;
 using IT_ParkTelegramBotShit.Service.ServiceRealization;
+using IT_ParkTelegramBotShit.Util;
 using NLog;
 using Telegram.Bot;
 using Telegram.Bot.Types;
@@ -11,28 +13,35 @@ public class MessageServiceManager
 {
     private static ILogger Logger = LogManager.GetCurrentClassLogger();
     
-    private Dictionary<State, Func<long, TransmittedData, Message, MessageToSend>>
-        _startedStateServiceMethodPairs;
-
-    private StartedService _startedService;
+    private StartedServiceManager _startedServiceManager;
 
     public MessageServiceManager()
     {
-        _startedService = new StartedService();
-
-        _startedStateServiceMethodPairs =
-            new Dictionary<State, Func<long, TransmittedData, Message, MessageToSend>>();
-
-        _startedStateServiceMethodPairs[State.CmdStart] = _startedService.ProcessCommandStart;
-        _startedStateServiceMethodPairs[State.EnterCode] = _startedService.ProcessCommandEnterCode;
+        _startedServiceManager = new StartedServiceManager();
     }
 
     public MessageToSend ProcessBotUpdate(long chatId, TransmittedData transmittedData, Message message)
     {
-        var serviceMethod = _startedStateServiceMethodPairs[transmittedData.State];
+        var state = transmittedData.State;
         
-        Logger.Info($"Вызван метод ProcessBotUpdate Для chatId = {chatId} состояние системы = {transmittedData.State} функция для обработки = {serviceMethod.Method.Name}");
-        
-        return serviceMethod.Invoke(chatId, transmittedData, message);
+        if (state.GlobalState != States.GlobalStates.Other)
+        {
+            return _startedServiceManager.ProcessBotUpdate(chatId, transmittedData, message);
+        }
+        else if (state.StudentState != States.StudentStates.None)
+        {
+            throw new NotImplementedException();
+            // st
+        }
+        else if (state.TeacherState != States.TeacherStates.None)
+        {
+            throw new NotImplementedException();
+            // th
+        }
+        else
+        {
+            Logger.Error("Program logic error (ProcessBotUpdate in MessageServiceManager)");
+            return new MessageToSend(ReplyTextsStorage.FatalError);
+        }
     }
 }
