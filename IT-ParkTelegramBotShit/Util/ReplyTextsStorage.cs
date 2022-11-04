@@ -4,7 +4,10 @@ public class ReplyTextsStorage
 {
     public static ReplyTeacherTestsStorage Teacher = new ReplyTeacherTestsStorage();
 
-    public static ReplyStudentTestsStorage Student = new ReplyStudentTestsStorage();
+    public static ReplyStudentTextsStorage Student = new ReplyStudentTextsStorage();
+
+    public static string Empty =
+        "Empty";
     
     public static string ErrorInput =
         "Команда не распознана. Для начала работы с ботом введите /start";
@@ -17,4 +20,7 @@ public class ReplyTextsStorage
     
     public static string FatalError =
         "Сбои в работе бота!";
+    
+    public static string InDevelopment =
+        "В данный момент функция недоступна";
 }

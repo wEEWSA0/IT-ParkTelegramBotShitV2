@@ -44,12 +44,19 @@ public class BotRequestHandlers
             case UpdateType.CallbackQuery:
                 if (update.CallbackQuery != null)
                 {
-                   /* if (update.CallbackQuery.Message == null) {return;}
+                    if (update.CallbackQuery.Message == null)
+                    {
+                        throw new FormatException();
+                    }
                     
                     chatId = update.CallbackQuery.Message.Chat.Id;
-                    Logger.Debug($"Тип входящего сообщения chatId = {chatId} - UpdateType.CallbackQuery");
+                    
+                    Logger.Debug($"Тип входящего сообщения от chatId = {chatId} - UpdateType.CallbackQuery");
 
-                    await _chatsRouter.RouterCallbackQuery.Route(chatId, update.CallbackQuery, botClient, cancellationToken);*/
+                    MessageToSend messageToSend =
+                        await Task.Run(() => _chatsRouter.RouterCallbackQuery.Route(chatId, update.CallbackQuery), cancellationToken);
+                    
+                    BotMessageManager.GetInstance().GetChatIdMessageManager(chatId).AddMessageToStack(messageToSend);
                 }
                 break;
         }

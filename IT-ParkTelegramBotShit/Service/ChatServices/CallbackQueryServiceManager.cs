@@ -1,4 +1,7 @@
+using IT_ParkTelegramBotShit.Bot;
 using IT_ParkTelegramBotShit.Router.Auxiliary;
+using IT_ParkTelegramBotShit.Service.ServiceManager;
+using IT_ParkTelegramBotShit.Util;
 using NLog;
 using Telegram.Bot;
 using Telegram.Bot.Types;
@@ -9,40 +12,34 @@ public class CallbackQueryServiceManager
 {
     private static ILogger Logger = LogManager.GetCurrentClassLogger();
     
-    private Dictionary<States, Func<long, TransmittedData, CallbackQuery, ITelegramBotClient, CancellationToken, Task>>
-        _stateServiceMethodPairs;
-
-    //private MainMenuService _mainMenuService;
+    private TeacherStateManager _teacherStateManager;
 
     public CallbackQueryServiceManager()
     {
-        // _mainMenuService = new MainMenuService();
-
-        _stateServiceMethodPairs =
-            new Dictionary<States, Func<long, TransmittedData, CallbackQuery, ITelegramBotClient, CancellationToken, Task>>();
-/*
-        _stateServiceMethodPairs[State.WaitingCommandStart] = _mainMenuService.ProcessCommandStart;
-        _stateServiceMethodPairs[State.WaitingClickOnInlineButtonInMenuMain] =
-            _mainMenuService.ProcessClickOnInlineButtonInMenuMain;
-        _stateServiceMethodPairs[State.WaitingClickOnInlineButtonInMenuAdd] =
-            _mainMenuService.ProcessClickOnInlineButtonInMenuAddChoosing;*/
+        _teacherStateManager = new TeacherStateManager();
     }
 
-    public Task ProcessBotUpdate(long chatId, TransmittedData transmittedData, CallbackQuery callback,
-        ITelegramBotClient botClient, CancellationToken cancellationToken)
+    public MessageToSend ProcessBotUpdate(long chatId, TransmittedData transmittedData, CallbackQuery callback)
     {
-        try
+        var state = transmittedData.State;
+        
+        if (state.GlobalState != States.GlobalStates.Other)
         {
-            var serviceMethod = _stateServiceMethodPairs[transmittedData.State];
-            
-            Logger.Info($"Вызван метод ProcessBotUpdate Для chatId = {chatId} состояние системы = {transmittedData.State} функция для обработки = {serviceMethod.Method.Name}");
-            
-            return serviceMethod.Invoke(chatId, transmittedData, callback, botClient, cancellationToken);
+            throw new NotImplementedException();
         }
-        catch (Exception e)
+        else if (state.StudentState != States.StudentStates.None)
         {
-            Console.WriteLine(e);
-            return new Task(() => { });
+            throw new NotImplementedException();
+            // st
+        }
+        else if (state.TeacherState != States.TeacherStates.None)
+        {
+            return _teacherStateManager.ProcessBotUpdate(chatId, transmittedData, callback.Data);
+        }
+        else
+        {
+            Logger.Error("Program logic error (ProcessBotUpdate in MessageServiceManager)");
+            return new MessageToSend(ReplyTextsStorage.FatalError);
         }
     }
 }

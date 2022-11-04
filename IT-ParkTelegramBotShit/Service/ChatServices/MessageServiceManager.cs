@@ -13,11 +13,11 @@ public class MessageServiceManager
 {
     private static ILogger Logger = LogManager.GetCurrentClassLogger();
     
-    private StartedServiceManager _startedServiceManager;
+    private GlobalStateManager _globalStateManager;
 
     public MessageServiceManager()
     {
-        _startedServiceManager = new StartedServiceManager();
+        _globalStateManager = new GlobalStateManager();
     }
 
     public MessageToSend ProcessBotUpdate(long chatId, TransmittedData transmittedData, Message message)
@@ -26,7 +26,7 @@ public class MessageServiceManager
         
         if (state.GlobalState != States.GlobalStates.Other)
         {
-            return _startedServiceManager.ProcessBotUpdate(chatId, transmittedData, message);
+            return _globalStateManager.ProcessBotUpdate(chatId, transmittedData, message.Text);
         }
         else if (state.StudentState != States.StudentStates.None)
         {

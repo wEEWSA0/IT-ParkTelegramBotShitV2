@@ -137,7 +137,7 @@ public class TableCourses
 
     public bool TryGetCourseByStudentInviteCode(out Course course, string inviteCode)
     {
-        string sqlRequest = $"SELECT * FROM courses WHERE student_invite_code = {inviteCode}";
+        string sqlRequest = $"SELECT * FROM courses WHERE student_invite_code = '{inviteCode}'";
         
         NpgsqlCommand command = new NpgsqlCommand(sqlRequest, _connection);
 

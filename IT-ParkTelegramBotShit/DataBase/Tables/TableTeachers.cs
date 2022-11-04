@@ -66,10 +66,10 @@ public class TableTeachers
     
     public bool TryJoinTeacherAccountByInviteCode(out Teacher teacher, long chatId, string inviteCode)
     {
+        teacher = new Teacher();
+        
         if (!IsCorrectInviteCode(inviteCode))
         {
-            teacher = new Teacher();
-            
             return false;
         }
 
@@ -78,17 +78,29 @@ public class TableTeachers
         NpgsqlCommand command = new NpgsqlCommand(sqlRequest, _connection);
 
         NpgsqlDataReader dataReader = command.ExecuteReader();
-
-        int id = dataReader.GetInt32(dataReader.GetOrdinal("id"));
-        string name = dataReader.GetString(dataReader.GetOrdinal("name"));
-        string code = dataReader.GetString(dataReader.GetOrdinal("invite_code"));
-
-        teacher = new Teacher(id, name, chatId, code);
         
-        UpdateChatIdByTeacherId(id, chatId);
+        if (!dataReader.HasRows)
+        {
+            dataReader.Close();
+            
+            return false;
+        }
+
+        while (dataReader.Read())
+        {
+            int id = dataReader.GetInt32(dataReader.GetOrdinal("id"));
+            string name = dataReader.GetString(dataReader.GetOrdinal("name"));
+            string code = dataReader.GetString(dataReader.GetOrdinal("invite_code"));
+            
+            teacher = new Teacher(id, name, chatId, code);
+        
+            break;
+        }
         
         dataReader.Close();
 
+        UpdateChatIdByTeacherId(teacher.Id, chatId);
+        
         return true;
     }
 

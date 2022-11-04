@@ -70,4 +70,10 @@ public class MessageToSend
     {
         Text = text;
     }
+    
+    public MessageToSend(string text, InlineKeyboardMarkup? markup)
+    {
+        Text = text;
+        InlineKeyboardMarkup = markup;
+    }
 }
