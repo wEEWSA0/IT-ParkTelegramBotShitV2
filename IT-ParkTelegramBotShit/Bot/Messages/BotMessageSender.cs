@@ -1,10 +1,11 @@
+using IT_ParkTelegramBotShit.Util;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.ReplyMarkups;
 
 namespace IT_ParkTelegramBotShit.Bot;
 
-public class BotChatIdMessageManager
+public class BotMessageSender
 {
     private Queue<MessageToSend> _messagesToSend;
     
@@ -13,7 +14,7 @@ public class BotChatIdMessageManager
 
     private long _chatId;
     
-    public BotChatIdMessageManager(TelegramBotClient client, CancellationTokenSource token, long chatId)
+    public BotMessageSender(TelegramBotClient client, CancellationTokenSource token, long chatId)
     {
         _messagesToSend = new Queue<MessageToSend>();
 
@@ -43,21 +44,29 @@ public class BotChatIdMessageManager
         _messagesToSend.Enqueue(message);
     }
 
-    public async void SendAllMessages()
+    public List<Message> SendAllMessages()
     {
+        List<Message> messages = new List<Message>();
+        
         while (_messagesToSend.Count > 0)
         {
-            await SendMessage(_messagesToSend.Dequeue());
+            Message message = SendMessage(_messagesToSend.Dequeue());
+            
+            messages.Add(message);
         }
+
+        return messages;
     }
     
-    private Task SendMessage(MessageToSend message)
-    {
-        return _botClient.SendTextMessageAsync(
+    private Message SendMessage(MessageToSend message)
+    { 
+        Task<Message> task = _botClient.SendTextMessageAsync(
             chatId: _chatId,
             text: message.Text,
             replyMarkup: message.InlineKeyboardMarkup,
             cancellationToken: _cancellationTokenSource.Token);
+
+        return task.Result;
     }
 }
 
@@ -65,7 +74,7 @@ public class MessageToSend
 {
     public string Text { get; private set; }
     public InlineKeyboardMarkup? InlineKeyboardMarkup;
-
+    
     public MessageToSend(string text)
     {
         Text = text;
@@ -75,5 +84,10 @@ public class MessageToSend
     {
         Text = text;
         InlineKeyboardMarkup = markup;
+    }
+
+    public static MessageToSend Empty()
+    {
+        return new MessageToSend(ReplyTextsStorage.Empty);
     }
 }

@@ -27,7 +27,7 @@ public class StartedService
         {
             transmittedData.State.GlobalState = States.GlobalStates.EnterCode;
         
-            response = ReplyTextsStorage.CmsStart;
+            response = ReplyTextsStorage.CmdStart;
         }
         
         return new MessageToSend(response);
@@ -35,7 +35,7 @@ public class StartedService
     
     public MessageToSend ProcessCommandEnterCode(long chatId, TransmittedData transmittedData, string request)
     {
-        string response = ReplyTextsStorage.Empty;
+        string response = ReplyTextsStorage.MainMenu;
 
         InlineKeyboardMarkup keyboard = InlineKeyboardMarkup.Empty();
         

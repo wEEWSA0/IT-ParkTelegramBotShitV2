@@ -15,7 +15,7 @@ public class ReplyTextsStorage
     public static string NotValidCode =
         "Код не распознан";
     
-    public static string CmsStart =
+    public static string CmdStart =
         "Для начала работы с ботом введите код ";
     
     public static string FatalError =
@@ -23,4 +23,7 @@ public class ReplyTextsStorage
     
     public static string InDevelopment =
         "В данный момент функция недоступна";
+
+    public static string MainMenu =
+        "Главное меню";
 }

@@ -30,13 +30,11 @@ public class MessageServiceManager
         }
         else if (state.StudentState != States.StudentStates.None)
         {
-            throw new NotImplementedException();
-            // st
+            return MessageToSend.Empty();
         }
         else if (state.TeacherState != States.TeacherStates.None)
         {
-            throw new NotImplementedException();
-            // th
+            return MessageToSend.Empty();
         }
         else
         {

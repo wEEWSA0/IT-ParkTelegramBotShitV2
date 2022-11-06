@@ -27,6 +27,23 @@ public class BotKeyboardCreator
     {
         InlineKeyboardMarkup keyboard;
 
+        InlineKeyboardButton[][] buttonsInColumn = new InlineKeyboardButton[buttons.Length][];
+
+        for (int i = 0; i < buttons.Length; i++)
+        {
+            buttonsInColumn[i] = new InlineKeyboardButton[1];
+            buttonsInColumn[i][0] = buttons[i];
+        }
+        
+        keyboard = new InlineKeyboardMarkup(buttonsInColumn);
+
+        return keyboard;
+    }
+    
+    public InlineKeyboardMarkup GetKeyboardMarkupRow(params InlineKeyboardButton[] buttons)
+    {
+        InlineKeyboardMarkup keyboard;
+
         keyboard = new InlineKeyboardMarkup(buttons);
         
         return keyboard;

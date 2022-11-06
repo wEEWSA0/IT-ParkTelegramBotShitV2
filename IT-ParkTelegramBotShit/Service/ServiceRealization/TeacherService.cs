@@ -15,7 +15,7 @@ public class TeacherService
         string response = ReplyTextsStorage.Empty;
 
         response = ReplyTextsStorage.InDevelopment + "  " + request;
-
+/*
         switch (request)
         {
             case CallbackQueryStorage.Logout:
@@ -24,7 +24,7 @@ public class TeacherService
             }
             break;
             default: throw new NotImplementedException();
-        }
+        }*/
         
         return new MessageToSend(response);
     }

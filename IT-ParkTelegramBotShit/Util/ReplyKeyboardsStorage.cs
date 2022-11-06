@@ -9,5 +9,5 @@ public class BotKeyboardsStorage
     private static BotKeyboardCreator _creator = BotKeyboardCreator.GetInstance();
     
     public static InlineKeyboardMarkup MainMenu = _creator
-        .GetKeyboardMarkup(ReplyButtonsStorage.MainMenu, ReplyButtonsStorage.Logout);
+        .GetKeyboardMarkup(ReplyButtonsStorage.Groups, ReplyButtonsStorage.AddHomework, ReplyButtonsStorage.AddNextLessonDate, ReplyButtonsStorage.Profile);
 }

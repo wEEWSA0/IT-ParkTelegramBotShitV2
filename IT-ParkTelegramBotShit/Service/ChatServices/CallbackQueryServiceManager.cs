@@ -25,12 +25,11 @@ public class CallbackQueryServiceManager
         
         if (state.GlobalState != States.GlobalStates.Other)
         {
-            throw new NotImplementedException();
+            return MessageToSend.Empty();
         }
         else if (state.StudentState != States.StudentStates.None)
         {
-            throw new NotImplementedException();
-            // st
+            return MessageToSend.Empty();
         }
         else if (state.TeacherState != States.TeacherStates.None)
         {

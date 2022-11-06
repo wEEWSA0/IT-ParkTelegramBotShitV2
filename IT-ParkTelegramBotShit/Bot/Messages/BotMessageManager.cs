@@ -5,7 +5,8 @@ namespace IT_ParkTelegramBotShit.Bot;
 public class BotMessageManager
 {
     private static BotMessageManager _messageManager = null;
-    private Dictionary<long, BotChatIdMessageManager> _messageWithChatId;
+    private Dictionary<long, BotMessageSender> _messageSender;
+    private Dictionary<long, BotMessageHistory> _messageHistorie;
     
     private TelegramBotClient _botClient;
     private CancellationTokenSource _cancellationTokenSource;
@@ -15,7 +16,8 @@ public class BotMessageManager
         _botClient = client;
         _cancellationTokenSource = token;
 
-        _messageWithChatId = new Dictionary<long, BotChatIdMessageManager>();
+        _messageSender = new Dictionary<long, BotMessageSender>();
+        _messageHistorie = new Dictionary<long, BotMessageHistory>();
     }
     
     public static BotMessageManager GetInstance()
@@ -40,13 +42,23 @@ public class BotMessageManager
         return false;
     }
 
-    public BotChatIdMessageManager GetChatIdMessageManager(long chatId)
+    public BotMessageSender GetSender(long chatId)
     {
-        if (!_messageWithChatId.ContainsKey(chatId))
+        if (!_messageSender.ContainsKey(chatId))
         {
-            _messageWithChatId[chatId] = new BotChatIdMessageManager(_botClient, _cancellationTokenSource, chatId);
+            _messageSender[chatId] = new BotMessageSender(_botClient, _cancellationTokenSource, chatId);
         }
         
-        return _messageWithChatId[chatId];
+        return _messageSender[chatId];
+    }
+    
+    public BotMessageHistory GetHistory(long chatId)
+    {
+        if (!_messageHistorie.ContainsKey(chatId))
+        {
+            _messageHistorie[chatId] = new BotMessageHistory(_botClient, _cancellationTokenSource, chatId);
+        }
+        
+        return _messageHistorie[chatId];
     }
 }

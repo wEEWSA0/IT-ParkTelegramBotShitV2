@@ -23,7 +23,9 @@ public class BotRequestHandlers
         CancellationToken cancellationToken)
     {
         Logger.Info("Старт обработки входящего сообщения от клиента в методе HandleUpdateAsync");
-        
+
+        var messageManager = BotMessageManager.GetInstance();
+        MessageToSend messageToSend = MessageToSend.Empty();
         long chatId = 0;
         
         switch (update.Type)
@@ -32,12 +34,13 @@ public class BotRequestHandlers
                 if (update.Message != null)
                 {
                     chatId = update.Message.Chat.Id;
-                    Logger.Debug($"Тип входящего сообщения от chatId = {chatId} - UpdateType.Message");
-
-                    MessageToSend messageToSend =
-                        await Task.Run(() => _chatsRouter.RouterMessage.Route(chatId, update.Message), cancellationToken);
                     
-                    BotMessageManager.GetInstance().GetChatIdMessageManager(chatId).AddMessageToStack(messageToSend);
+                    messageManager.GetHistory(chatId).AddMessage(update.Message);
+                    
+                    Logger.Debug($"Тип входящего сообщения от chatId = {chatId} - UpdateType.Message");
+                    
+                    messageToSend =
+                        await Task.Run(() => _chatsRouter.RouterMessage.Route(chatId, update.Message), cancellationToken);
                 }
                 break;
 
@@ -53,15 +56,26 @@ public class BotRequestHandlers
                     
                     Logger.Debug($"Тип входящего сообщения от chatId = {chatId} - UpdateType.CallbackQuery");
 
-                    MessageToSend messageToSend =
+                    messageToSend =
                         await Task.Run(() => _chatsRouter.RouterCallbackQuery.Route(chatId, update.CallbackQuery), cancellationToken);
-                    
-                    BotMessageManager.GetInstance().GetChatIdMessageManager(chatId).AddMessageToStack(messageToSend);
                 }
                 break;
         }
-        
-        BotMessageManager.GetInstance().GetChatIdMessageManager(chatId).SendAllMessages();
+
+        if (messageToSend != MessageToSend.Empty())
+        {
+            var sender = messageManager.GetSender(chatId);
+            
+            sender.AddMessageToStack(messageToSend);
+            
+            var messages = sender.SendAllMessages();
+            
+            messageManager.GetHistory(chatId).AddMessages(messages);
+        }
+        else
+        {
+            // хуйня какая-то, переделать, продумать
+        }
         
         Logger.Info($"Выполенна обработка входящего сообщения от chatId = {chatId} в методе HandleUpdateAsync");
     }
