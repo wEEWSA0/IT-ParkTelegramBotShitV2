@@ -14,16 +14,12 @@ public class BotRequestHandlers
 
     public BotRequestHandlers()
     {
-        Logger.Info("Старт инициализации ChatsRouter");
         _chatsRouter = new ChatsRouter();
-        Logger.Info("Выволнена инициализация ChatsRouter");
     }
 
     public async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update,
         CancellationToken cancellationToken)
     {
-        Logger.Info("Старт обработки входящего сообщения от клиента в методе HandleUpdateAsync");
-
         var messageManager = BotMessageManager.GetInstance();
         MessageToSend messageToSend = MessageToSend.Empty();
         long chatId = 0;
@@ -37,7 +33,7 @@ public class BotRequestHandlers
                     
                     messageManager.GetHistory(chatId).AddMessage(update.Message);
                     
-                    Logger.Debug($"Тип входящего сообщения от chatId = {chatId} - UpdateType.Message");
+                    Logger.Info($"Принято входящее сообщение: chatId = {chatId} - UpdateType.Message");
                     
                     messageToSend =
                         await Task.Run(() => _chatsRouter.RouterMessage.Route(chatId, update.Message), cancellationToken);
@@ -54,7 +50,7 @@ public class BotRequestHandlers
                     
                     chatId = update.CallbackQuery.Message.Chat.Id;
                     
-                    Logger.Debug($"Тип входящего сообщения от chatId = {chatId} - UpdateType.CallbackQuery");
+                    Logger.Info($"Принято входящее сообщение: chatId = {chatId} - UpdateType.CallbackQuery");
 
                     messageToSend =
                         await Task.Run(() => _chatsRouter.RouterCallbackQuery.Route(chatId, update.CallbackQuery), cancellationToken);
@@ -71,13 +67,16 @@ public class BotRequestHandlers
             var messages = sender.SendAllMessages();
             
             messageManager.GetHistory(chatId).AddMessages(messages);
+            
+            Logger.Info($"Отправлено ответное сообщение: chatId = {chatId}");
         }
         else
         {
+            // удаляем только что отправленное пользователем сообщение
             // хуйня какая-то, переделать, продумать
         }
         
-        Logger.Info($"Выполенна обработка входящего сообщения от chatId = {chatId} в методе HandleUpdateAsync");
+        Logger.Debug($"Выполенна обработка входящего сообщения: chatId = {chatId} в методе HandleUpdateAsync");
     }
 
     public Task HandlePollingErrorAsync(ITelegramBotClient botClient, Exception exception,

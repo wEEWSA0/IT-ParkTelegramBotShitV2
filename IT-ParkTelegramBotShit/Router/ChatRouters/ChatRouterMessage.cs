@@ -22,13 +22,13 @@ public class ChatRouterMessage
 
     public MessageToSend Route(long chatId, Message message)
     {
-        Logger.Info($"Старт метода Route для chatId = {chatId}");
+        Logger.Debug($"Старт метода Route: chatId = {chatId}");
 
         TransmittedData transmittedData = _chatsRouter.GetUserTransmittedData(chatId);
 
         MessageToSend messageToSend = _servicesManager.ProcessBotUpdate(chatId, transmittedData, message);
 
-        Logger.Info($"Выполнен метода Route для chatId = {chatId}");
+        Logger.Debug($"Выполнен метода Route: chatId = {chatId}");
 
         return messageToSend;
     }

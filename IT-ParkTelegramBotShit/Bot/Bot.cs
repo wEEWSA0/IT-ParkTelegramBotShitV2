@@ -14,8 +14,6 @@ public class Bot
 
     public Bot()
     {
-        Logger.Info("Старт инициализации TelegramBotClient");
-
         _botClient = new TelegramBotClient("5655889814:AAEdVK___v3pjwLwxycXJaYsFtdFnMOvMyA");
         _cancellationTokenSource = new CancellationTokenSource();
 
@@ -24,12 +22,11 @@ public class Bot
             throw new Exception("Not working, error");
         }
         
-        Logger.Info("Выполнена инициализация TelegramBotClient");
+        Logger.Debug("Выполнена инициализация TelegramBotClient");
     }
 
     public void Start()
     {
-        Logger.Info("Старт инициализации ReceiverOptions и BotRequestHandlers");
         ReceiverOptions receiverOptions = new ReceiverOptions
         {
             AllowedUpdates = Array.Empty<UpdateType>()
@@ -44,21 +41,21 @@ public class Bot
             _cancellationTokenSource.Token
         );
 
-        Logger.Info("Выполнена инициализация ReceiverOptions и BotRequestHandlers и выполнен TelegramBotClient StartReceiving");
+        Logger.Debug("Выполнена инициализация ReceiverOptions и BotRequestHandlers и выполнен TelegramBotClient StartReceiving");
+        Logger.Info("Выполнен запуск бота");
     }
 
     public string GetBotName()
     {
-        Logger.Info("Старт получения имени бота");
         string? userName = _botClient.GetMeAsync().Result.Username;
         
         if (userName != null)
         {
-            Logger.Info("Выполнено получение имени бота");
+            Logger.Debug("Выполнено получение имени бота");
         }
         else
         {
-            Logger.Error("Ошибка получение имени бота");
+            Logger.Warn("Ошибка получение имени бота");
             userName = "";
         }
         
@@ -67,8 +64,7 @@ public class Bot
 
     public void Stop()
     {
-        Logger.Info("Старт остановки бота");
         _cancellationTokenSource.Cancel();
-        Logger.Info("Выполнено остановка бота");
+        Logger.Info("Выполнена остановка бота");
     }   
 }

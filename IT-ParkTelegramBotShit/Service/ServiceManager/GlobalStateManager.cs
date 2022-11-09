@@ -30,7 +30,9 @@ public class GlobalStateManager
     {
         var serviceMethod = _startedStateServiceMethodPairs[transmittedData.State.GlobalState];
         
-        Logger.Info($"Вызван метод ProcessBotUpdate Для chatId = {chatId} состояние системы = {transmittedData.State} функция для обработки = {serviceMethod.Method.Name}");
+        Logger.Debug($"Вызван метод ProcessBotUpdate: chatId = {chatId}, " +
+                     $"состояние = {transmittedData.State.GetCurrentStateName()}, " +
+                     $"функция для обработки = {serviceMethod.Method.Name}");
         
         return serviceMethod.Invoke(chatId, transmittedData, request);
     }

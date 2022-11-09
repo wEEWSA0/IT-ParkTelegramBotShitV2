@@ -45,7 +45,7 @@ public class StartedService
             transmittedData.State.GlobalState = States.GlobalStates.Other;
             transmittedData.State.TeacherState = States.TeacherStates.MainMenu;
 
-            keyboard = BotKeyboardsStorage.MainMenu;
+            keyboard = BotKeyboardsStorage.TeacherMainMenu;
         }
         else if (DbManager.GetInstance().TableCourses.TryGetCourseByStudentInviteCode(out Course course, request))
         {

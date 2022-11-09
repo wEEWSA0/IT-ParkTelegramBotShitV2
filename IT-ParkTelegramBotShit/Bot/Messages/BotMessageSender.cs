@@ -88,6 +88,6 @@ public class MessageToSend
 
     public static MessageToSend Empty()
     {
-        return new MessageToSend(ReplyTextsStorage.Empty);
+        return new MessageToSend(ConstantsStorage.EmptyMessageToSend);
     }
 }

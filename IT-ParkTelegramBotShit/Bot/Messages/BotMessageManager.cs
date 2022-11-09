@@ -1,9 +1,12 @@
+using NLog;
 using Telegram.Bot;
 
 namespace IT_ParkTelegramBotShit.Bot;
 
 public class BotMessageManager
 {
+    private static ILogger Logger = LogManager.GetCurrentClassLogger();
+    
     private static BotMessageManager _messageManager = null;
     private Dictionary<long, BotMessageSender> _messageSender;
     private Dictionary<long, BotMessageHistory> _messageHistorie;
@@ -24,6 +27,7 @@ public class BotMessageManager
     {
         if (_messageManager == null)
         {
+            Logger.Error("BotMessageManager not initialized");
             throw new NotImplementedException();
         }
         

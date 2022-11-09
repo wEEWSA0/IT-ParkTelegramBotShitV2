@@ -29,7 +29,9 @@ public class TeacherStateManager
     {
         var serviceMethod = _serviceMethodPairs[transmittedData.State.TeacherState];
         
-        Logger.Info($"Вызван метод ProcessBotUpdate Для chatId = {chatId} состояние системы = {transmittedData.State} функция для обработки = {serviceMethod.Method.Name}");
+        Logger.Debug($"Вызван метод ProcessBotUpdate: chatId = {chatId}, " +
+                     $"состояние = {transmittedData.State.GetCurrentStateName()}, " +
+                     $"функция для обработки = {serviceMethod.Method.Name}");
         
         return serviceMethod.Invoke(chatId, transmittedData, request);
     }

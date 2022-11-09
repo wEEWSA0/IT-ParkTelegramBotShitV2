@@ -33,4 +33,24 @@ public class States
         StudentState = StudentStates.None;
         TeacherState = TeacherStates.None;
     }
+
+    public string GetCurrentStateName()
+    {
+        if (GlobalState != GlobalStates.Other)
+        {
+            return GlobalState.ToString() + " in GlobalState";
+        }
+        else if (StudentState != StudentStates.None)
+        {
+            return StudentState.ToString() + " in StudentState";
+        }
+        else if (TeacherState != TeacherStates.None)
+        {
+            return TeacherState.ToString() + " in TeacherState";
+        }
+        else
+        {
+            throw new Exception("Logic error in States");
+        }
+    }
 }
