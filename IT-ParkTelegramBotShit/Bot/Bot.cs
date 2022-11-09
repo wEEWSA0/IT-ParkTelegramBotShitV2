@@ -19,6 +19,7 @@ public class Bot
 
         if (!BotMessageManager.Create(_botClient, _cancellationTokenSource))
         {
+            Logger.Error("Problems with BotMessageManager.Create");
             throw new Exception("Not working, error");
         }
         
