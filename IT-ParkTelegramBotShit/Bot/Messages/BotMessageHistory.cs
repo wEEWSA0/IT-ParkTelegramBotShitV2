@@ -37,15 +37,17 @@ public class BotMessageHistory
     
     public async void DeleteAllMessages()
     {
-        for (int i = 0; i < _messages.Count; i++)
-        {
-            await DeleteMessage(_messages[i]);
-        }
+        List<Message> messages = new List<Message>(_messages);
         
         _messages.Clear();
+        
+        for (int i = 0; i < messages.Count; i++)
+        {
+            await DeleteMessage(messages[i]);
+        }
     }
     
-    private Task DeleteMessage(Message message)
+    public Task DeleteMessage(Message message)
     {
         return _botClient.DeleteMessageAsync(
             messageId: message.MessageId,

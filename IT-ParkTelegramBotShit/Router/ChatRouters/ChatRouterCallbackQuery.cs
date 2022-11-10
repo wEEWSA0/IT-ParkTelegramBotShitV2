@@ -29,7 +29,7 @@ public class ChatRouterCallbackQuery
 
         MessageToSend messageToSend = _servicesManager.ProcessBotUpdate(chatId, transmittedData, callback);
 
-        Logger.Debug($"Выполнен метода Route: chatId = {chatId}");
+        Logger.Debug($"Выполнен метод Route: chatId = {chatId}");
 
         return messageToSend;
     }

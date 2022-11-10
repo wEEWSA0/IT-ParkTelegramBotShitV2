@@ -33,7 +33,7 @@ public class BotRequestHandlers
                     
                     messageManager.GetHistory(chatId).AddMessage(update.Message);
                     
-                    Logger.Info($"Принято входящее сообщение: chatId = {chatId} - UpdateType.Message");
+                    Logger.Info($"Принято входящее сообщение: chatId = {chatId}, UpdateType.Message");
                     
                     messageToSend =
                         await Task.Run(() => _chatsRouter.RouterMessage.Route(chatId, update.Message), cancellationToken);
@@ -50,7 +50,7 @@ public class BotRequestHandlers
                     
                     chatId = update.CallbackQuery.Message.Chat.Id;
                     
-                    Logger.Info($"Принято входящее сообщение: chatId = {chatId} - UpdateType.CallbackQuery");
+                    Logger.Info($"Принято входящее сообщение: chatId = {chatId}, UpdateType.CallbackQuery");
 
                     messageToSend =
                         await Task.Run(() => _chatsRouter.RouterCallbackQuery.Route(chatId, update.CallbackQuery), cancellationToken);
@@ -58,22 +58,40 @@ public class BotRequestHandlers
                 break;
         }
 
-        if (messageToSend != MessageToSend.Empty())
+        if (messageToSend.Text != MessageToSend.Empty().Text)
         {
             var sender = messageManager.GetSender(chatId);
+            var history = messageManager.GetHistory(chatId);
+
+            if (!messageToSend.IsLastMessagesHistoryNeeded)
+            {
+                history.DeleteAllMessages();
+            }
             
             sender.AddMessageToStack(messageToSend);
             
             var messages = sender.SendAllMessages();
             
-            messageManager.GetHistory(chatId).AddMessages(messages);
+            history.AddMessages(messages);
             
             Logger.Info($"Отправлено ответное сообщение: chatId = {chatId}");
         }
         else
         {
-            // удаляем только что отправленное пользователем сообщение
-            // хуйня какая-то, переделать, продумать
+            if (update.Type == UpdateType.Message)
+            {
+                if (update.Message == null)
+                {
+                    Logger.Error("update.Type is null and UpdateType is Message. It can't be!");
+                    throw new Exception();
+                }
+                
+                await messageManager.GetHistory(chatId).DeleteMessage(update.Message);
+            }
+            else
+            {
+                Logger.Warn("MessageToSend is Empty and UpdateType isn't Message. It can't be!");
+            }
         }
         
         Logger.Debug($"Выполенна обработка входящего сообщения: chatId = {chatId} в методе HandleUpdateAsync");

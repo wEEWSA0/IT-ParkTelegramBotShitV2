@@ -30,10 +30,14 @@ public class MessageServiceManager
         }
         else if (state.StudentState != States.StudentStates.None)
         {
+            Logger.Debug(LoggerTextsStorage.LostServiceMethod(chatId, transmittedData));
+            
             return MessageToSend.Empty();
         }
         else if (state.TeacherState != States.TeacherStates.None)
         {
+            Logger.Debug(LoggerTextsStorage.LostServiceMethod(chatId, transmittedData));
+            
             return MessageToSend.Empty();
         }
         else

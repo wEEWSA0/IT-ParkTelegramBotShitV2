@@ -28,7 +28,7 @@ public class ChatRouterMessage
 
         MessageToSend messageToSend = _servicesManager.ProcessBotUpdate(chatId, transmittedData, message);
 
-        Logger.Debug($"Выполнен метода Route: chatId = {chatId}");
+        Logger.Debug($"Выполнен метод Route: chatId = {chatId}");
 
         return messageToSend;
     }

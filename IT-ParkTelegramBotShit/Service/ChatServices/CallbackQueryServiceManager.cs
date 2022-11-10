@@ -25,10 +25,14 @@ public class CallbackQueryServiceManager
         
         if (state.GlobalState != States.GlobalStates.Other)
         {
+            Logger.Debug(LoggerTextsStorage.LostServiceMethod(chatId, transmittedData));
+            
             return MessageToSend.Empty();
         }
         else if (state.StudentState != States.StudentStates.None)
         {
+            Logger.Debug(LoggerTextsStorage.LostServiceMethod(chatId, transmittedData));
+            
             return MessageToSend.Empty();
         }
         else if (state.TeacherState != States.TeacherStates.None)

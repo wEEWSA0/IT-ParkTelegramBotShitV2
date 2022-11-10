@@ -1,6 +1,7 @@
 using IT_ParkTelegramBotShit.Bot;
 using IT_ParkTelegramBotShit.Router.Auxiliary;
 using IT_ParkTelegramBotShit.Service.ServiceRealization;
+using IT_ParkTelegramBotShit.Util;
 using NLog;
 using Telegram.Bot.Types;
 
@@ -27,11 +28,16 @@ public class TeacherStateManager
 
     public MessageToSend ProcessBotUpdate(long chatId, TransmittedData transmittedData, string request)
     {
+        if (!_serviceMethodPairs.ContainsKey(transmittedData.State.TeacherState))
+        {
+            Logger.Debug(LoggerTextsStorage.LostServiceMethod(chatId, transmittedData));
+            
+            return MessageToSend.Empty();
+        }
+        
         var serviceMethod = _serviceMethodPairs[transmittedData.State.TeacherState];
         
-        Logger.Debug($"Вызван метод ProcessBotUpdate: chatId = {chatId}, " +
-                     $"состояние = {transmittedData.State.GetCurrentStateName()}, " +
-                     $"функция для обработки = {serviceMethod.Method.Name}");
+        Logger.Debug(LoggerTextsStorage.FoundServiceMethod(chatId, transmittedData, serviceMethod.Method.Name));
         
         return serviceMethod.Invoke(chatId, transmittedData, request);
     }

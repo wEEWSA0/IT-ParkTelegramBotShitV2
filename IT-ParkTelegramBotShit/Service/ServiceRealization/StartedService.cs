@@ -17,35 +17,34 @@ public class StartedService
     
     public MessageToSend ProcessCommandStart(long chatId, TransmittedData transmittedData, string request)
     {
-        string response = ReplyTextsStorage.Empty;
-
         if (request != RecieveCommandsStorage.Start)
         {
-            response = ReplyTextsStorage.ErrorInput;
+            return new MessageToSend(ReplyTextsStorage.ErrorInput);
         }
         else
         {
             transmittedData.State.GlobalState = States.GlobalStates.EnterCode;
         
-            response = ReplyTextsStorage.CmdStart;
+            return new MessageToSend(ReplyTextsStorage.CmdStart, false);
         }
-        
-        return new MessageToSend(response);
     }
     
     public MessageToSend ProcessCommandEnterCode(long chatId, TransmittedData transmittedData, string request)
     {
-        string response = ReplyTextsStorage.MainMenu;
+        string response = ReplyTextsStorage.Empty;
 
         InlineKeyboardMarkup keyboard = InlineKeyboardMarkup.Empty();
         
         if (DbManager.GetInstance().TableTeachers.TryJoinTeacherAccountByInviteCode(out Teacher teacher, chatId, request))
         {
-            // учитель
+            response = ReplyTextsStorage.MainMenu;
+            
             transmittedData.State.GlobalState = States.GlobalStates.Other;
             transmittedData.State.TeacherState = States.TeacherStates.MainMenu;
 
             keyboard = BotKeyboardsStorage.TeacherMainMenu;
+            
+            return new MessageToSend(response, keyboard, false);
         }
         else if (DbManager.GetInstance().TableCourses.TryGetCourseByStudentInviteCode(out Course course, request))
         {
