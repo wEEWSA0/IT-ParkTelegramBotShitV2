@@ -22,7 +22,8 @@ public class States
     public enum TeacherStates
     {
         None = 0,
-        MainMenu = 1
+        MainMenu = 1,
+        Groups = 10
     }
     
     public TeacherStates TeacherState;

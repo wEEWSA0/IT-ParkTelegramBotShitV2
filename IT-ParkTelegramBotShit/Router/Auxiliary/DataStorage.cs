@@ -24,8 +24,17 @@ public class DataStorage
         _data.Clear();
     }
 
-    public object Get(string key)
+    public bool TryGet(string key, out object value)
     {
-        return _data[key];
+        value = new object();
+        
+        if (_data.ContainsKey(key))
+        {
+            value = _data[key];
+
+            return true;
+        }
+
+        return false;
     }
 }

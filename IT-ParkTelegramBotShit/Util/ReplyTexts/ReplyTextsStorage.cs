@@ -1,6 +1,6 @@
 namespace IT_ParkTelegramBotShit.Util;
 
-public class ReplyTextsStorage
+public static class ReplyTextsStorage
 {
     public static ReplyTeacherTestsStorage Teacher = new ReplyTeacherTestsStorage();
 
@@ -26,4 +26,7 @@ public class ReplyTextsStorage
 
     public static string MainMenu =
         "Главное меню";
+    
+    public static string Groups =
+        "Группы";
 }

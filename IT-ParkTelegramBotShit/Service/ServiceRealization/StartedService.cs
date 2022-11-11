@@ -41,8 +41,10 @@ public class StartedService
             
             transmittedData.State.GlobalState = States.GlobalStates.Other;
             transmittedData.State.TeacherState = States.TeacherStates.MainMenu;
+            
+            transmittedData.DataStorage.Add(ConstantsStorage.TeacherId, teacher.Id); // записываем teacher id
 
-            keyboard = BotKeyboardsStorage.TeacherMainMenu;
+            keyboard = ReplyKeyboardsStorage.Teacher.MainMenu;
             
             return new MessageToSend(response, keyboard, false);
         }
