@@ -7,6 +7,9 @@ namespace IT_ParkTelegramBotShit.Util;
 public static class ReplyKeyboardsStorage
 {
     public static readonly TeacherReplyKeyboardsStorage Teacher = new TeacherReplyKeyboardsStorage();
+    
+    public static InlineKeyboardMarkup FinalStep = BotKeyboardCreator.GetInstance()
+        .GetKeyboardMarkup(ReplyButtonsStorage.Yes, ReplyButtonsStorage.No);
 }
 
 public class TeacherReplyKeyboardsStorage

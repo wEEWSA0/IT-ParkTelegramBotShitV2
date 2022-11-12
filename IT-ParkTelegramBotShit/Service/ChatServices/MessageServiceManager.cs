@@ -14,10 +14,12 @@ public class MessageServiceManager
     private static ILogger Logger = LogManager.GetCurrentClassLogger();
     
     private GlobalStateManager _globalStateManager;
+    private TeacherStateManager _teacherStateManager;
 
     public MessageServiceManager()
     {
         _globalStateManager = new GlobalStateManager();
+        _teacherStateManager = new TeacherStateManager();
     }
 
     public MessageToSend ProcessBotUpdate(long chatId, TransmittedData transmittedData, Message message)
@@ -28,22 +30,20 @@ public class MessageServiceManager
         {
             return _globalStateManager.ProcessBotUpdate(chatId, transmittedData, message.Text);
         }
-        else if (state.StudentState != States.StudentStates.None)
+        
+        if (state.StudentState != States.StudentStates.None)
         {
             Logger.Debug(LoggerTextsStorage.LostServiceMethod(chatId, transmittedData));
             
             return MessageToSend.Empty();
         }
-        else if (state.TeacherState != States.TeacherStates.None)
+        
+        if (state.TeacherState != States.TeacherStates.None)
         {
-            Logger.Debug(LoggerTextsStorage.LostServiceMethod(chatId, transmittedData));
-            
-            return MessageToSend.Empty();
+            return _teacherStateManager.ProcessBotUpdate(chatId, transmittedData, message.Text);
         }
-        else
-        {
-            Logger.Error("Program logic error (ProcessBotUpdate in MessageServiceManager)");
-            return new MessageToSend(ReplyTextsStorage.FatalError);
-        }
+        
+        Logger.Error("Program logic error (ProcessBotUpdate in MessageServiceManager)");
+        return new MessageToSend(ReplyTextsStorage.FatalError);
     }
 }

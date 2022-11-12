@@ -12,11 +12,14 @@ public class BotMessageSender
     private TelegramBotClient _botClient;
     private CancellationTokenSource _cancellationTokenSource;
 
+    private BotMessageHistory _history;
     private long _chatId;
     
     public BotMessageSender(TelegramBotClient client, CancellationTokenSource token, long chatId)
     {
         _messagesToSend = new Queue<MessageToSend>();
+        
+        _history = BotMessageManager.GetInstance().GetHistory(chatId);
 
         _chatId = chatId;
         _botClient = client;
@@ -50,7 +53,14 @@ public class BotMessageSender
         
         while (_messagesToSend.Count > 0)
         {
-            Message message = SendMessage(_messagesToSend.Dequeue());
+            var messageToSend = _messagesToSend.Dequeue();
+            
+            if (!messageToSend.IsLastMessagesHistoryNeeded)
+            {
+                _history.DeleteAllMessages();
+            }
+            
+            Message message = SendMessage(messageToSend);
             
             messages.Add(message);
         }

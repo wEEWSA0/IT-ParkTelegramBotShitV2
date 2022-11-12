@@ -62,12 +62,12 @@ public class BotRequestHandlers
         {
             var sender = messageManager.GetSender(chatId);
             var history = messageManager.GetHistory(chatId);
-
+            /*
             if (!messageToSend.IsLastMessagesHistoryNeeded)
             {
                 history.DeleteAllMessages();
             }
-            
+            */
             sender.AddMessageToStack(messageToSend);
             
             var messages = sender.SendAllMessages();

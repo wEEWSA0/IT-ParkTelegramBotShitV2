@@ -29,20 +29,20 @@ public class CallbackQueryServiceManager
             
             return MessageToSend.Empty();
         }
-        else if (state.StudentState != States.StudentStates.None)
+        
+        if (state.StudentState != States.StudentStates.None)
         {
             Logger.Debug(LoggerTextsStorage.LostServiceMethod(chatId, transmittedData));
             
             return MessageToSend.Empty();
         }
-        else if (state.TeacherState != States.TeacherStates.None)
+        
+        if (state.TeacherState != States.TeacherStates.None)
         {
             return _teacherStateManager.ProcessBotUpdate(chatId, transmittedData, callback.Data);
         }
-        else
-        {
-            Logger.Error("Program logic error (ProcessBotUpdate in MessageServiceManager)");
-            return new MessageToSend(ReplyTextsStorage.FatalError);
-        }
+        
+        Logger.Error("Program logic error (ProcessBotUpdate in MessageServiceManager)");
+        return new MessageToSend(ReplyTextsStorage.FatalError);
     }
 }

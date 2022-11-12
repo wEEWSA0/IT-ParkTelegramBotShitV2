@@ -2,12 +2,12 @@ namespace IT_ParkTelegramBotShit.Util;
 
 public static class ReplyTextsStorage
 {
-    public static ReplyTeacherTestsStorage Teacher = new ReplyTeacherTestsStorage();
+    public static readonly ReplyTeacherTextsStorage Teacher = new ReplyTeacherTextsStorage();
 
-    public static ReplyStudentTextsStorage Student = new ReplyStudentTextsStorage();
+    public static readonly ReplyStudentTextsStorage Student = new ReplyStudentTextsStorage();
 
     public static string Empty =
-        "Empty";
+        "Сообщите в поддержку о том, что увидели данное сообщение. Это поможет исправлению проблемы";
     
     public static string ErrorInput =
         "Команда не распознана. Для начала работы с ботом введите /start";
@@ -19,7 +19,7 @@ public static class ReplyTextsStorage
         "Для начала работы с ботом введите код ";
     
     public static string FatalError =
-        "Сбои в работе бота!";
+        "Сбои в работе бота! Сообщите в поддержку о том, что увидели данное сообщение. Это поможет исправлению данной проблемы";
     
     public static string InDevelopment =
         "В данный момент функция недоступна";
@@ -27,6 +27,6 @@ public static class ReplyTextsStorage
     public static string MainMenu =
         "Главное меню";
     
-    public static string Groups =
-        "Группы";
+    public static string FinalStep =
+        "Заключение";
 }

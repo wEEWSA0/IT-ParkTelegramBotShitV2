@@ -5,7 +5,9 @@ public static class CallbackQueryStorage
     public static readonly TeacherCallbackQueryStorage Teacher = new TeacherCallbackQueryStorage();
     
     public const string MainMenu = "main_menu_callback";
-    public const string Logout = "logout_from_system_callback";
+    public const string Yes = "yes_callback";
+    public const string No = "no_callback";
+    //public const string Logout = "logout_from_system_callback";
 }
 
 public class TeacherCallbackQueryStorage

@@ -1,3 +1,4 @@
+using IT_ParkTelegramBotShit.Bot;
 using IT_ParkTelegramBotShit.DataBase.Entities;
 using Npgsql;
 
@@ -39,7 +40,7 @@ public class TableCourses
         command.ExecuteNonQuery();
     }
 
-    public void UpdateCourseChangeInfo(string courseName, string inviteCode, int courseId)
+    public void UpdateCourseInfo(string courseName, string inviteCode, int courseId)
     {
         string sqlRequest = $"UPDATE courses SET course_name = '{courseName}', student_invite_code = '{inviteCode}' WHERE id = {courseId}";
         
@@ -162,5 +163,39 @@ public class TableCourses
         dataReader.Close();
 
         return true;
+    }
+    
+    public bool IsCourseNameUnique(string name)
+    {
+        return !IsExists(name, "course_name");
+    }
+    
+    public bool IsCourseInviteCodeUnique(string courseName)
+    {
+        return !IsExists(courseName, "student_invite_code");
+    }
+    
+    private bool IsExists(string value, string tableName)
+    {
+        string sqlRequest = $"SELECT EXISTS(SELECT * FROM courses WHERE {tableName} = '{value}')";
+        
+        NpgsqlCommand command = new NpgsqlCommand(sqlRequest, _connection);
+
+        NpgsqlDataReader dataReader = command.ExecuteReader();
+
+        bool isExist;
+        
+        if (dataReader.Read())
+        {
+            isExist = dataReader.GetBoolean(dataReader.GetOrdinal("exists"));
+        }
+        else
+        {
+            throw new Exception();
+        }
+        
+        dataReader.Close();
+
+        return isExist;
     }
 }

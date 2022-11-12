@@ -23,7 +23,10 @@ public class States
     {
         None = 0,
         MainMenu = 1,
-        Groups = 10
+        Groups = 10,
+        InputGroupName = 100,
+        InputGroupInviteCode = 101,
+        GroupCreateFinalStep = 102
     }
     
     public TeacherStates TeacherState;

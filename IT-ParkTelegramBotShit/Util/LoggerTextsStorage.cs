@@ -17,4 +17,9 @@ public class LoggerTextsStorage
                $"состояние = {transmittedData.State.GetCurrentStateName()}, " +
                $"функция для обработки = {methodName}";
     }
+    
+    public static string FatalLogicError(string methodName)
+    {
+        return $"В методе {methodName} произошла ошибка, связанная с логикой взаимодействия методов в программе";
+    }
 }

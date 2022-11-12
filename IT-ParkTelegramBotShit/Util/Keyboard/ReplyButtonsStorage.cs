@@ -7,7 +7,9 @@ public static class ReplyButtonsStorage
     public static readonly TeacherReplyButtonsStorage Teacher = new TeacherReplyButtonsStorage();
     
     public static InlineKeyboardButton MainMenu = InlineKeyboardButton.WithCallbackData("Главное меню", CallbackQueryStorage.MainMenu);
-    public static InlineKeyboardButton Logout = InlineKeyboardButton.WithCallbackData("Выйти", CallbackQueryStorage.Logout);
+    public static InlineKeyboardButton Yes = InlineKeyboardButton.WithCallbackData("Да", CallbackQueryStorage.Yes);
+    public static InlineKeyboardButton No = InlineKeyboardButton.WithCallbackData("Нет", CallbackQueryStorage.No);
+    //public static InlineKeyboardButton Logout = InlineKeyboardButton.WithCallbackData("Выйти", CallbackQueryStorage.Logout);
 }
 
 public class TeacherReplyButtonsStorage
