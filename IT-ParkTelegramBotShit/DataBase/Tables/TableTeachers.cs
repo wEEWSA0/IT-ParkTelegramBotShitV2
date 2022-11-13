@@ -53,11 +53,18 @@ public class TableTeachers
             return false;
         }
         
-        int id = dataReader.GetInt32(dataReader.GetOrdinal("id"));
-        string name = dataReader.GetString(dataReader.GetOrdinal("name"));
-        string code = dataReader.GetString(dataReader.GetOrdinal("invite_code"));
+        if (dataReader.Read())
+        {
+            int id = dataReader.GetInt32(dataReader.GetOrdinal("id"));
+            string name = dataReader.GetString(dataReader.GetOrdinal("name"));
+            string code = dataReader.GetString(dataReader.GetOrdinal("invite_code"));
 
-        teacher = new Teacher(id, name, chatId, code);
+            teacher = new Teacher(id, name, chatId, code);
+        }
+        else
+        {
+            throw new Exception();
+        }
         
         dataReader.Close();
 

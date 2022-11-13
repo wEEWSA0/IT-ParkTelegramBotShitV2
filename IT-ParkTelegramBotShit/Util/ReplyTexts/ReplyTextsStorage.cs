@@ -29,4 +29,10 @@ public static class ReplyTextsStorage
     
     public static string FinalStep =
         "Заключение";
+    
+    public static string AppliedChanges =
+        "Изменения применены";
+    
+    public static string DeclinedChanges =
+        "Изменения не применены";
 }

@@ -13,4 +13,7 @@ public class ConstantsStorage
     
     public static string GroupInviteCode =
         "group_invite_code_data";
+    
+    public static string Course =
+        "course_class_data";
 }

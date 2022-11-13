@@ -5,16 +5,19 @@ public class ReplyTeacherTextsStorage
     public readonly string Groups =
         "Группы";
     
+    public readonly string EditGroup =
+        "Редактирование группы";
+    
     public readonly string InputGroupName =
         "Введите название группы";
     
     public readonly string InputGroupInviteCode =
-        "Введите код приглашения в группы";
+        "Введите код приглашения в группу";
     
     public readonly string InputAnotherGroupName =
-        "Такое название уже существует. Введите название другое группы";
+        "Такое название уже существует. Введите другое название группы";
     
-    public readonly string InputAnotherInviteCode =
+    public readonly string InputAnotherGroupInviteCode =
         "Такой код уже существует. Введите другой";
     
     public readonly string GroupCreated =
@@ -22,11 +25,23 @@ public class ReplyTeacherTextsStorage
     
     public readonly string GroupNotCreated =
         "Группа не создана";
-
+    
     public string GetGroupFinalStateView(string name, string inviteCode)
     {
         return $"Группа '{name}'" +
                $"\nКод для входа: {inviteCode}" +
                $"\n\nДобавить?";
+    }
+    
+    public string GetNewGroupNameView(string name)
+    {
+        return $"Новое название группы '{name}'" +
+               $"\n\nОбновить название группы на новое?";
+    }
+    
+    public string GetNewGroupInviteCodeView(string inviteCode)
+    {
+        return $"Новое код приглашения {inviteCode}" +
+               $"\n\nОбновить код приглашения на новый?";
     }
 }

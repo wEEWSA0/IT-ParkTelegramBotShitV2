@@ -29,6 +29,7 @@ public class TeacherCallbackQueryStorage
     #region EditGroup
 
     public readonly string EditGroupName = "edit_group_name_callback_teacher";
+    public readonly string EditGroupInviteCode = "edit_group_invite_code_callback_teacher";
     public readonly string DeleteGroup = "delete_group_callback_teacher";
 
     #endregion

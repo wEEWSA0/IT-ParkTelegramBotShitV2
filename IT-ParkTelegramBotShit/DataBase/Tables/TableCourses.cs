@@ -40,9 +40,18 @@ public class TableCourses
         command.ExecuteNonQuery();
     }
 
-    public void UpdateCourseInfo(string courseName, string inviteCode, int courseId)
+    public void UpdateCourseName(string courseName, int courseId)
     {
-        string sqlRequest = $"UPDATE courses SET course_name = '{courseName}', student_invite_code = '{inviteCode}' WHERE id = {courseId}";
+        string sqlRequest = $"UPDATE courses SET course_name = '{courseName}' WHERE id = {courseId}";
+        
+        NpgsqlCommand command = new NpgsqlCommand(sqlRequest, _connection);
+        
+        command.ExecuteNonQuery();
+    }
+    
+    public void UpdateCourseInviteCode(string inviteCode, int courseId)
+    {
+        string sqlRequest = $"UPDATE courses SET student_invite_code = '{inviteCode}' WHERE id = {courseId}";
         
         NpgsqlCommand command = new NpgsqlCommand(sqlRequest, _connection);
         
@@ -68,7 +77,14 @@ public class TableCourses
             return false;
         }
         
-        homework = dataReader.GetString(dataReader.GetOrdinal("homework"));
+        if (dataReader.Read())
+        {
+            homework = dataReader.GetString(dataReader.GetOrdinal("homework"));
+        }
+        else
+        {
+            throw new Exception();
+        }
         
         dataReader.Close();
 
@@ -93,9 +109,16 @@ public class TableCourses
             
             return false;
         }
-        
-        nextLesson = dataReader.GetDateTime(dataReader.GetOrdinal("next_lesson"));
-        
+
+        if (dataReader.Read())
+        {
+            nextLesson = dataReader.GetDateTime(dataReader.GetOrdinal("next_lesson"));
+        }
+        else
+        {
+            throw new Exception();
+        }
+
         dataReader.Close();
 
         return true;
@@ -152,14 +175,21 @@ public class TableCourses
             
             return false;
         }
-        
-        int id = dataReader.GetInt32(dataReader.GetOrdinal("id"));
-        string courseName = dataReader.GetString(dataReader.GetOrdinal("course_name"));
-        string studentInviteCode = dataReader.GetString(dataReader.GetOrdinal("student_invite_code"));
-        int teacherId = dataReader.GetInt32(dataReader.GetOrdinal("teacher_id"));
 
-        course = new Course(id, courseName, studentInviteCode, teacherId);
-        
+        if (dataReader.Read())
+        {
+            int id = dataReader.GetInt32(dataReader.GetOrdinal("id"));
+            string courseName = dataReader.GetString(dataReader.GetOrdinal("course_name"));
+            string studentInviteCode = dataReader.GetString(dataReader.GetOrdinal("student_invite_code"));
+            int teacherId = dataReader.GetInt32(dataReader.GetOrdinal("teacher_id"));
+            
+            course = new Course(id, courseName, studentInviteCode, teacherId);
+        }
+        else
+        {
+            throw new Exception();
+        }
+
         dataReader.Close();
 
         return true;

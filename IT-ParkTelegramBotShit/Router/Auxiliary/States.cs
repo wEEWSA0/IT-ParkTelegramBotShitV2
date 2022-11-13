@@ -23,10 +23,21 @@ public class States
     {
         None = 0,
         MainMenu = 1,
+        
         Groups = 10,
+        
         InputGroupName = 100,
         InputGroupInviteCode = 101,
-        GroupCreateFinalStep = 102
+        GroupCreateFinalStep = 102,
+        
+        ChooseGroupForEdit = 200,
+        EditGroup = 201,
+        EditGroupName = 2010,
+        EditGroupNameFinalStep = 20100,
+        EditGroupInviteCode = 2011,
+        EditGroupInviteCodeFinalStep = 20110,
+        DeleteGroup = 2012,
+        DeleteGroupFinalStep = 20120
     }
     
     public TeacherStates TeacherState;

@@ -19,7 +19,7 @@ public class TeacherReplyKeyboardsStorage
     
     public readonly InlineKeyboardMarkup MainMenu = _creator
         .GetKeyboardMarkup(_replyButtons.Groups, _replyButtons.AddHomework, _replyButtons.AddNextLessonDate, _replyButtons.Profile);
-    /*
-    public readonly InlineKeyboardMarkup Groups = _creator
-        .GetKeyboardMarkup(_replyButtons.CreateGroup, _replyButtons.EditGroup);*/
+    
+    public readonly InlineKeyboardMarkup EditGroup = _creator
+        .GetKeyboardMarkup(_replyButtons.EditGroupName, _replyButtons.EditGroupInviteCode/*, _replyButtons.DeleteGroup*/, ReplyButtonsStorage.MainMenu); // todo DeleteGroup
 }

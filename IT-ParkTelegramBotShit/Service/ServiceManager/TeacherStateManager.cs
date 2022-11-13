@@ -20,12 +20,18 @@ public class TeacherStateManager
 
         _serviceMethodPairs =
             new Dictionary<States.TeacherStates, Func<long, TransmittedData, string, MessageToSend>>();
-        
+
         _serviceMethodPairs[States.TeacherStates.MainMenu] = teacherService.ProcessButtons;
         _serviceMethodPairs[States.TeacherStates.Groups] = teacherService.ProcessButtons;
         _serviceMethodPairs[States.TeacherStates.InputGroupName] = teacherService.ProcessInputGroupName;
         _serviceMethodPairs[States.TeacherStates.InputGroupInviteCode] = teacherService.ProcessInputGroupInviteCode;
         _serviceMethodPairs[States.TeacherStates.GroupCreateFinalStep] = teacherService.ProcessButtons;
+        _serviceMethodPairs[States.TeacherStates.ChooseGroupForEdit] = teacherService.ProcessChooseGroupForEdit;
+        _serviceMethodPairs[States.TeacherStates.EditGroup] = teacherService.ProcessButtons;
+        _serviceMethodPairs[States.TeacherStates.EditGroupName] = teacherService.ProcessEditGroupName;
+        _serviceMethodPairs[States.TeacherStates.EditGroupInviteCode] = teacherService.ProcessEditGroupInviteCode;
+        _serviceMethodPairs[States.TeacherStates.EditGroupNameFinalStep] = teacherService.ProcessButtons;
+        _serviceMethodPairs[States.TeacherStates.EditGroupInviteCodeFinalStep] = teacherService.ProcessButtons;
     }
 
     public MessageToSend ProcessBotUpdate(long chatId, TransmittedData transmittedData, string request)

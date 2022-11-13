@@ -33,6 +33,7 @@ public class TeacherReplyButtonsStorage
     #region EditGroup
 
     public readonly InlineKeyboardButton EditGroupName = InlineKeyboardButton.WithCallbackData("Изменить название группы", _callbacks.EditGroupName);
+    public readonly InlineKeyboardButton EditGroupInviteCode = InlineKeyboardButton.WithCallbackData("Изменить код приглашения", _callbacks.EditGroupInviteCode);
     public readonly InlineKeyboardButton DeleteGroup = InlineKeyboardButton.WithCallbackData("Удалить группу", _callbacks.DeleteGroup);
 
     #endregion
