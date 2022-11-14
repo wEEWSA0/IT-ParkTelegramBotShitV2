@@ -19,9 +19,9 @@ public class TeacherReplyButtonsStorage
     #region MainMenu
 
     public readonly InlineKeyboardButton Groups = InlineKeyboardButton.WithCallbackData("Группы", _callbacks.Groups);
-    public readonly InlineKeyboardButton AddHomework = InlineKeyboardButton.WithCallbackData("Назначить дз", _callbacks.AddHomework);
+    public readonly InlineKeyboardButton AddHomework = InlineKeyboardButton.WithCallbackData("Назначить дз", _callbacks.AddHomework);   //
     public readonly InlineKeyboardButton Profile = InlineKeyboardButton.WithCallbackData("Профиль", _callbacks.Profile);
-    public readonly InlineKeyboardButton AddNextLessonDate = InlineKeyboardButton.WithCallbackData("Назначить занятие", _callbacks.AddNextLessonDate);
+    public readonly InlineKeyboardButton AddNextLessonDate = InlineKeyboardButton.WithCallbackData("Назначить занятие", _callbacks.AddNextLessonDate);  //
 
     #endregion
     #region Groups

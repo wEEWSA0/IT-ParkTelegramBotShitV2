@@ -31,6 +31,9 @@ public class TeacherService
         _requestMethodsPairs[CallbackQueryStorage.Teacher.EditGroup] = ProcessButtonEditGroup;
         _requestMethodsPairs[CallbackQueryStorage.Teacher.EditGroupName] = ProcessButtonEditGroupName;
         _requestMethodsPairs[CallbackQueryStorage.Teacher.EditGroupInviteCode] = ProcessButtonEditGroupInviteCode;
+
+        _requestMethodsPairs[CallbackQueryStorage.Teacher.AddHomework] = ProcessButtonAddHomework;
+        _requestMethodsPairs[CallbackQueryStorage.Teacher.AddNextLessonDate] = ProcessButtonAddNextLessonData;
     }
     
     #region InputAndChooseMethods
@@ -42,6 +45,18 @@ public class TeacherService
             transmittedData.DataStorage.Add(ConstantsStorage.GroupName, request);
 
             transmittedData.State.TeacherState = States.TeacherStates.InputGroupInviteCode;
+        }
+
+        return messageToSend;
+    }
+
+    public MessageToSend ProcessInputHomework(long chatId, TransmittedData transmittedData, string request)             //
+    {
+        if (InputGroupName(out MessageToSend messageToSend, request, ReplyTextsStorage.Teacher.InputHomework))
+        {
+            transmittedData.DataStorage.Add(ConstantsStorage.GroupName, request);
+
+            transmittedData.State.TeacherState = States.TeacherStates.InputHomework;
         }
 
         return messageToSend;
@@ -133,6 +148,24 @@ public class TeacherService
         
         return _requestMethodsPairs[request].Invoke(chatId, transmittedData);
     }
+
+    private MessageToSend ProcessButtonAddHomework(long chatId, TransmittedData transmittedData)
+    {
+        string response = ReplyTextsStorage.Teacher.InputHomework;
+
+        transmittedData.State.TeacherState = States.TeacherStates.InputHomework;
+
+        return new MessageToSend(response, false);
+    }
+    
+    private MessageToSend ProcessButtonAddNextLessonData(long chatId, TransmittedData transmittedData)
+    {
+        string response = ReplyTextsStorage.Teacher.InputDateNextLesson;
+
+        transmittedData.State.TeacherState = States.TeacherStates.InputDataNextLesson;
+
+        return new MessageToSend(response, false);
+    }
     
     private MessageToSend ProcessButtonGroups(long chatId, TransmittedData transmittedData)
     {
@@ -185,8 +218,8 @@ public class TeacherService
     
     private MessageToSend ProcessButtonYes(long chatId, TransmittedData transmittedData)
     {
-        var state = transmittedData.State;
-        var storage = transmittedData.DataStorage;
+        var state = transmittedData.State;      //вызываем состояния
+        var storage = transmittedData.DataStorage;      //вызываем storage 
         MessageToSend messageToSend;
         
         switch (transmittedData.State.TeacherState)
@@ -287,10 +320,10 @@ public class TeacherService
         
         BotMessageManager.GetInstance().GetSender(chatId).AddMessageToStack(messageToSend);
 
-        state.TeacherState = States.TeacherStates.MainMenu;
+        state.TeacherState = States.TeacherStates.MainMenu;     //переход состояния к главному меню
         
-        string response = ReplyTextsStorage.MainMenu;
-        var keyboard = ReplyKeyboardsStorage.Teacher.MainMenu;
+        string response = ReplyTextsStorage.MainMenu;   //... ответное сообщение
+        var keyboard = ReplyKeyboardsStorage.Teacher.MainMenu;      //... клавиатура
         
         return new MessageToSend(response, keyboard);
     }

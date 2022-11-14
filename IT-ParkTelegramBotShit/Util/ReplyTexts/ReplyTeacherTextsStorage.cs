@@ -2,6 +2,8 @@ namespace IT_ParkTelegramBotShit.Util;
 
 public class ReplyTeacherTextsStorage
 {
+    #region GroupsReply
+    
     public readonly string Groups =
         "Группы";
     
@@ -44,4 +46,39 @@ public class ReplyTeacherTextsStorage
         return $"Новое код приглашения {inviteCode}" +
                $"\n\nОбновить код приглашения на новый?";
     }
+    
+    #endregion
+    
+    #region HomeworkReply
+
+    public readonly string InputHomework = 
+        "Введите домашнее задание";
+
+    public readonly string HomeworkCreated = 
+        "Домашнее задание добавлено";
+
+    public string GetNewHomeworkView(string homework)
+    {
+        return $"Дз для следующего занятия:"+
+               $"\n{homework}" +
+               $"\n\nДобавить?";
+    }
+    
+    #endregion
+    
+    #region NextLessonReply
+    
+    public readonly string InputDateNextLesson = 
+        "Введите время для следующего занятия";
+    
+    public readonly string DateNextLessonCreated = 
+        "Введите время для следующего занятия";
+    
+    public string GetNewDateNextLessonView(string date)
+    {
+        return $"Дата и время следующего занятия: {date}"+
+               $"\nНазначить?";
+    }
+    
+    #endregion
 }

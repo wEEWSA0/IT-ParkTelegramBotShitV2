@@ -37,7 +37,13 @@ public class States
         EditGroupInviteCode = 2011,
         EditGroupInviteCodeFinalStep = 20110,
         DeleteGroup = 2012,
-        DeleteGroupFinalStep = 20120
+        DeleteGroupFinalStep = 20120,
+        
+        InputHomework = 30,
+        InputHomeworkFinalStep = 31,
+        
+        InputDataNextLesson = 40,
+        InputTimeNextLessonFinalState = 41
     }
     
     public TeacherStates TeacherState;
