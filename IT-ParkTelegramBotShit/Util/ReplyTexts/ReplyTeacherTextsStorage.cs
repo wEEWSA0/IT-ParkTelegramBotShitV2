@@ -2,6 +2,9 @@ namespace IT_ParkTelegramBotShit.Util;
 
 public class ReplyTeacherTextsStorage
 {
+    public readonly string LogIntoAccount =
+        "Вы вошли в учетную запись преподователя";
+    
     #region GroupsReply
     
     public readonly string Groups =
@@ -68,15 +71,16 @@ public class ReplyTeacherTextsStorage
     
     #region NextLessonReply
     
-    public readonly string InputDateNextLesson = 
-        "Введите время для следующего занятия";
+    public readonly string InputNextLessonDate = 
+        "Введите полную дату следующего занятия";
     
-    public readonly string DateNextLessonCreated = 
-        "Введите время для следующего занятия";
+    public readonly string NextLessonDateCreated = 
+        "Следующее занятие назначено";
     
-    public string GetNewDateNextLessonView(string date)
+    public string GetNewNextLessonDateView(string date)
     {
-        return $"Дата и время следующего занятия: {date}"+
+        return $"Дата и время следующего занятия:" +
+               $"{date}"+
                $"\nНазначить?";
     }
     

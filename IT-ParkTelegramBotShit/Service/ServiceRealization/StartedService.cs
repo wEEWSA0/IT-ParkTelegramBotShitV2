@@ -45,8 +45,12 @@ public class StartedService
             transmittedData.DataStorage.Add(ConstantsStorage.TeacherId, teacher.Id); // записываем teacher id
 
             keyboard = ReplyKeyboardsStorage.Teacher.MainMenu;
+
+            var logIntoAccountMessageToSend = new MessageToSend(ReplyTextsStorage.Teacher.LogIntoAccount, false);
             
-            return new MessageToSend(response, keyboard, false);
+            BotMessageManager.GetInstance().GetSender(chatId).AddMessageToStack(logIntoAccountMessageToSend);
+            
+            return new MessageToSend(response, keyboard);
         }
         else if (DbManager.GetInstance().TableCourses.TryGetCourseByStudentInviteCode(out Course course, request))
         {

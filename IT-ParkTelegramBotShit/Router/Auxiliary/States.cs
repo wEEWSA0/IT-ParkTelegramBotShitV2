@@ -24,26 +24,48 @@ public class States
         None = 0,
         MainMenu = 1,
         
+        #region Groups
+        
         Groups = 10,
         
+        #region AddGroup
+        
         InputGroupName = 100,
-        InputGroupInviteCode = 101,
-        GroupCreateFinalStep = 102,
+        InputGroupInviteCode = 1000,
+        GroupCreateFinalStep = 10000,
         
-        ChooseGroupForEdit = 200,
-        EditGroup = 201,
-        EditGroupName = 2010,
-        EditGroupNameFinalStep = 20100,
-        EditGroupInviteCode = 2011,
-        EditGroupInviteCodeFinalStep = 20110,
-        DeleteGroup = 2012,
-        DeleteGroupFinalStep = 20120,
+        #endregion
         
+        #region EditGroup
+
+        ChooseGroupForEdit = 101,
+        EditGroup = 1010,
+        
+        EditGroupName = 10100,
+        EditGroupInviteCode = 10101,
+        DeleteGroup = 10102,
+        
+        EditGroupNameFinalStep = 101000,
+        EditGroupInviteCodeFinalStep = 101010,
+        DeleteGroupFinalStep = 10102,
+        
+        #endregion
+        
+        #endregion
+
+        #region AddHomework
+
         InputHomework = 30,
-        InputHomeworkFinalStep = 31,
-        
-        InputDataNextLesson = 40,
-        InputTimeNextLessonFinalState = 41
+        HomeworkFinalStep = 300,
+
+        #endregion
+
+        #region DateNextLesson
+
+        InputNextLesson = 40,
+        InputNextLessonFinalStep = 400
+
+        #endregion
     }
     
     public TeacherStates TeacherState;

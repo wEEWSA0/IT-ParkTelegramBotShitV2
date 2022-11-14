@@ -15,10 +15,10 @@ namespace IT_ParkTelegramBotShit.Service.ServiceRealization;
 public class TeacherService
 {
     private static ILogger Logger = LogManager.GetCurrentClassLogger();
-    
+
     private Dictionary<string, Func<long, TransmittedData, MessageToSend>>
         _requestMethodsPairs;
-    
+
     public TeacherService()
     {
         _requestMethodsPairs = new Dictionary<string, Func<long, TransmittedData, MessageToSend>>();
@@ -33,7 +33,7 @@ public class TeacherService
         _requestMethodsPairs[CallbackQueryStorage.Teacher.EditGroupInviteCode] = ProcessButtonEditGroupInviteCode;
 
         _requestMethodsPairs[CallbackQueryStorage.Teacher.AddHomework] = ProcessButtonAddHomework;
-        _requestMethodsPairs[CallbackQueryStorage.Teacher.AddNextLessonDate] = ProcessButtonAddNextLessonData;
+        _requestMethodsPairs[CallbackQueryStorage.Teacher.AddNextLessonDate] = ProcessButtonDateNextLesson;
     }
     
     #region InputAndChooseMethods
@@ -50,23 +50,24 @@ public class TeacherService
         return messageToSend;
     }
 
-    public MessageToSend ProcessInputHomework(long chatId, TransmittedData transmittedData, string request)             //
+    public MessageToSend ProcessInputHomework(long chatId, TransmittedData transmittedData, string request)
     {
-        if (InputGroupName(out MessageToSend messageToSend, request, ReplyTextsStorage.Teacher.InputHomework))
-        {
-            transmittedData.DataStorage.Add(ConstantsStorage.GroupName, request);
+        transmittedData.DataStorage.Add(ConstantsStorage.Homework, request);
 
-            transmittedData.State.TeacherState = States.TeacherStates.InputHomework;
-        }
+        transmittedData.State.TeacherState = States.TeacherStates.HomeworkFinalStep;
 
-        return messageToSend;
+        var response = GetReplyFinalStepText(ReplyTextsStorage.Teacher.GetNewHomeworkView(request));
+        
+        var keyboard = ReplyKeyboardsStorage.FinalStep;
+
+        return new MessageToSend(response, keyboard, false);
     }
-    
+
     public MessageToSend ProcessInputGroupInviteCode(long chatId, TransmittedData transmittedData, string request)
     {
         transmittedData.DataStorage.TryGet(ConstantsStorage.GroupName, out Object groupName);
         
-        string response = ReplyTextsStorage.FinalStep + "\n" + ReplyTextsStorage.Teacher.GetGroupFinalStateView((string)groupName, request);
+        string response = GetReplyFinalStepText(ReplyTextsStorage.Teacher.GetGroupFinalStateView((string)groupName, request));
 
         if (InputGroupInviteCode(out MessageToSend messageToSend, request, response))
         {
@@ -101,7 +102,7 @@ public class TeacherService
 
     public MessageToSend ProcessEditGroupName(long chatId, TransmittedData transmittedData, string request)
     {
-        string response = ReplyTextsStorage.FinalStep + "\n" + ReplyTextsStorage.Teacher.GetNewGroupNameView(request);
+        string response = GetReplyFinalStepText(ReplyTextsStorage.Teacher.GetNewGroupNameView(request));
         
         if (InputGroupName(out MessageToSend messageToSend, request, response))
         {
@@ -119,7 +120,7 @@ public class TeacherService
     
     public MessageToSend ProcessEditGroupInviteCode(long chatId, TransmittedData transmittedData, string request)
     {
-        string response = ReplyTextsStorage.FinalStep + "\n" + ReplyTextsStorage.Teacher.GetNewGroupInviteCodeView(request);
+        string response = GetReplyFinalStepText(ReplyTextsStorage.Teacher.GetNewGroupInviteCodeView(request));
         
         if (InputGroupInviteCode(out MessageToSend messageToSend, request, response))
         {
@@ -158,11 +159,11 @@ public class TeacherService
         return new MessageToSend(response, false);
     }
     
-    private MessageToSend ProcessButtonAddNextLessonData(long chatId, TransmittedData transmittedData)
+    private MessageToSend ProcessButtonDateNextLesson(long chatId, TransmittedData transmittedData)
     {
-        string response = ReplyTextsStorage.Teacher.InputDateNextLesson;
+        string response = ReplyTextsStorage.Teacher.InputNextLessonDate;
 
-        transmittedData.State.TeacherState = States.TeacherStates.InputDataNextLesson;
+        transmittedData.State.TeacherState = States.TeacherStates.InputNextLesson;
 
         return new MessageToSend(response, false);
     }
@@ -377,7 +378,7 @@ public class TeacherService
 
         if (!DbManager.GetInstance().TableCourses.TryGetTeacherCourses(out List<Course> courses, teacherId))
         {
-            Logger.Error(LoggerTextsStorage.FatalLogicError("ProcessButtonEditGroup"));
+            Logger.Error(LoggerTextsStorage.FatalLogicError("GetTeacherCoursesButtons"));
             throw new Exception();
         }
 
@@ -416,6 +417,11 @@ public class TeacherService
         messageToSend = new MessageToSend(succesReplyText);
 
         return true;
+    }
+
+    private string GetReplyFinalStepText(string value)
+    {
+        return ReplyTextsStorage.FinalStep + "\n" + value;
     }
 
     #endregion

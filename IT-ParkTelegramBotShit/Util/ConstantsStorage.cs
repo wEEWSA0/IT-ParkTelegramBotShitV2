@@ -16,4 +16,7 @@ public class ConstantsStorage
     
     public static string Course =
         "course_class_data";
+    
+    public static string Homework =
+        "homework_data";
 }
