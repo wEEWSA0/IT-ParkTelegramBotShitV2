@@ -167,13 +167,13 @@ public class TeacherService
         return _requestMethodsPairs[request].Invoke(chatId, transmittedData);
     }
 
-    private MessageToSend ProcessButtonSetHomework(long chatId, TransmittedData transmittedData)    //
+    private MessageToSend ProcessButtonSetHomework(long chatId, TransmittedData transmittedData)
     {
         string response = ReplyTextsStorage.Teacher.GroupHomework;
 
         transmittedData.State.TeacherState = States.TeacherStates.ChooseGroupForHomework;
 
-        var keyboard = GetTeacherCoursesButtons(chatId, transmittedData.DataStorage);   //
+        var keyboard = GetTeacherCoursesButtons(chatId, transmittedData.DataStorage);
 
         return new MessageToSend(response, keyboard, false);
     }
