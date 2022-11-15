@@ -54,11 +54,17 @@ public class ReplyTeacherTextsStorage
     
     #region HomeworkReply
 
+    public readonly string GroupHomework =
+        "В какую группу добавить дз?";
+        
     public readonly string InputHomework = 
         "Введите домашнее задание";
 
     public readonly string HomeworkCreated = 
         "Домашнее задание добавлено";
+    
+    public readonly string HomeworkNotCreated = 
+        "Домашнее задание не добавлено";
 
     public string GetNewHomeworkView(string homework)
     {
@@ -70,6 +76,9 @@ public class ReplyTeacherTextsStorage
     #endregion
     
     #region NextLessonReply
+
+    public readonly string GroupNextLesson =
+        "В какой группе указать дату занятия?";
     
     public readonly string InputNextLessonDate = 
         "Введите полную дату следующего занятия";

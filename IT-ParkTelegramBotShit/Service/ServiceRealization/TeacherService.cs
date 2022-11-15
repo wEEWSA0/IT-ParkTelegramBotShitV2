@@ -32,7 +32,7 @@ public class TeacherService
         _requestMethodsPairs[CallbackQueryStorage.Teacher.EditGroupName] = ProcessButtonEditGroupName;
         _requestMethodsPairs[CallbackQueryStorage.Teacher.EditGroupInviteCode] = ProcessButtonEditGroupInviteCode;
 
-        _requestMethodsPairs[CallbackQueryStorage.Teacher.AddHomework] = ProcessButtonAddHomework;
+        _requestMethodsPairs[CallbackQueryStorage.Teacher.AddHomework] = ProcessButtonSetHomework;
         _requestMethodsPairs[CallbackQueryStorage.Teacher.AddNextLessonDate] = ProcessButtonDateNextLesson;
     }
     
@@ -99,6 +99,23 @@ public class TeacherService
 
         return new MessageToSend(response, keyboard, false);
     }
+    
+    public MessageToSend ProcessChooseGroupForHomework(long chatId, TransmittedData transmittedData, string request)    //
+    {
+        string response = ReplyTextsStorage.Teacher.InputHomework;
+
+        transmittedData.State.TeacherState = States.TeacherStates.InputHomework;
+        
+        if (!DbManager.GetInstance().TableCourses.TryGetCourseByStudentInviteCode(out Course course, request))
+        {
+            Logger.Error(LoggerTextsStorage.FatalLogicError("ProcessChooseGroupForEdit"));
+            throw new NotImplementedException();
+        }
+        
+        transmittedData.DataStorage.Add(ConstantsStorage.Course, course);
+
+        return new MessageToSend(response, false);
+    }
 
     public MessageToSend ProcessEditGroupName(long chatId, TransmittedData transmittedData, string request)
     {
@@ -150,13 +167,15 @@ public class TeacherService
         return _requestMethodsPairs[request].Invoke(chatId, transmittedData);
     }
 
-    private MessageToSend ProcessButtonAddHomework(long chatId, TransmittedData transmittedData)
+    private MessageToSend ProcessButtonSetHomework(long chatId, TransmittedData transmittedData)    //
     {
-        string response = ReplyTextsStorage.Teacher.InputHomework;
+        string response = ReplyTextsStorage.Teacher.GroupHomework;
 
-        transmittedData.State.TeacherState = States.TeacherStates.InputHomework;
+        transmittedData.State.TeacherState = States.TeacherStates.ChooseGroupForHomework;
 
-        return new MessageToSend(response, false);
+        var keyboard = GetTeacherCoursesButtons(chatId, transmittedData.DataStorage);   //
+
+        return new MessageToSend(response, keyboard, false);
     }
     
     private MessageToSend ProcessButtonDateNextLesson(long chatId, TransmittedData transmittedData)
@@ -277,6 +296,23 @@ public class TeacherService
                 messageToSend = new MessageToSend(ReplyTextsStorage.AppliedChanges, false);
             }
                 break;
+            case States.TeacherStates.HomeworkFinalStep:
+            {
+                var tableCourses = DbManager.GetInstance().TableCourses;
+                
+                bool isHomeworkEnab = storage.TryGet(ConstantsStorage.Homework, out Object homework);
+                bool isCourseEnab = storage.TryGet(ConstantsStorage.Course, out Object course);
+        
+                if (!isHomeworkEnab || !isCourseEnab)
+                {
+                    Logger.Error(LoggerTextsStorage.FatalLogicError("ProcessInputGroupInviteCode"));
+                }
+                
+                tableCourses.UpdateCourseHomework((string)homework, ((Course)course).Id);
+                
+                messageToSend = new MessageToSend(ReplyTextsStorage.Teacher.HomeworkCreated, false);
+            }
+                break;
             default:
             {
                 Logger.Error(LoggerTextsStorage.FatalLogicError("ProcessButtonYes"));
@@ -310,6 +346,11 @@ public class TeacherService
             case States.TeacherStates.EditGroupInviteCodeFinalStep:
             {
                 messageToSend = new MessageToSend(ReplyTextsStorage.DeclinedChanges, false);
+            }
+                break;
+            case States.TeacherStates.HomeworkFinalStep:
+            {
+                messageToSend = new MessageToSend(ReplyTextsStorage.Teacher.HomeworkNotCreated, false);
             }
                 break;
             default:

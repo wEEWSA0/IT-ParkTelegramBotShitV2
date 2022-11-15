@@ -56,14 +56,16 @@ public class States
         #region AddHomework
 
         InputHomework = 30,
-        HomeworkFinalStep = 300,
+        ChooseGroupForHomework = 300,
+        HomeworkFinalStep = 3000,
 
         #endregion
 
         #region DateNextLesson
 
         InputNextLesson = 40,
-        InputNextLessonFinalStep = 400
+        ChooseGroupForNextLesson = 400,
+        InputNextLessonFinalStep = 4000
 
         #endregion
     }

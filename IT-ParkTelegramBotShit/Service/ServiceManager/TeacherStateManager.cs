@@ -32,6 +32,10 @@ public class TeacherStateManager
         _serviceMethodPairs[States.TeacherStates.EditGroupInviteCode] = teacherService.ProcessEditGroupInviteCode;
         _serviceMethodPairs[States.TeacherStates.EditGroupNameFinalStep] = teacherService.ProcessButtons;
         _serviceMethodPairs[States.TeacherStates.EditGroupInviteCodeFinalStep] = teacherService.ProcessButtons;
+        _serviceMethodPairs[States.TeacherStates.InputHomework] = teacherService.ProcessInputHomework;
+        _serviceMethodPairs[States.TeacherStates.ChooseGroupForHomework] = teacherService.ProcessChooseGroupForHomework;
+        _serviceMethodPairs[States.TeacherStates.InputHomework] = teacherService.ProcessInputHomework;
+        _serviceMethodPairs[States.TeacherStates.HomeworkFinalStep] = teacherService.ProcessButtons;
     }
 
     public MessageToSend ProcessBotUpdate(long chatId, TransmittedData transmittedData, string request)
