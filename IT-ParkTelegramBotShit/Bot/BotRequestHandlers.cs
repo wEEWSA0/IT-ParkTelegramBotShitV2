@@ -5,7 +5,7 @@ using Telegram.Bot.Exceptions;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 
-namespace IT_ParkTelegramBotShit.Bot;
+namespace IT_ParkTelegramBotShit.Bot.Messages;
 
 public class BotRequestHandlers
 {
@@ -36,7 +36,7 @@ public class BotRequestHandlers
                     Logger.Info($"Принято входящее сообщение: chatId = {chatId}, UpdateType.Message");
                     
                     messageToSend =
-                        await Task.Run(() => _chatsRouter.RouterMessage.Route(chatId, update.Message), cancellationToken);
+                        await Task.Run(() => _chatsRouter.RouteMessage(chatId, update.Message), cancellationToken);
                 }
                 break;
 
@@ -53,7 +53,7 @@ public class BotRequestHandlers
                     Logger.Info($"Принято входящее сообщение: chatId = {chatId}, UpdateType.CallbackQuery");
 
                     messageToSend =
-                        await Task.Run(() => _chatsRouter.RouterCallbackQuery.Route(chatId, update.CallbackQuery), cancellationToken);
+                        await Task.Run(() => _chatsRouter.RouteCallbackQuery(chatId, update.CallbackQuery), cancellationToken);
                 }
                 break;
         }
@@ -62,12 +62,7 @@ public class BotRequestHandlers
         {
             var sender = messageManager.GetSender(chatId);
             var history = messageManager.GetHistory(chatId);
-            /*
-            if (!messageToSend.IsLastMessagesHistoryNeeded)
-            {
-                history.DeleteAllMessages();
-            }
-            */
+            
             sender.AddMessageToStack(messageToSend);
             
             var messages = sender.SendAllMessages();
@@ -86,7 +81,7 @@ public class BotRequestHandlers
                     throw new Exception();
                 }
                 
-                await messageManager.GetHistory(chatId).DeleteMessage(update.Message);
+                await messageManager.GetHistory(chatId).DeleteLastMessage();
             }
             else
             {

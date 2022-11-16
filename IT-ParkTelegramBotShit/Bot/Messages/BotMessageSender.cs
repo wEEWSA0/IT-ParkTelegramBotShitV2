@@ -3,7 +3,7 @@ using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.ReplyMarkups;
 
-namespace IT_ParkTelegramBotShit.Bot;
+namespace IT_ParkTelegramBotShit.Bot.Messages;
 
 public class BotMessageSender
 {

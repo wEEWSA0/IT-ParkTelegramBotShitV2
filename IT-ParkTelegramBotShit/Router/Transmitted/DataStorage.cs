@@ -1,4 +1,4 @@
-namespace IT_ParkTelegramBotShit.Router.Auxiliary;
+namespace IT_ParkTelegramBotShit.Router.Transmitted;
 
 public class DataStorage
 {

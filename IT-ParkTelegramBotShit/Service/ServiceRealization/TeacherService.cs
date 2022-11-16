@@ -1,9 +1,9 @@
-using IT_ParkTelegramBotShit.Bot;
-using IT_ParkTelegramBotShit.Bot.Buttons;
+using IT_ParkTelegramBotShit.Bot.Messages;
+using IT_ParkTelegramBotShit.Bot.Messages.Buttons;
 using IT_ParkTelegramBotShit.DataBase;
 using IT_ParkTelegramBotShit.DataBase.Entities;
-using IT_ParkTelegramBotShit.Router.Auxiliary;
-using IT_ParkTelegramBotShit.Service.ChatServices;
+using IT_ParkTelegramBotShit.Router.Transmitted;
+using IT_ParkTelegramBotShit.Service.ServiceUpdateType;
 using IT_ParkTelegramBotShit.Util;
 using NLog;
 using NLog.Fluent;
@@ -90,7 +90,7 @@ public class TeacherService
         if (!DbManager.GetInstance().TableCourses.TryGetCourseByStudentInviteCode(out Course course, request))
         {
             Logger.Error(LoggerTextsStorage.FatalLogicError("ProcessChooseGroupForEdit"));
-            throw new NotImplementedException();
+            throw new Exception();
         }
         
         transmittedData.DataStorage.Add(ConstantsStorage.Course, course);
@@ -109,7 +109,7 @@ public class TeacherService
         if (!DbManager.GetInstance().TableCourses.TryGetCourseByStudentInviteCode(out Course course, request))
         {
             Logger.Error(LoggerTextsStorage.FatalLogicError("ProcessChooseGroupForEdit"));
-            throw new NotImplementedException();
+            throw new Exception();
         }
         
         transmittedData.DataStorage.Add(ConstantsStorage.Course, course);
@@ -156,18 +156,18 @@ public class TeacherService
     #endregion
     #region ButtonsMethods
 
-    public MessageToSend ProcessButtons(long chatId, TransmittedData transmittedData, string request)
-    {
-        if (!_requestMethodsPairs.ContainsKey(request))
-        {
-            Logger.Error($"Not found methods to process '{request}'");
-            throw new NotImplementedException();
-        }
-        
-        return _requestMethodsPairs[request].Invoke(chatId, transmittedData);
-    }
+    // public MessageToSend ProcessButtons(long chatId, TransmittedData transmittedData, string request)
+    // {
+    //     if (!_requestMethodsPairs.ContainsKey(request))
+    //     {
+    //         Logger.Error($"Not found methods to process '{request}'");
+    //         throw new Exception();
+    //     }
+    //     
+    //     return _requestMethodsPairs[request].Invoke(chatId, transmittedData);
+    // }
 
-    private MessageToSend ProcessButtonSetHomework(long chatId, TransmittedData transmittedData)
+    public MessageToSend ProcessButtonSetHomework(long chatId, TransmittedData transmittedData)
     {
         string response = ReplyTextsStorage.Teacher.GroupHomework;
 
@@ -178,7 +178,7 @@ public class TeacherService
         return new MessageToSend(response, keyboard, false);
     }
     
-    private MessageToSend ProcessButtonDateNextLesson(long chatId, TransmittedData transmittedData)
+    public MessageToSend ProcessButtonDateNextLesson(long chatId, TransmittedData transmittedData)
     {
         string response = ReplyTextsStorage.Teacher.InputNextLessonDate;
 
@@ -187,7 +187,7 @@ public class TeacherService
         return new MessageToSend(response, false);
     }
     
-    private MessageToSend ProcessButtonGroups(long chatId, TransmittedData transmittedData)
+    public MessageToSend ProcessButtonGroups(long chatId, TransmittedData transmittedData)
     {
         string response = ReplyTextsStorage.Teacher.Groups;
         
@@ -216,7 +216,7 @@ public class TeacherService
         return new MessageToSend(response, keyboard, false);
     }
     
-    private MessageToSend ProcessButtonMainMenu(long chatId, TransmittedData transmittedData)
+    public MessageToSend ProcessButtonMainMenu(long chatId, TransmittedData transmittedData)
     {
         string response = ReplyTextsStorage.MainMenu;
 
@@ -227,7 +227,7 @@ public class TeacherService
         return new MessageToSend(response, keyboard, false);
     }
     
-    private MessageToSend ProcessButtonCreateGroup(long chatId, TransmittedData transmittedData)
+    public MessageToSend ProcessButtonCreateGroup(long chatId, TransmittedData transmittedData)
     {
         string response = ReplyTextsStorage.Teacher.InputGroupName;
 
@@ -236,7 +236,7 @@ public class TeacherService
         return new MessageToSend(response, false);
     }
     
-    private MessageToSend ProcessButtonYes(long chatId, TransmittedData transmittedData)
+    public MessageToSend ProcessButtonYes(long chatId, TransmittedData transmittedData)
     {
         var state = transmittedData.State;      //вызываем состояния
         var storage = transmittedData.DataStorage;      //вызываем storage 
@@ -316,7 +316,7 @@ public class TeacherService
             default:
             {
                 Logger.Error(LoggerTextsStorage.FatalLogicError("ProcessButtonYes"));
-                throw new NotImplementedException();
+                throw new Exception();
             }
         }
         
@@ -330,7 +330,7 @@ public class TeacherService
         return new MessageToSend(response, keyboard); // todo: возможно переделать логику перекидывания MessageToSend для всех методов
     }
     
-    private MessageToSend ProcessButtonNo(long chatId, TransmittedData transmittedData)
+    public MessageToSend ProcessButtonNo(long chatId, TransmittedData transmittedData)
     {
         var state = transmittedData.State;
         MessageToSend messageToSend;
@@ -356,7 +356,7 @@ public class TeacherService
             default:
             {
                 Logger.Error(LoggerTextsStorage.FatalLogicError("ProcessButtonNo"));
-                throw new NotImplementedException();
+                throw new Exception();
             }
         }
         
@@ -370,7 +370,7 @@ public class TeacherService
         return new MessageToSend(response, keyboard);
     }
     
-    private MessageToSend ProcessButtonEditGroup(long chatId, TransmittedData transmittedData)
+    public MessageToSend ProcessButtonEditGroup(long chatId, TransmittedData transmittedData)
     {
         string response = ReplyTextsStorage.Teacher.Groups;
 
@@ -381,7 +381,7 @@ public class TeacherService
         return new MessageToSend(response, keyboard, false);
     }
     
-    private MessageToSend ProcessButtonEditGroupName(long chatId, TransmittedData transmittedData)
+    public MessageToSend ProcessButtonEditGroupName(long chatId, TransmittedData transmittedData)
     {
         string response = ReplyTextsStorage.Teacher.InputGroupName;
 
@@ -390,7 +390,7 @@ public class TeacherService
         return new MessageToSend(response, false);
     }
     
-    private MessageToSend ProcessButtonEditGroupInviteCode(long chatId, TransmittedData transmittedData)
+    public MessageToSend ProcessButtonEditGroupInviteCode(long chatId, TransmittedData transmittedData)
     {
         string response = ReplyTextsStorage.Teacher.InputGroupInviteCode;
 

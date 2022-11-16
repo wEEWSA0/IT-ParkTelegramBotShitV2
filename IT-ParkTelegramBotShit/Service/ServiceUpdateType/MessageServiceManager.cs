@@ -1,13 +1,13 @@
-using IT_ParkTelegramBotShit.Bot;
-using IT_ParkTelegramBotShit.Router.Auxiliary;
-using IT_ParkTelegramBotShit.Service.ServiceManager;
+using IT_ParkTelegramBotShit.Bot.Messages;
+using IT_ParkTelegramBotShit.Router.Transmitted;
+using IT_ParkTelegramBotShit.Service.ServiceStateToMethod;
 using IT_ParkTelegramBotShit.Service.ServiceRealization;
 using IT_ParkTelegramBotShit.Util;
 using NLog;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 
-namespace IT_ParkTelegramBotShit.Service.ChatServices;
+namespace IT_ParkTelegramBotShit.Service.ServiceUpdateType;
 
 public class MessageServiceManager
 {
@@ -22,7 +22,7 @@ public class MessageServiceManager
         _teacherStateManager = new TeacherStateManager();
     }
 
-    public MessageToSend ProcessBotUpdate(long chatId, TransmittedData transmittedData, Message message)
+    public MessageToSend ProcessBotMessage(long chatId, TransmittedData transmittedData, Message message)
     {
         var state = transmittedData.State;
         
@@ -40,7 +40,7 @@ public class MessageServiceManager
         
         if (state.TeacherState != States.TeacherStates.None)
         {
-            return _teacherStateManager.ProcessBotUpdate(chatId, transmittedData, message.Text);
+            return _teacherStateManager.ProcessMessage(chatId, transmittedData, message.Text);
         }
         
         Logger.Error("Program logic error (ProcessBotUpdate in MessageServiceManager)");

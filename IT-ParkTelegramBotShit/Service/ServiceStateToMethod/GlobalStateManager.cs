@@ -1,11 +1,11 @@
-using IT_ParkTelegramBotShit.Bot;
-using IT_ParkTelegramBotShit.Router.Auxiliary;
+using IT_ParkTelegramBotShit.Bot.Messages;
+using IT_ParkTelegramBotShit.Router.Transmitted;
 using IT_ParkTelegramBotShit.Service.ServiceRealization;
 using IT_ParkTelegramBotShit.Util;
 using NLog;
 using Telegram.Bot.Types;
 
-namespace IT_ParkTelegramBotShit.Service.ServiceManager;
+namespace IT_ParkTelegramBotShit.Service.ServiceStateToMethod;
 
 public class GlobalStateManager
 {

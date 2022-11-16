@@ -1,7 +1,7 @@
 using NLog;
 using Telegram.Bot;
 
-namespace IT_ParkTelegramBotShit.Bot;
+namespace IT_ParkTelegramBotShit.Bot.Messages;
 
 public class BotMessageManager
 {
@@ -28,7 +28,7 @@ public class BotMessageManager
         if (_messageManager == null)
         {
             Logger.Error("BotMessageManager not initialized");
-            throw new NotImplementedException();
+            throw new Exception();
         }
         
         return _messageManager;

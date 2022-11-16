@@ -1,4 +1,4 @@
-using IT_ParkTelegramBotShit.Bot;
+using IT_ParkTelegramBotShit.Bot.Messages;
 using IT_ParkTelegramBotShit.DataBase.Entities;
 using Npgsql;
 

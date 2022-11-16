@@ -1,7 +1,8 @@
+using NLog;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 
-namespace IT_ParkTelegramBotShit.Bot;
+namespace IT_ParkTelegramBotShit.Bot.Messages;
 
 public class BotMessageHistory
 {
@@ -47,7 +48,24 @@ public class BotMessageHistory
         }
     }
     
-    public Task DeleteMessage(Message message)
+    public Task DeleteLastMessage()
+    {
+        if (_messages.Count < 1)
+        {
+            throw new Exception("Messages count < 1");
+        }
+
+        Message message = _messages[_messages.Count - 1];
+        
+        _messages.Remove(message);
+        
+        return _botClient.DeleteMessageAsync(
+            messageId: message.MessageId,
+            chatId: _chatId,
+            cancellationToken: _cancellationTokenSource.Token);
+    }
+    
+    private Task DeleteMessage(Message message)
     {
         return _botClient.DeleteMessageAsync(
             messageId: message.MessageId,

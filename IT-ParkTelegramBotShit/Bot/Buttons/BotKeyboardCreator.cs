@@ -2,7 +2,7 @@ using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.ReplyMarkups;
 
-namespace IT_ParkTelegramBotShit.Bot.Buttons;
+namespace IT_ParkTelegramBotShit.Bot.Messages.Buttons;
 
 public class BotKeyboardCreator
 {

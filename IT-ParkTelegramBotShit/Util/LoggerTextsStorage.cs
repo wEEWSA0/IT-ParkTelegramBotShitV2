@@ -1,4 +1,4 @@
-using IT_ParkTelegramBotShit.Router.Auxiliary;
+using IT_ParkTelegramBotShit.Router.Transmitted;
 
 namespace IT_ParkTelegramBotShit.Util;
 
