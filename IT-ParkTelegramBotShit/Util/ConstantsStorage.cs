@@ -19,4 +19,7 @@ public class ConstantsStorage
     
     public static string Homework =
         "homework_data";
+    
+    public static string NextLessonDate =
+        "next_lesson_date_data";
 }

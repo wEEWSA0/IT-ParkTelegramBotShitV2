@@ -63,9 +63,17 @@ public class TeacherService
         return new MessageToSend(response, keyboard, false);
     }
     
-    public MessageToSend ProcessInputNextLesson(long chatId, TransmittedData transmittedData, string request)   //из ввода к финалу
+    public MessageToSend ProcessInputNextLessonDate(long chatId, TransmittedData transmittedData, string request)   //из ввода к финалу
     {
-        transmittedData.DataStorage.Add(ConstantsStorage.Homework, request);
+        DateTime dateTime/* = DateTime.Parse()*/;
+        
+        // todo Разбить метод на два:
+        // Ввод даты с примером (следующий день)
+        // Ввод точного времени (20:45)
+        // 
+        // В конце заключение
+        
+        //transmittedData.DataStorage.Add(ConstantsStorage.NextLessonDate, dateTime);
 
         transmittedData.State.TeacherState = States.TeacherStates.InputNextLessonFinalStep;
 
