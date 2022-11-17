@@ -62,6 +62,19 @@ public class TeacherService
 
         return new MessageToSend(response, keyboard, false);
     }
+    
+    public MessageToSend ProcessInputNextLesson(long chatId, TransmittedData transmittedData, string request)   //из ввода к финалу
+    {
+        transmittedData.DataStorage.Add(ConstantsStorage.Homework, request);
+
+        transmittedData.State.TeacherState = States.TeacherStates.InputNextLessonFinalStep;
+
+        var response = GetReplyFinalStepText(ReplyTextsStorage.Teacher.GetNewNextLessonDateView(request));
+        
+        var keyboard = ReplyKeyboardsStorage.FinalStep;
+
+        return new MessageToSend(response, keyboard, false);
+    }
 
     public MessageToSend ProcessInputGroupInviteCode(long chatId, TransmittedData transmittedData, string request)
     {
@@ -100,11 +113,28 @@ public class TeacherService
         return new MessageToSend(response, keyboard, false);
     }
     
-    public MessageToSend ProcessChooseGroupForHomework(long chatId, TransmittedData transmittedData, string request)    //
+    public MessageToSend ProcessChooseGroupForHomework(long chatId, TransmittedData transmittedData, string request)  
     {
         string response = ReplyTextsStorage.Teacher.InputHomework;
 
         transmittedData.State.TeacherState = States.TeacherStates.InputHomework;
+        
+        if (!DbManager.GetInstance().TableCourses.TryGetCourseByStudentInviteCode(out Course course, request))
+        {
+            Logger.Error(LoggerTextsStorage.FatalLogicError("ProcessChooseGroupForEdit"));
+            throw new Exception();
+        }
+        
+        transmittedData.DataStorage.Add(ConstantsStorage.Course, course);
+
+        return new MessageToSend(response, false);
+    }
+    
+    public MessageToSend ProcessChooseGroupForNextLesson(long chatId, TransmittedData transmittedData, string request)    //
+    {
+        string response = ReplyTextsStorage.Teacher.InputNextLessonDate;
+
+        transmittedData.State.TeacherState = States.TeacherStates.InputNextLesson;
         
         if (!DbManager.GetInstance().TableCourses.TryGetCourseByStudentInviteCode(out Course course, request))
         {
@@ -180,11 +210,13 @@ public class TeacherService
     
     public MessageToSend ProcessButtonDateNextLesson(long chatId, TransmittedData transmittedData)
     {
-        string response = ReplyTextsStorage.Teacher.InputNextLessonDate;
+        string response = ReplyTextsStorage.Teacher.GroupNextLesson;
 
-        transmittedData.State.TeacherState = States.TeacherStates.InputNextLesson;
+        transmittedData.State.TeacherState = States.TeacherStates.ChooseGroupForNextLesson;
 
-        return new MessageToSend(response, false);
+        var keyboard = GetTeacherCoursesButtons(chatId, transmittedData.DataStorage);
+        
+        return new MessageToSend(response, keyboard, false);
     }
     
     public MessageToSend ProcessButtonGroups(long chatId, TransmittedData transmittedData)
@@ -313,6 +345,23 @@ public class TeacherService
                 messageToSend = new MessageToSend(ReplyTextsStorage.Teacher.HomeworkCreated, false);
             }
                 break;
+            case States.TeacherStates.InputNextLessonFinalStep:                     //ответ на да и главное меню
+            {
+                var tableCourses = DbManager.GetInstance().TableCourses;
+                
+                bool isDateNextLessonEnab = storage.TryGet(ConstantsStorage.Homework, out Object dateNextLesson); //homework исправить
+                bool isCourseEnab = storage.TryGet(ConstantsStorage.Course, out Object course);
+        
+                if (!isDateNextLessonEnab || !isCourseEnab)
+                {
+                    Logger.Error(LoggerTextsStorage.FatalLogicError("ProcessInputGroupInviteCode"));
+                }
+                
+                tableCourses.UpdateCourseNextLessonTime((DateTime)dateNextLesson, ((Course)course).Id);
+                
+                messageToSend = new MessageToSend(ReplyTextsStorage.Teacher.NextLessonDateCreated, false);
+            }
+                break;
             default:
             {
                 Logger.Error(LoggerTextsStorage.FatalLogicError("ProcessButtonYes"));
@@ -351,6 +400,11 @@ public class TeacherService
             case States.TeacherStates.HomeworkFinalStep:
             {
                 messageToSend = new MessageToSend(ReplyTextsStorage.Teacher.HomeworkNotCreated, false);
+            }
+                break;
+            case States.TeacherStates.InputNextLessonFinalStep:
+            {
+                messageToSend = new MessageToSend(ReplyTextsStorage.Teacher.NextLessonDateNotCreated, false);
             }
                 break;
             default:

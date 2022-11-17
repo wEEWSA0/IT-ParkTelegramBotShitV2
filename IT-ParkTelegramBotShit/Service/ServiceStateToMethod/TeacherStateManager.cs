@@ -34,7 +34,7 @@ public class TeacherStateManager
         _messageMethods[States.TeacherStates.EditGroupName] = teacherService.ProcessEditGroupName;
         _messageMethods[States.TeacherStates.EditGroupInviteCode] = teacherService.ProcessEditGroupInviteCode;
         _messageMethods[States.TeacherStates.InputHomework] = teacherService.ProcessInputHomework;
-        _messageMethods[States.TeacherStates.InputHomework] = teacherService.ProcessInputHomework;
+        _messageMethods[States.TeacherStates.InputNextLesson] = teacherService.ProcessInputNextLesson;
         
         _callbackMethods =
             new Dictionary<States.TeacherStates, Func<long, TransmittedData, string, MessageToSend>>();
@@ -49,6 +49,8 @@ public class TeacherStateManager
         _callbackMethods[States.TeacherStates.EditGroupInviteCodeFinalStep] = ProcessStaticButtons;
         _callbackMethods[States.TeacherStates.ChooseGroupForHomework] = teacherService.ProcessChooseGroupForHomework;
         _callbackMethods[States.TeacherStates.HomeworkFinalStep] = ProcessStaticButtons;
+        _callbackMethods[States.TeacherStates.ChooseGroupForNextLesson] = teacherService.ProcessChooseGroupForNextLesson;
+        _callbackMethods[States.TeacherStates.InputNextLessonFinalStep] = ProcessStaticButtons;
         #endregion
         #region StaticButtons
         _staticButtonsMethods = new Dictionary<string, Func<long, TransmittedData, MessageToSend>>();

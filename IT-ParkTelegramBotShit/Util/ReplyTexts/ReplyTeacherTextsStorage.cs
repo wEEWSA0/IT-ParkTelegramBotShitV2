@@ -81,10 +81,14 @@ public class ReplyTeacherTextsStorage
         "В какой группе указать дату занятия?";
     
     public readonly string InputNextLessonDate = 
-        "Введите полную дату следующего занятия";
+        "Введите полную дату следующего занятия" +
+        $"\nв формате (дата время - 01.01.0001 0:00:00)";
     
     public readonly string NextLessonDateCreated = 
         "Следующее занятие назначено";
+    
+    public readonly string NextLessonDateNotCreated = 
+        "Следующее занятие не назначено";
     
     public string GetNewNextLessonDateView(string date)
     {
