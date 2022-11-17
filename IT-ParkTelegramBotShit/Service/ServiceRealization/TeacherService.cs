@@ -147,7 +147,7 @@ public class TeacherService
         return new MessageToSend(response, false);
     }
 
-    public MessageToSend ProcessEditGroupName(long chatId, TransmittedData transmittedData, string request)
+    public MessageToSend ProcessEditGroupName(long chatId, TransmittedData transmittedData, string request)         //
     {
         string response = GetReplyFinalStepText(ReplyTextsStorage.Teacher.GetNewGroupNameView(request));
         
