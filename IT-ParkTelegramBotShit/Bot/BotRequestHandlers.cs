@@ -31,7 +31,7 @@ public class BotRequestHandlers
                 {
                     chatId = update.Message.Chat.Id;
                     
-                    messageManager.GetHistory(chatId).AddMessage(update.Message);
+                    messageManager.GetHistory(chatId).AddMessageId(update.Message.MessageId);
                     
                     Logger.Info($"Принято входящее сообщение: chatId = {chatId}, UpdateType.Message");
                     
@@ -66,8 +66,8 @@ public class BotRequestHandlers
             sender.AddMessageToStack(messageToSend);
             
             var messages = sender.SendAllMessages();
-            
-            history.AddMessages(messages);
+
+            history.AddMessageListIds(messages);
             
             Logger.Info($"Отправлено ответное сообщение: chatId = {chatId}");
         }
