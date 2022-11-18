@@ -68,7 +68,7 @@ public class BotMessageHistory
         _messagesIds.Remove(lastMessageId);
         
         return _botClient.DeleteMessageAsync(
-            messageId: lastMessageId, // todo Возможна оптимизация Message (big class) to MessageId (int)
+            messageId: lastMessageId,
             chatId: _chatId,
             cancellationToken: _cancellationTokenSource.Token);
     }
