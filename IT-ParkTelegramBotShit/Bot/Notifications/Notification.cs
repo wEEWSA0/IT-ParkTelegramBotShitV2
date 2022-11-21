@@ -1,4 +1,5 @@
 using IT_ParkTelegramBotShit.DataBase;
+using IT_ParkTelegramBotShit.Util;
 using NLog;
 
 namespace IT_ParkTelegramBotShit.Bot.Messages.Notifications;
@@ -10,24 +11,22 @@ public class Notification
     public NotificationType Type { get; private set; }
     public MessageToSend Message { get; private set; }
     public DateTime Date { get; private set; }
-    
-    // todo добавить ConstantsStorage.SpecialValue
-    
+
     private List<long> _recieverList = new List<long>();
-    private BotMessageSender _messageSender; //private BotMessageManager.GetInstance().GetSender(ConstantsStorage.SpecialValue)
-    
+    private BotNotificationSender _notificationSender;
+
     public Notification(MessageToSend message, DateTime date)
     {
         Type = NotificationType.OneTime;
         Message = message;
         Date = date;
+        
+        _notificationSender = BotNotificationSender.GetInstance();
     }
-    
-    public Notification(MessageToSend message, DateTime date, NotificationType type) // todo вспомнить base
+
+    public Notification(MessageToSend message, DateTime date, NotificationType type) : this(message, date)
     {
         Type = type;
-        Message = message;
-        Date = date;
     }
 
     public void AddReciever(long chatId)
@@ -42,16 +41,26 @@ public class Notification
         _recieverList.Add(chatId);
     }
     
+    public void AddRecieverList(List<long> recieverList)
+    {
+        for (int i = 0; i < recieverList.Count; i++)
+        {
+            AddReciever(recieverList[i]);
+        }
+    }
+    
     public void Send()
     {
         if (_recieverList.Count == 0)
         {
             throw new NotImplementedException();
         }
-
+        
+        // todo жестокие тесты на 1000-и запросов (почти 100% шанс на поломку)
+        
         for (int i = 0; i < _recieverList.Count; i++)
         {
-            // todo отправка
+            _notificationSender.SendNotificationMessage(Message, _recieverList[i]);
         }
     }
 }

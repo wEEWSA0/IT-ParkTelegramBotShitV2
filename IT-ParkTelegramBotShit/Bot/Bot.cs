@@ -23,6 +23,12 @@ public class Bot
             throw new Exception("Not working, error");
         }
         
+        if (!BotNotificationSender.Create(_botClient, _cancellationTokenSource))
+        {
+            Logger.Error("Problems with BotNotificationSender.Create");
+            throw new Exception("Not working, error");
+        }
+        
         Logger.Debug("Выполнена инициализация TelegramBotClient");
     }
 
