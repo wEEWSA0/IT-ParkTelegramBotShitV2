@@ -13,7 +13,15 @@ public class BotNotificationSystem
     
     private BotNotificationSystem()
     {
+        // Объявление системы ТЕСТИРОВАНИЕ
+
+        var message = new MessageToSend("Тестирование");
         
+        DateTime date = DateTime.Now;
+        
+        AddNotification(new Notification(message, date));
+        
+        CheckNotifications(); // todo Найти, куда встроить проверку уведомлений
     }
     
     public static BotNotificationSystem GetInstance()
@@ -26,8 +34,6 @@ public class BotNotificationSystem
         return _notificationSystem;
     }
     
-    // todo BotNotificationSystem class
-
     public void AddNotification(Notification notification)
     {
         // возможна проверка на уникальность с Warn
@@ -35,5 +41,16 @@ public class BotNotificationSystem
         _notifications.Add(notification);
     }
     
-    // CheckNotifications()
+    public void CheckNotifications()
+    {
+        for (int i = 0; i < _notifications.Count; i++)
+        {
+            var notification = _notifications[i];
+
+            if (notification.Date <= DateTime.Now)
+            {
+                notification.Send();
+            }
+        }
+    }
 }

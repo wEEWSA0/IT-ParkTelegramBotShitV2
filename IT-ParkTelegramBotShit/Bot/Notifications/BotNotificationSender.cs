@@ -43,9 +43,16 @@ public class BotNotificationSender
 
         return false;
     }
-
-    public Message SendNotificationMessage(MessageToSend message, long chatId)
-    { 
+    
+    public void SendNotificationMessage(MessageToSend messageToSend, long chatId)
+    {
+        Message message = SendMessage(messageToSend, chatId);
+        
+        BotMessageManager.GetInstance().GetHistory(chatId).AddMessageId(message.MessageId);
+    }
+    
+    private Message SendMessage(MessageToSend message, long chatId)
+    {
         Task<Message> task = _botClient.SendTextMessageAsync(
             chatId: chatId,
             text: message.Text,

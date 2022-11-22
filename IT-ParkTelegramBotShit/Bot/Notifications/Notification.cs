@@ -53,7 +53,8 @@ public class Notification
     {
         if (_recieverList.Count == 0)
         {
-            throw new NotImplementedException();
+            Logger.Error("Нельзя отправить уведомление 0 пользователям");
+            throw new Exception();
         }
         
         // todo жестокие тесты на 1000-и запросов (почти 100% шанс на поломку)
