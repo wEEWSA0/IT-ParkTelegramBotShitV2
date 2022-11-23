@@ -1,9 +1,9 @@
-namespace IT_ParkTelegramBotShit.Bot.Messages.Notifications;
+namespace IT_ParkTelegramBotShit.Bot.Notifications;
 
 public enum NotificationType
 {
     OneTime,
-    Regular,
+    Regular/*,
     UntilAction,
-    WhileAction
+    WhileAction*/
 }

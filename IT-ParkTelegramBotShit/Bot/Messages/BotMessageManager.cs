@@ -1,7 +1,7 @@
 using NLog;
 using Telegram.Bot;
 
-namespace IT_ParkTelegramBotShit.Bot.Messages;
+namespace IT_ParkTelegramBotShit.Bot;
 
 public class BotMessageManager
 {

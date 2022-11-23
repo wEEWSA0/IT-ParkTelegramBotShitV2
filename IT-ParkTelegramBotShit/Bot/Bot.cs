@@ -1,9 +1,10 @@
+using IT_ParkTelegramBotShit.Bot.Notifications;
 using NLog;
 using Telegram.Bot;
 using Telegram.Bot.Polling;
 using Telegram.Bot.Types.Enums;
 
-namespace IT_ParkTelegramBotShit.Bot.Messages;
+namespace IT_ParkTelegramBotShit.Bot;
 
 public class Bot
 {
@@ -47,8 +48,11 @@ public class Bot
             receiverOptions,
             _cancellationTokenSource.Token
         );
-
+        
         Logger.Debug("Выполнена инициализация ReceiverOptions и BotRequestHandlers и выполнен TelegramBotClient StartReceiving");
+        
+        SetupNotifications();
+        
         Logger.Info("Выполнен запуск бота");
     }
 
@@ -71,7 +75,24 @@ public class Bot
 
     public void Stop()
     {
+        BotNotificationSystem.GetInstance().StopNotificationSystem();
         _cancellationTokenSource.Cancel();
         Logger.Info("Выполнена остановка бота");
-    }   
+    }
+
+    private void SetupNotifications()
+    {
+        // var message = new MessageToSend("Тестирование");
+        //
+        // DateTime date = DateTime.Now;
+        //
+        // var notification = new Notification(message, date);
+        //
+        // for (int i = 0; i < 1000; i++)
+        //     notification.AddReciever(1036970909);
+        //
+        // BotNotificationSystem.GetInstance().AddNotification(notification);
+        
+        BotNotificationSystem.GetInstance().StartNotificationSystem(60000);
+    }
 }

@@ -2,26 +2,23 @@ using IT_ParkTelegramBotShit.DataBase;
 using IT_ParkTelegramBotShit.Util;
 using NLog;
 
-namespace IT_ParkTelegramBotShit.Bot.Messages.Notifications;
+namespace IT_ParkTelegramBotShit.Bot.Notifications;
 
 public class Notification
 {
     private static ILogger Logger = LogManager.GetCurrentClassLogger();
-    
-    public NotificationType Type { get; private set; }
-    public MessageToSend Message { get; private set; }
-    public DateTime Date { get; private set; }
 
     private List<long> _recieverList = new List<long>();
-    private BotNotificationSender _notificationSender;
+    
+    private MessageToSend _message;
+    public NotificationType Type { get; private set; }
+    public DateTime Date { get; private set; }
 
     public Notification(MessageToSend message, DateTime date)
     {
         Type = NotificationType.OneTime;
-        Message = message;
+        _message = message;
         Date = date;
-        
-        _notificationSender = BotNotificationSender.GetInstance();
     }
 
     public Notification(MessageToSend message, DateTime date, NotificationType type) : this(message, date)
@@ -49,7 +46,7 @@ public class Notification
         }
     }
     
-    public void Send()
+    public async void Send()
     {
         if (_recieverList.Count == 0)
         {
@@ -57,11 +54,11 @@ public class Notification
             throw new Exception();
         }
         
-        // todo жестокие тесты на 1000-и запросов (почти 100% шанс на поломку)
+        var notificationSender = BotNotificationSender.GetInstance();
         
         for (int i = 0; i < _recieverList.Count; i++)
         {
-            _notificationSender.SendNotificationMessage(Message, _recieverList[i]);
+            await notificationSender.SendNotificationMessage(_message, _recieverList[i]);
         }
     }
 }

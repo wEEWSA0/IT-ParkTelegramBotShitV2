@@ -1,5 +1,5 @@
-using IT_ParkTelegramBotShit.Bot.Messages;
-using IT_ParkTelegramBotShit.Bot.Messages.Buttons;
+using IT_ParkTelegramBotShit.Bot;
+using IT_ParkTelegramBotShit.Bot.Buttons;
 using IT_ParkTelegramBotShit.DataBase;
 using IT_ParkTelegramBotShit.DataBase.Entities;
 using IT_ParkTelegramBotShit.Router.Transmitted;

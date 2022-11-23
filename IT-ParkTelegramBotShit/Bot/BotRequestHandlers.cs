@@ -5,7 +5,7 @@ using Telegram.Bot.Exceptions;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 
-namespace IT_ParkTelegramBotShit.Bot.Messages;
+namespace IT_ParkTelegramBotShit.Bot;
 
 public class BotRequestHandlers
 {

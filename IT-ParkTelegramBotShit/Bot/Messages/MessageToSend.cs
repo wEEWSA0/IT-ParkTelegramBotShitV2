@@ -1,7 +1,7 @@
 using IT_ParkTelegramBotShit.Util;
 using Telegram.Bot.Types.ReplyMarkups;
 
-namespace IT_ParkTelegramBotShit.Bot.Messages;
+namespace IT_ParkTelegramBotShit.Bot;
 
 public class MessageToSend
 {

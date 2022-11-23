@@ -1,9 +1,10 @@
+using IT_ParkTelegramBotShit.Util;
 using NLog;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.ReplyMarkups;
 
-namespace IT_ParkTelegramBotShit.Bot.Messages;
+namespace IT_ParkTelegramBotShit.Bot;
 
 public class BotNotificationSender
 {
@@ -44,21 +45,25 @@ public class BotNotificationSender
         return false;
     }
     
-    public void SendNotificationMessage(MessageToSend messageToSend, long chatId)
+    public async Task<Message> SendNotificationMessage(MessageToSend messageToSend, long chatId)
     {
-        Message message = SendMessage(messageToSend, chatId);
+        Task<Message> task = SendMessage(messageToSend, chatId);
+        
+        Message message = task.Result;
         
         BotMessageManager.GetInstance().GetHistory(chatId).AddMessageId(message.MessageId);
+        
+        await Task.Run(() => Thread.Sleep(ConstantsStorage.ThreadSleepBetweenSendMessages));
+        
+        return task.Result;
     }
     
-    private Message SendMessage(MessageToSend message, long chatId)
+    private Task<Message> SendMessage(MessageToSend message, long chatId)
     {
-        Task<Message> task = _botClient.SendTextMessageAsync(
+        return _botClient.SendTextMessageAsync(
             chatId: chatId,
             text: message.Text,
             replyMarkup: message.InlineKeyboardMarkup,
             cancellationToken: _cancellationTokenSource.Token);
-
-        return task.Result;
     }
 }

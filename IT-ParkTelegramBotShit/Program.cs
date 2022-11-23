@@ -1,4 +1,4 @@
-﻿using IT_ParkTelegramBotShit.Bot.Messages;
+﻿using IT_ParkTelegramBotShit.Bot;
 
 Bot bot = new Bot();
 bot.Start();
