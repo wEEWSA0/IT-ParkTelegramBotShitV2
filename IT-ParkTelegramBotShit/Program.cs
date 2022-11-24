@@ -10,4 +10,7 @@ Console.ReadKey();
 
 bot.Stop();
 
+// Console.WriteLine("Preparing to stop bot");
+
+Console.ReadKey();
 Console.WriteLine("Bot stopped");

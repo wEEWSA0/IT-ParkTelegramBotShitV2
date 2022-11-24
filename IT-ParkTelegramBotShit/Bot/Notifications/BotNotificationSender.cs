@@ -1,5 +1,6 @@
 using IT_ParkTelegramBotShit.Util;
 using NLog;
+using NLog.Fluent;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.ReplyMarkups;
@@ -38,7 +39,7 @@ public class BotNotificationSender
         if (_notificationSender == null)
         {
             _notificationSender = new BotNotificationSender(client, token);
-
+            Logger.Debug("BotNotificationSender is initialized");
             return true;
         }
 

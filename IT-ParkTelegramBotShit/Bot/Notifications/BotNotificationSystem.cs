@@ -3,7 +3,7 @@ using IT_ParkTelegramBotShit.Bot.Notifications;
 using NLog;
 using NLog.Fluent;
 
-public class BotNotificationSystem // todo сделать/проверить все логеры; использовать систему по назначению
+public class BotNotificationSystem // todo использовать систему по назначению
 {
     private static ILogger Logger = LogManager.GetCurrentClassLogger();
     private static BotNotificationSystem _notificationSystem;
@@ -24,6 +24,7 @@ public class BotNotificationSystem // todo сделать/проверить в�
         if (_notificationSystem == null)
         {
             _notificationSystem = new BotNotificationSystem();
+            Logger.Debug("BotNotificationSystem is initialized");
         }
         
         return _notificationSystem;
@@ -50,7 +51,7 @@ public class BotNotificationSystem // todo сделать/проверить в�
         {
             if (_checkingNotifications.Status != TaskStatus.RanToCompletion)
             {
-                Logger.Error("");
+                Logger.Error("NotificationSystem has some undeifined errors");
                 return;
             }
         }

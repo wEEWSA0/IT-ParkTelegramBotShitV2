@@ -44,7 +44,7 @@ public class BotMessageHistory
         }
     }
     
-    public async void DeleteAllMessages()
+    public async Task DeleteAllMessages()
     {
         List<int> messagesToDelete = new List<int>(_messagesIds);
         

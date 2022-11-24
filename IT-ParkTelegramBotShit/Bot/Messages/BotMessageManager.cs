@@ -39,7 +39,7 @@ public class BotMessageManager
         if (_messageManager == null)
         {
             _messageManager = new BotMessageManager(client, token);
-
+            Logger.Debug("BotMessageManager is initialized");
             return true;
         }
 
@@ -64,5 +64,10 @@ public class BotMessageManager
         }
         
         return _messageHistorie[chatId];
+    }
+
+    public List<long> GetAllHistoryKeys()
+    {
+        return new List<long>(_messageHistorie.Keys.ToList());
     }
 }

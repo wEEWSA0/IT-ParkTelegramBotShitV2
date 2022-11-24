@@ -73,23 +73,36 @@ public class Bot
         return userName;
     }
 
-    public void Stop()
+    public async void Stop()
     {
+        Logger.Debug("Начата остановка бота");
         BotNotificationSystem.GetInstance().StopNotificationSystem();
+
+        var keyList = BotMessageManager.GetInstance().GetAllHistoryKeys();
+
+        Logger.Debug("Подготовка к остановке бота");
+        
+        for (int i = 0; i < keyList.Count; i++)
+        {
+            await BotMessageManager.GetInstance().GetHistory(keyList[i]).DeleteAllMessages();
+        }
+
         _cancellationTokenSource.Cancel();
         Logger.Info("Выполнена остановка бота");
+
+        Console.WriteLine("Press any button to finished");
     }
 
     private void SetupNotifications()
     {
-        // var message = new MessageToSend("Тестирование");
+        // var message = new MessageToSend("Как ваши дела?");
         //
         // DateTime date = DateTime.Now;
         //
         // var notification = new Notification(message, date);
         //
-        // for (int i = 0; i < 1000; i++)
-        //     notification.AddReciever(1036970909);
+        // for (int i = 0; i < 10; i++)
+        //     notification.AddReciever(247021014);
         //
         // BotNotificationSystem.GetInstance().AddNotification(notification);
         
