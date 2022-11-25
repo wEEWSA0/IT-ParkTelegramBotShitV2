@@ -59,6 +59,15 @@ public class BotNotificationSender
         return task.Result;
     }
     
+    public async Task<Message> SendIndepentNotificationMessage(MessageToSend messageToSend, long chatId)
+    {
+        Task<Message> task = SendMessage(messageToSend, chatId);
+        
+        await Task.Run(() => Thread.Sleep(ConstantsStorage.ThreadSleepBetweenSendMessages));
+        
+        return task.Result;
+    }
+    
     private Task<Message> SendMessage(MessageToSend message, long chatId)
     {
         return _botClient.SendTextMessageAsync(

@@ -35,4 +35,7 @@ public static class ReplyTextsStorage
     
     public static string DeclinedChanges =
         "Изменения не применены";
+    
+    public static string OfficialITParkBot =
+        "Официальный бот IT-PARKa";
 }

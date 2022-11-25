@@ -1,5 +1,6 @@
 using IT_ParkTelegramBotShit.Bot;
 using IT_ParkTelegramBotShit.Bot.Buttons;
+using IT_ParkTelegramBotShit.Bot.Notifications;
 using IT_ParkTelegramBotShit.DataBase;
 using IT_ParkTelegramBotShit.DataBase.Entities;
 using IT_ParkTelegramBotShit.Router.Transmitted;
@@ -24,7 +25,16 @@ public class StartedService
         else
         {
             transmittedData.State.GlobalState = States.GlobalStates.EnterCode;
-        
+            
+            // todo Переделать решение закрепленного сообщения
+            // Сообщение, необходимое для того, чтобы не пояалялась кнопка /start на Mac и Ios
+            
+            // Стоит за место данного решения использовать рассылку сообщений всем зареганым (ученики/учителя)
+            // когда бот включается, а когда выключается удалять это сообщение
+            var message = new MessageToSend(ReplyTextsStorage.OfficialITParkBot);
+
+            BotNotificationSender.GetInstance().SendIndepentNotificationMessage(message, chatId);
+            
             return new MessageToSend(ReplyTextsStorage.CmdStart, false);
         }
     }
