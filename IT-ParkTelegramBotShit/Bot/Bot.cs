@@ -1,4 +1,9 @@
 using IT_ParkTelegramBotShit.Bot.Notifications;
+using IT_ParkTelegramBotShit.DataBase;
+using IT_ParkTelegramBotShit.DataBase.Entities;
+using IT_ParkTelegramBotShit.Router;
+using IT_ParkTelegramBotShit.Router.Transmitted;
+using IT_ParkTelegramBotShit.Util;
 using NLog;
 using Telegram.Bot;
 using Telegram.Bot.Polling;
@@ -40,7 +45,8 @@ public class Bot
             AllowedUpdates = Array.Empty<UpdateType>()
         };
 
-        BotRequestHandlers botRequestHandlers = new BotRequestHandlers();
+        ChatsRouter chatsRouter = new ChatsRouter();
+        BotRequestHandlers botRequestHandlers = new BotRequestHandlers(chatsRouter);
 
         _botClient.StartReceiving(
             botRequestHandlers.HandleUpdateAsync,
@@ -51,8 +57,8 @@ public class Bot
         
         Logger.Debug("Выполнена инициализация ReceiverOptions и BotRequestHandlers и выполнен TelegramBotClient StartReceiving");
         
-        SetupNotifications();
-        
+        SetupNotifications(chatsRouter);
+
         Logger.Info("Выполнен запуск бота");
     }
 
@@ -93,19 +99,48 @@ public class Bot
         Console.WriteLine("Press any button to finished");
     }
 
-    private void SetupNotifications()
+    private void SetupNotifications(ChatsRouter chatsRouter)
     {
-        // var message = new MessageToSend("Как ваши дела?");
-        //
-        // DateTime date = DateTime.Now;
-        //
-        // var notification = new Notification(message, date);
-        //
-        // for (int i = 0; i < 10; i++)
-        //     notification.AddReciever(247021014);
-        //
-        // BotNotificationSystem.GetInstance().AddNotification(notification);
+        var teachersChatId = DbManager.GetInstance().TableTeachers.GetAllTeachersChatId();
+        
+        AuthorizationTeachers(teachersChatId, chatsRouter);
         
         BotNotificationSystem.GetInstance().StartNotificationSystem(60000);
+    }
+
+    private async void AuthorizationTeachers(List<long> teacherChatIdList, ChatsRouter chatsRouter)
+    {
+        var firstMessage = new MessageToSend(ReplyTextsStorage.OfficialITParkBot);
+
+        foreach (var chatId in teacherChatIdList)
+        {
+            await BotNotificationSender.GetInstance().SendAnchoredNotificationMessage(firstMessage, chatId);
+
+            AuthorizeTeacher(chatId, chatsRouter.GetUserTransmittedData(chatId));
+            var mainMenuMessage = GetAuthorizedTeacherMessage();
+            await BotNotificationSender.GetInstance().SendNotificationMessage(mainMenuMessage, chatId);
+        }
+    }
+
+    private void AuthorizeTeacher(long chatId, TransmittedData transmittedData)
+    {
+        transmittedData.State.GlobalState = States.GlobalStates.Other;
+        transmittedData.State.TeacherState = States.TeacherStates.MainMenu;
+
+        if (!DbManager.GetInstance().TableTeachers.TryGetTeacherByChatId(out Teacher teacher, chatId))
+        {
+            Logger.Error(LoggerTextsStorage.FatalLogicError("AuthorizeTeacher"));
+            throw new Exception();
+        }
+        
+        transmittedData.DataStorage.Add(ConstantsStorage.TeacherId, teacher.Id);
+    }
+
+    private MessageToSend GetAuthorizedTeacherMessage()
+    {
+        string response = ReplyTextsStorage.MainMenu;
+        var keyboard = ReplyKeyboardsStorage.Teacher.MainMenu;
+
+        return new MessageToSend(response, keyboard);
     }
 }

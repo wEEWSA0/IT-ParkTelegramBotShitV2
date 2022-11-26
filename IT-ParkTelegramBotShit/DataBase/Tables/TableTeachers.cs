@@ -12,11 +12,11 @@ public class TableTeachers
         _connection = connection;
     }
     
-    public List<Teacher> GetTeachers() // не используется
+    public List<long> GetAllTeachersChatId()
     {
-        List<Teacher> teachers = new List<Teacher>();
+        List<long> teacherIds = new List<long>();
 
-        string sqlRequest = $"SELECT name, invite_code FROM teachers";
+        string sqlRequest = $"SELECT chat_id FROM teachers";
 
         NpgsqlCommand command = new NpgsqlCommand(sqlRequest, _connection);
 
@@ -24,16 +24,23 @@ public class TableTeachers
 
         while (dataReader.Read())
         {
-            string name = dataReader.GetString(dataReader.GetOrdinal("name"));
-            string code = dataReader.GetString(dataReader.GetOrdinal("invite_code"));
+            int ordinal = dataReader.GetOrdinal("chat_id");
 
-            // NOT WORKING
-            //teachers.Add(new Teacher(name, code));
+            bool isNull = dataReader.GetValue(ordinal) == DBNull.Value;
+
+            if (isNull)
+            {
+                continue;
+            }
+            
+            long chatId = dataReader.GetInt64(ordinal);
+            
+            teacherIds.Add(chatId);
         }
 
         dataReader.Close();
 
-        return teachers;
+        return teacherIds;
     }
 
     public bool TryGetTeacherByChatId(out Teacher teacher, long chatId)

@@ -32,8 +32,8 @@ public class StartedService
             // Стоит за место данного решения использовать рассылку сообщений всем зареганым (ученики/учителя)
             // когда бот включается, а когда выключается удалять это сообщение
             var message = new MessageToSend(ReplyTextsStorage.OfficialITParkBot);
-
-            BotNotificationSender.GetInstance().SendIndepentNotificationMessage(message, chatId);
+            
+            BotNotificationSender.GetInstance().SendAnchoredNotificationMessage(message, chatId);
             
             return new MessageToSend(ReplyTextsStorage.CmdStart, false);
         }

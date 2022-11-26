@@ -14,10 +14,15 @@ public class Notification
     public NotificationType Type { get; private set; }
     public DateTime Date { get; private set; }
 
-    public Notification(MessageToSend message, DateTime date)
+    public Notification(MessageToSend message)
     {
         Type = NotificationType.OneTime;
         _message = message;
+        Date = DateTime.Now;
+    }
+    
+    public Notification(MessageToSend message, DateTime date) : this(message)
+    {
         Date = date;
     }
 

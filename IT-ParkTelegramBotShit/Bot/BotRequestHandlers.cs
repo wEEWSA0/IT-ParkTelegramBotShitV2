@@ -12,9 +12,9 @@ public class BotRequestHandlers
     private static ILogger Logger = LogManager.GetCurrentClassLogger();
     private ChatsRouter _chatsRouter;
 
-    public BotRequestHandlers()
+    public BotRequestHandlers(ChatsRouter chatsRouter)
     {
-        _chatsRouter = new ChatsRouter();
+        _chatsRouter = chatsRouter;
     }
 
     public async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update,
@@ -65,7 +65,7 @@ public class BotRequestHandlers
             
             sender.AddMessageToStack(messageToSend);
             
-            var messages = sender.SendAllMessages();
+            var messages = sender.SendAllMessages().Result;
 
             history.AddMessageListIds(messages);
             

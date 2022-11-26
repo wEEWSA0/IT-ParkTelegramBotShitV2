@@ -59,9 +59,13 @@ public class BotNotificationSender
         return task.Result;
     }
     
-    public async Task<Message> SendIndepentNotificationMessage(MessageToSend messageToSend, long chatId)
+    public async Task<Message> SendAnchoredNotificationMessage(MessageToSend messageToSend, long chatId)
     {
         Task<Message> task = SendMessage(messageToSend, chatId);
+        
+        Message message = task.Result;
+        
+        BotMessageManager.GetInstance().GetHistory(chatId).AddAnchoredMessagesId(message.MessageId);
         
         await Task.Run(() => Thread.Sleep(ConstantsStorage.ThreadSleepBetweenSendMessages));
         

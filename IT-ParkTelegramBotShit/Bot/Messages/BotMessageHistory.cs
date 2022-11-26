@@ -7,7 +7,8 @@ namespace IT_ParkTelegramBotShit.Bot;
 public class BotMessageHistory
 {
     private static BotMessageHistory _messageHistory;
-    private List<int> _messagesIds;
+    private List<int> _ordinaryMessagesIds;
+    private List<int> _anchoredMessagesIds;
     
     private TelegramBotClient _botClient;
     private CancellationTokenSource _cancellationTokenSource;
@@ -16,23 +17,32 @@ public class BotMessageHistory
 
     public BotMessageHistory(TelegramBotClient client, CancellationTokenSource token, long chatId)
     {
-        _messagesIds = new List<int>();
+        _ordinaryMessagesIds = new List<int>();
+        _anchoredMessagesIds = new List<int>();
 
         _chatId = chatId;
         _botClient = client;
         _cancellationTokenSource = token;
     }
-    
+
     public void AddMessageId(int messageId)
     {
-        _messagesIds.Add(messageId);
+        _ordinaryMessagesIds.Add(messageId);
     }
-    
+
+    public void AddAnchoredMessagesId(params int[] messagesId)
+    {
+        for (int i = 0; i < messagesId.Length; i++)
+        {
+            _anchoredMessagesIds.Add(messagesId[i]);
+        }
+    }
+
     public void AddMessagesIds(params int[] messagesId)
     {
         for (int i = 0; i < messagesId.Length; i++)
         {
-            _messagesIds.Add(messagesId[i]);
+            _ordinaryMessagesIds.Add(messagesId[i]);
         }
     }
     
@@ -40,32 +50,36 @@ public class BotMessageHistory
     {
         for (int i = 0; i < messageList.Count; i++)
         {
-            _messagesIds.Add(messageList[i].MessageId);
+            _ordinaryMessagesIds.Add(messageList[i].MessageId);
         }
+    }
+    
+    public async Task DeleteAllOrdinaryMessages()
+    {
+        await DeleteMessages(_ordinaryMessagesIds);
+        
+        _ordinaryMessagesIds.Clear();
     }
     
     public async Task DeleteAllMessages()
     {
-        List<int> messagesToDelete = new List<int>(_messagesIds);
+        await DeleteAllOrdinaryMessages();
         
-        _messagesIds.Clear();
+        await DeleteMessages(_anchoredMessagesIds);
         
-        for (int i = 0; i < messagesToDelete.Count; i++)
-        {
-            await DeleteMessage(messagesToDelete[i]);
-        }
+        _anchoredMessagesIds.Clear();
     }
     
     public Task DeleteLastMessage()
     {
-        if (_messagesIds.Count < 1)
+        if (_ordinaryMessagesIds.Count < 1)
         {
             throw new Exception("Messages count < 1");
         }
 
-        int lastMessageId = _messagesIds[_messagesIds.Count - 1];
+        int lastMessageId = _ordinaryMessagesIds[_ordinaryMessagesIds.Count - 1];
         
-        _messagesIds.Remove(lastMessageId);
+        _ordinaryMessagesIds.Remove(lastMessageId);
         
         return _botClient.DeleteMessageAsync(
             messageId: lastMessageId,
@@ -79,5 +93,15 @@ public class BotMessageHistory
             messageId: messageId,
             chatId: _chatId,
             cancellationToken: _cancellationTokenSource.Token);
+    }
+
+    private async Task DeleteMessages(List<int> messageIdList)
+    {
+        List<int> messageIdsToDelete = new List<int>(messageIdList);
+        
+        for (int i = 0; i < messageIdsToDelete.Count; i++)
+        {
+            await DeleteMessage(messageIdsToDelete[i]);
+        }
     }
 }

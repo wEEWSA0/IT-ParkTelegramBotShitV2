@@ -47,7 +47,7 @@ public class BotMessageSender
         _messagesToSend.Enqueue(message);
     }
 
-    public List<Message> SendAllMessages()
+    public async Task<List<Message>> SendAllMessages()
     {
         List<Message> messages = new List<Message>();
         
@@ -57,7 +57,7 @@ public class BotMessageSender
             
             if (!messageToSend.IsLastMessagesHistoryNeeded)
             {
-                _history.DeleteAllMessages();
+                await _history.DeleteAllOrdinaryMessages();
             }
             
             Message message = SendMessage(messageToSend);

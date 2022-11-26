@@ -51,7 +51,7 @@ public class ChatsRouter
         return messageToSend;
     }
     
-    private TransmittedData GetUserTransmittedData(long chatId)
+    public TransmittedData GetUserTransmittedData(long chatId)
     {
         if (!_chatTransmittedDataPairs.ContainsKey(chatId))
         {
