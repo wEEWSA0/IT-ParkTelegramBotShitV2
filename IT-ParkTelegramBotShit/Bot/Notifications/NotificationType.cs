@@ -1,6 +1,6 @@
 namespace IT_ParkTelegramBotShit.Bot.Notifications;
 
-public enum NotificationType
+public enum NotificationType // todo notification type functional realization
 {
     OneTime,
     Regular,

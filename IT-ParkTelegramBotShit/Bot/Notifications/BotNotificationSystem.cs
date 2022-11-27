@@ -3,7 +3,7 @@ using IT_ParkTelegramBotShit.Bot.Notifications;
 using NLog;
 using NLog.Fluent;
 
-public class BotNotificationSystem // todo использовать систему по назначению
+public class BotNotificationSystem
 {
     private static ILogger Logger = LogManager.GetCurrentClassLogger();
     private static BotNotificationSystem _notificationSystem;
@@ -32,7 +32,10 @@ public class BotNotificationSystem // todo использовать систем
     
     public void AddNotification(Notification notification)
     {
-        // возможна проверка на уникальность с Warn
+        if (_notifications.Contains(notification))
+        {
+            Logger.Warn("Notification already added");
+        }
         
         _notifications.Add(notification);
     }

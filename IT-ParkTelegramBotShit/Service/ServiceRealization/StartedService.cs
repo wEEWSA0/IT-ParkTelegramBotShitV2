@@ -26,11 +26,6 @@ public class StartedService
         {
             transmittedData.State.GlobalState = States.GlobalStates.EnterCode;
             
-            // todo Переделать решение закрепленного сообщения
-            // Сообщение, необходимое для того, чтобы не пояалялась кнопка /start на Mac и Ios
-            
-            // Стоит за место данного решения использовать рассылку сообщений всем зареганым (ученики/учителя)
-            // когда бот включается, а когда выключается удалять это сообщение
             var message = new MessageToSend(ReplyTextsStorage.OfficialITParkBot);
             
             BotNotificationSender.GetInstance().SendAnchoredNotificationMessage(message, chatId);
