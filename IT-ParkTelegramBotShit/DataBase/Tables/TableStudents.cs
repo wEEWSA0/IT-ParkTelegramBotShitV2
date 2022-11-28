@@ -11,6 +11,37 @@ public class TableStudents
     {
         _connection = connection;
     }
+    
+    public List<long> GetAllStudentsChatId()
+    {
+        List<long> studentsChatId = new List<long>();
+
+        string sqlRequest = $"SELECT chat_id FROM students";
+
+        NpgsqlCommand command = new NpgsqlCommand(sqlRequest, _connection);
+
+        NpgsqlDataReader dataReader = command.ExecuteReader();
+
+        while (dataReader.Read())
+        {
+            int ordinal = dataReader.GetOrdinal("chat_id");
+
+            bool isNull = dataReader.GetValue(ordinal) == DBNull.Value;
+
+            if (isNull)
+            {
+                continue;
+            }
+            
+            long chatId = dataReader.GetInt64(ordinal);
+            
+            studentsChatId.Add(chatId);
+        }
+
+        dataReader.Close();
+
+        return studentsChatId;
+    }
 
     public bool TryGetStudentByChatId(out Student student, long chatId)
     {
@@ -50,6 +81,15 @@ public class TableStudents
     public void SetStudent(long chatId, int courseId, string name)
     {
         string sqlRequest = $"INSERT INTO students (chat_id, course_id, name) VALUES ({chatId}, {courseId}, '{name}')";
+        
+        NpgsqlCommand command = new NpgsqlCommand(sqlRequest, _connection);
+
+        command.ExecuteNonQuery();
+    }
+    
+    private void UpdateNameByChatId(int chatId, string name)
+    {
+        string sqlRequest = $"UPDATE students set name = '{name}' where chat_id = {chatId}";
         
         NpgsqlCommand command = new NpgsqlCommand(sqlRequest, _connection);
 

@@ -14,7 +14,8 @@ namespace IT_ParkTelegramBotShit.Bot;
 public class Bot
 {
     private static ILogger Logger = LogManager.GetCurrentClassLogger();
-
+    private const int CheckNotificationsDelay = 60000;
+    
     private TelegramBotClient _botClient;
     private CancellationTokenSource _cancellationTokenSource;
 
@@ -102,11 +103,15 @@ public class Bot
     private void SetupNotifications(ChatsRouter chatsRouter)
     {
         var teachersChatId = DbManager.GetInstance().TableTeachers.GetAllTeachersChatId();
-        
         AuthorizationTeachers(teachersChatId, chatsRouter);
         
-        BotNotificationSystem.GetInstance().StartNotificationSystem(60000);
+        var studentsChatId = DbManager.GetInstance().TableStudents.GetAllStudentsChatId();
+        AuthorizationStudents(studentsChatId, chatsRouter);
+        
+        BotNotificationSystem.GetInstance().StartNotificationSystem(CheckNotificationsDelay);
     }
+
+    #region Authorization
 
     private async void AuthorizationTeachers(List<long> teacherChatIdList, ChatsRouter chatsRouter)
     {
@@ -143,4 +148,42 @@ public class Bot
 
         return new MessageToSend(response, keyboard);
     }
+    
+    private async void AuthorizationStudents(List<long> studentsChatIdList, ChatsRouter chatsRouter)
+    {
+        var firstMessage = new MessageToSend(ReplyTextsStorage.OfficialITParkBot);
+
+        foreach (var chatId in studentsChatIdList)
+        {
+            await BotNotificationSender.GetInstance().SendAnchoredNotificationMessage(firstMessage, chatId);
+
+            AuthorizeStudent(chatId, chatsRouter.GetUserTransmittedData(chatId));
+            var mainMenuMessage = GetAuthorizedStudentMessage();
+            await BotNotificationSender.GetInstance().SendNotificationMessage(mainMenuMessage, chatId);
+        }
+    }
+    
+    private void AuthorizeStudent(long chatId, TransmittedData transmittedData)
+    {
+        transmittedData.State.GlobalState = States.GlobalStates.Other;
+        transmittedData.State.StudentState = States.StudentStates.MainMenu;
+        
+        if (!DbManager.GetInstance().TableStudents.TryGetStudentByChatId(out Student student, chatId))
+        {
+            Logger.Error(LoggerTextsStorage.FatalLogicError("AuthorizeStudent"));
+            throw new Exception();
+        }
+        
+        transmittedData.DataStorage.Add(ConstantsStorage.StudentCourseId, student.CourseId);
+    }
+
+    private MessageToSend GetAuthorizedStudentMessage()
+    {
+        string response = ReplyTextsStorage.MainMenu;
+        var keyboard = ReplyKeyboardsStorage.Student.MainMenu;
+
+        return new MessageToSend(response, keyboard);
+    }
+
+    #endregion
 }

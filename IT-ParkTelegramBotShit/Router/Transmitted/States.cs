@@ -14,7 +14,35 @@ public class States
     public enum StudentStates
     {
         None = 0,
-        MainMenu = 1
+        MainMenu = 1,
+        
+        #region NextLesson
+        
+        NextLesson = 10,
+        
+        SkipNextLesson = 100,
+        
+        #endregion
+        
+        #region Homework
+        
+        Homework = 20,
+        
+        #endregion
+        
+        #region Profile
+        
+        Profile = 30,
+        
+        QuitAccount = 300,
+        ChangeName = 301,
+        
+        InputNewName = 3010,
+        ChangeNameFinalStep = 30100,
+        
+        QuitAccountFinalStep = 3000
+
+        #endregion
     }
     
     public StudentStates StudentState;

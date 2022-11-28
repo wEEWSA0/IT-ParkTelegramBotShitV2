@@ -5,11 +5,11 @@ namespace IT_ParkTelegramBotShit.Util;
 public static class ReplyButtonsStorage
 {
     public static readonly TeacherReplyButtonsStorage Teacher = new TeacherReplyButtonsStorage();
+    public static readonly StudentReplyButtonsStorage Student = new StudentReplyButtonsStorage();
     
     public static InlineKeyboardButton MainMenu = InlineKeyboardButton.WithCallbackData("Главное меню", CallbackQueryStorage.MainMenu);
     public static InlineKeyboardButton Yes = InlineKeyboardButton.WithCallbackData("Да", CallbackQueryStorage.Yes);
     public static InlineKeyboardButton No = InlineKeyboardButton.WithCallbackData("Нет", CallbackQueryStorage.No);
-    //public static InlineKeyboardButton Logout = InlineKeyboardButton.WithCallbackData("Выйти", CallbackQueryStorage.Logout);
 }
 
 public class TeacherReplyButtonsStorage
@@ -36,5 +36,37 @@ public class TeacherReplyButtonsStorage
     public readonly InlineKeyboardButton EditGroupInviteCode = InlineKeyboardButton.WithCallbackData("Изменить код приглашения", _callbacks.EditGroupInviteCode);
     public readonly InlineKeyboardButton DeleteGroup = InlineKeyboardButton.WithCallbackData("Удалить группу", _callbacks.DeleteGroup);
 
+    #endregion
+}
+
+public class StudentReplyButtonsStorage
+{
+    private static StudentCallbackQueryStorage _callbacks = CallbackQueryStorage.Student;
+    
+    #region NextLesson
+    
+    public readonly InlineKeyboardButton NextLesson = InlineKeyboardButton.WithCallbackData("Следущее занятие", _callbacks.NextLesson);
+    public readonly InlineKeyboardButton SkipNextLesson = InlineKeyboardButton.WithCallbackData("Сообщить о пропуске занятия", _callbacks.SkipNextLesson);
+        
+    #endregion
+        
+    #region Homework
+        
+    public readonly InlineKeyboardButton Homework = InlineKeyboardButton.WithCallbackData("Домашнее задание", _callbacks.Homework);
+        
+    #endregion
+        
+    #region Profile
+        
+    public readonly InlineKeyboardButton Profile = InlineKeyboardButton.WithCallbackData("Профиль", _callbacks.Profile);
+    public readonly InlineKeyboardButton QuitAccount = InlineKeyboardButton.WithCallbackData("Выйти из профиля", _callbacks.QuitAccount);
+    public readonly InlineKeyboardButton ChangeName = InlineKeyboardButton.WithCallbackData("Поменять ФИО", _callbacks.ChangeName);
+    
+    #endregion
+        
+    #region Payment
+        
+    public readonly InlineKeyboardButton Payment = InlineKeyboardButton.WithUrl("Оплата", "https://itpark32.ru/profile");
+        
     #endregion
 }

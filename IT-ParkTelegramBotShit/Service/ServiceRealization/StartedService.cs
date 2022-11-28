@@ -59,8 +59,20 @@ public class StartedService
         }
         else if (DbManager.GetInstance().TableCourses.TryGetCourseByStudentInviteCode(out Course course, request))
         {
-            // ученик
-            response = ReplyTextsStorage.InDevelopment;
+            response = ReplyTextsStorage.MainMenu;
+            
+            transmittedData.State.GlobalState = States.GlobalStates.Other;
+            transmittedData.State.StudentState = States.StudentStates.MainMenu;
+            
+            transmittedData.DataStorage.Add(ConstantsStorage.StudentCourseId, course.Id); // записываем course id
+
+            keyboard = ReplyKeyboardsStorage.Student.MainMenu;
+
+            var logIntoAccountMessageToSend = new MessageToSend(ReplyTextsStorage.Student.LogIntoAccount, false);
+            
+            BotMessageManager.GetInstance().GetSender(chatId).AddMessageToStack(logIntoAccountMessageToSend);
+            
+            return new MessageToSend(response, keyboard);
         }
         else
         {
