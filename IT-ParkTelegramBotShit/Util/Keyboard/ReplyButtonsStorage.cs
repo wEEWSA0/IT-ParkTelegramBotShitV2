@@ -20,7 +20,7 @@ public class TeacherReplyButtonsStorage
 
     public readonly InlineKeyboardButton Groups = InlineKeyboardButton.WithCallbackData("Группы", _callbacks.Groups);
     public readonly InlineKeyboardButton AddHomework = InlineKeyboardButton.WithCallbackData("Назначить дз", _callbacks.AddHomework);
-    public readonly InlineKeyboardButton Profile = InlineKeyboardButton.WithCallbackData("Профиль (не трожь)", _callbacks.Profile);
+    public readonly InlineKeyboardButton Profile = InlineKeyboardButton.WithCallbackData("Профиль", _callbacks.Profile);
     public readonly InlineKeyboardButton AddNextLessonDate = InlineKeyboardButton.WithCallbackData("Назначить занятие (не трожь)", _callbacks.AddNextLessonDate);
 
     #endregion
@@ -35,6 +35,12 @@ public class TeacherReplyButtonsStorage
     public readonly InlineKeyboardButton EditGroupName = InlineKeyboardButton.WithCallbackData("Изменить название группы", _callbacks.EditGroupName);
     public readonly InlineKeyboardButton EditGroupInviteCode = InlineKeyboardButton.WithCallbackData("Изменить код приглашения", _callbacks.EditGroupInviteCode);
     public readonly InlineKeyboardButton DeleteGroup = InlineKeyboardButton.WithCallbackData("Удалить группу", _callbacks.DeleteGroup);
+
+    #endregion
+    #region Profile
+
+    public readonly InlineKeyboardButton EditName = InlineKeyboardButton.WithCallbackData("Изменить ФИО", _callbacks.EditName);
+    public readonly InlineKeyboardButton ProfileLogOut = InlineKeyboardButton.WithCallbackData("Выход из профиля", _callbacks.ProfileLogOut);
 
     #endregion
 }

@@ -65,7 +65,8 @@ public class TeacherService
     
     public MessageToSend ProcessInputNextLessonDate(long chatId, TransmittedData transmittedData, string request)   //из ввода к финалу
     {
-        DateTime dateTime/* = DateTime.Parse()*/;
+        DateTime dateTime = DateTime.Parse(request);
+        //DateTime dateTime/* = DateTime.Parse()*/;
         
         // todo Разбить метод на два:
         // Ввод даты с примером (следующий день)
@@ -73,7 +74,29 @@ public class TeacherService
         // 
         // В конце заключение
         
-        //transmittedData.DataStorage.Add(ConstantsStorage.NextLessonDate, dateTime);
+        transmittedData.DataStorage.Add(ConstantsStorage.NextLessonDate, dateTime);
+
+        transmittedData.State.TeacherState = States.TeacherStates.InputNextLessonTime;
+
+        var response = ReplyTextsStorage.Teacher.InputNextLessonTime(request);
+
+        return new MessageToSend(response, false);
+    }
+    
+    public MessageToSend ProcessInputNextLessonTime(long chatId, TransmittedData transmittedData, string request)   //из ввода к финалу
+    {
+        transmittedData.DataStorage.TryGet(ConstantsStorage.NextLessonDate, out Object lessonDate); //lessonDate - нужная дата (и ненужное время)
+
+        #region DateTime
+        
+        string lessonDateString = lessonDate.ToString();
+        DateTime dateDate = DateTime.Parse(lessonDateString);
+        DateTime dateTime = DateTime.Parse(request);    //datetime - введенное время (и ненужная дата)
+        //DateTime fullDateTime = new DateTime(dateDate.Year, dateDate.Month, dateDate.Day, dateTime.Hour, dateTime.Minute, 00);
+        
+        #endregion
+        
+        transmittedData.DataStorage.Add(ConstantsStorage.NextLessonDateFull, dateTime);
 
         transmittedData.State.TeacherState = States.TeacherStates.InputNextLessonFinalStep;
 
@@ -140,7 +163,7 @@ public class TeacherService
     
     public MessageToSend ProcessChooseGroupForNextLesson(long chatId, TransmittedData transmittedData, string request)    //
     {
-        string response = ReplyTextsStorage.Teacher.InputNextLessonDate;
+        string response = ReplyTextsStorage.Teacher.InputNextLessonDate(request);
 
         transmittedData.State.TeacherState = States.TeacherStates.InputNextLesson;
         
@@ -190,6 +213,42 @@ public class TeacherService
         
         return messageToSend;
     }
+    
+    /*public MessageToSend ProcessEditName(long chatId, TransmittedData transmittedData, string request)         //
+    {
+        string response = GetReplyFinalStepText(ReplyTextsStorage.Teacher.GetNewGroupNameView(request));
+        
+        if (InputGroupName(out MessageToSend messageToSend, request, response))
+        {
+            transmittedData.DataStorage.Add(ConstantsStorage.GroupName, request);
+            
+            transmittedData.State.TeacherState = States.TeacherStates.EditGroupNameFinalStep;
+            
+            var keyboard = ReplyKeyboardsStorage.FinalStep;
+        
+            return new MessageToSend(messageToSend.Text, keyboard);
+        }
+
+        return messageToSend;
+    }
+    
+    public MessageToSend ProcessProfileLogOut(long chatId, TransmittedData transmittedData, string request)         //
+    {
+        string response = GetReplyFinalStepText(ReplyTextsStorage.Teacher.GetNewGroupNameView(request));
+        
+        if (InputGroupName(out MessageToSend messageToSend, request, response))
+        {
+            transmittedData.DataStorage.Add(ConstantsStorage.GroupName, request);
+            
+            transmittedData.State.TeacherState = States.TeacherStates.EditGroupNameFinalStep;
+            
+            var keyboard = ReplyKeyboardsStorage.FinalStep;
+        
+            return new MessageToSend(messageToSend.Text, keyboard);
+        }
+
+        return messageToSend;
+    }*/
     
     #endregion
     #region ButtonsMethods
@@ -253,6 +312,42 @@ public class TeacherService
         
         transmittedData.State.TeacherState = States.TeacherStates.Groups;
         
+        return new MessageToSend(response, keyboard, false);
+    }
+    
+    public MessageToSend ProcessButtonProfile(long chatId, TransmittedData transmittedData)
+    {
+        string response = ReplyTextsStorage.Teacher.Profile;
+        
+        InlineKeyboardMarkup keyboard;
+
+        keyboard = BotKeyboardCreator.GetInstance()
+            .GetKeyboardMarkup(ReplyButtonsStorage.Teacher.EditName, ReplyButtonsStorage.Teacher.ProfileLogOut);
+        
+        transmittedData.State.TeacherState = States.TeacherStates.Groups;
+        
+        return new MessageToSend(response, keyboard, false);
+    }
+    
+    public MessageToSend ProcessButtonEditProfile(long chatId, TransmittedData transmittedData)
+    {
+        string response = ReplyTextsStorage.Teacher.EditName;
+
+        transmittedData.State.TeacherState = States.TeacherStates.ChooseGroupForHomework;
+
+        var keyboard = GetTeacherCoursesButtons(chatId, transmittedData.DataStorage);
+
+        return new MessageToSend(response, keyboard, false);
+    }
+    
+    public MessageToSend ProcessButtonProfileLogOut(long chatId, TransmittedData transmittedData)
+    {
+        string response = ReplyTextsStorage.Teacher.ProfileLogOut;
+
+        transmittedData.State.TeacherState = States.TeacherStates.LogOutFinalStep;     //подтверждение а затем None
+
+        var keyboard = GetTeacherCoursesButtons(chatId, transmittedData.DataStorage);
+
         return new MessageToSend(response, keyboard, false);
     }
     
@@ -345,7 +440,7 @@ public class TeacherService
         
                 if (!isHomeworkEnab || !isCourseEnab)
                 {
-                    Logger.Error(LoggerTextsStorage.FatalLogicError("ProcessInputGroupInviteCode"));
+                    Logger.Error(LoggerTextsStorage.FatalLogicError("ProcessInputHomework"));
                 }
                 
                 tableCourses.UpdateCourseHomework((string)homework, ((Course)course).Id);
@@ -357,14 +452,14 @@ public class TeacherService
             {
                 var tableCourses = DbManager.GetInstance().TableCourses;
                 
-                bool isDateNextLessonEnab = storage.TryGet(ConstantsStorage.Homework, out Object dateNextLesson); //homework исправить
+                bool isDateNextLessonEnab = storage.TryGet(ConstantsStorage.NextLessonDateFull, out Object dateNextLesson); //homework исправить
                 bool isCourseEnab = storage.TryGet(ConstantsStorage.Course, out Object course);
         
                 if (!isDateNextLessonEnab || !isCourseEnab)
                 {
-                    Logger.Error(LoggerTextsStorage.FatalLogicError("ProcessInputGroupInviteCode"));
+                    Logger.Error(LoggerTextsStorage.FatalLogicError("ProcessInputNextLessonTime либо ProcessInputNextLessonDate"));
                 }
-                
+
                 tableCourses.UpdateCourseNextLessonTime((DateTime)dateNextLesson, ((Course)course).Id);
                 
                 messageToSend = new MessageToSend(ReplyTextsStorage.Teacher.NextLessonDateCreated, false);

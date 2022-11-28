@@ -35,7 +35,7 @@ public class TeacherCallbackQueryStorage
     #endregion
     #region Profile
 
-    public readonly string QuiteAccount = "quint_account_callback_teacher";
+    public readonly string ProfileLogOut = "quint_account_callback_teacher";
     public readonly string EditName = "edit_name_callback_teacher";
 
     #endregion

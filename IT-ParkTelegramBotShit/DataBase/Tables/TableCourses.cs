@@ -31,10 +31,21 @@ public class TableCourses
         command.ExecuteNonQuery();
     }
     
+    public void UpdateTeacherName(string homework, int courseId)
+    {
+        string sqlRequest = $"UPDATE courses SET homework = '{homework}' WHERE id = {courseId}";
+        
+        NpgsqlCommand command = new NpgsqlCommand(sqlRequest, _connection);
+        
+        command.ExecuteNonQuery();
+    }
+    
     public void UpdateCourseNextLessonTime(DateTime nextLesson, int courseId)
     {
-        string sqlRequest = $"UPDATE courses SET next_lesson = {nextLesson} WHERE id = {courseId}";
+        string sqlFormattedDate = nextLesson.ToString("yyyy-MM-dd HH:mm:ss.fff");
         
+        string sqlRequest = $"UPDATE courses SET next_lesson = '{sqlFormattedDate}' WHERE id = {courseId}";
+
         NpgsqlCommand command = new NpgsqlCommand(sqlRequest, _connection);
         
         command.ExecuteNonQuery();

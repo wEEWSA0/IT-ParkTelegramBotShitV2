@@ -80,10 +80,26 @@ public class ReplyTeacherTextsStorage
     public readonly string GroupNextLesson =
         "В какой группе указать дату занятия?";
     
-    public readonly string InputNextLessonDate = 
-        "Введите полную дату следующего занятия" +
-        $"\nв формате (дата время - 01.01.0001 0:00:00)";
+    public static DateTime localDate = DateTime.Now;
+    public static string dateNow = localDate.ToShortDateString();
+    public static string timeNow = localDate.ToShortTimeString();
     
+    public string InputNextLessonDate(string date)
+    {
+        DateTime localDate = DateTime.Now;
+        dateNow = localDate.ToShortDateString();
+        return "Введите дату следующего занятия" +
+               $"\nв формате (время - {dateNow})";
+    }
+    
+    public string InputNextLessonTime(string date)
+    {
+        DateTime localDate = DateTime.Now;
+        timeNow = localDate.ToShortTimeString();
+        return "Введите время следующего занятия" +
+               $"\nв формате (время - {timeNow})";
+    }
+
     public readonly string NextLessonDateCreated = 
         "Следующее занятие назначено";
     
@@ -96,6 +112,32 @@ public class ReplyTeacherTextsStorage
                $"{date}"+
                $"\nНазначить?";
     }
+    
+    #endregion
+
+    #region Profile
+
+    public readonly string Profile =
+        "Профиль";
+    
+    public readonly string EditName =
+        "Введите новые ФИО";
+    
+    public string ProfileNewNameView(string name)
+    {
+        return $"Новые ФИО:"+
+               $"\n{name}" +
+               $"\n\nИзменить?";
+    }
+
+    public readonly string NameEdited =
+        "ФИО успешно изменены";
+    
+    public readonly string NameNotEdited =
+        "ФИО остались прежними";
+    
+    public readonly string ProfileLogOut =
+        "Вы действительно хотите выйти?";
     
     #endregion
 }

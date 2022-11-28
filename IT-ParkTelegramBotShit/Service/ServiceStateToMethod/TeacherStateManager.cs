@@ -35,6 +35,7 @@ public class TeacherStateManager
         _messageMethods[States.TeacherStates.EditGroupInviteCode] = teacherService.ProcessEditGroupInviteCode;
         _messageMethods[States.TeacherStates.InputHomework] = teacherService.ProcessInputHomework;
         _messageMethods[States.TeacherStates.InputNextLesson] = teacherService.ProcessInputNextLessonDate;
+        _messageMethods[States.TeacherStates.InputNextLessonTime] = teacherService.ProcessInputNextLessonTime;
         
         _callbackMethods =
             new Dictionary<States.TeacherStates, Func<long, TransmittedData, string, MessageToSend>>();
@@ -66,6 +67,10 @@ public class TeacherStateManager
 
         _staticButtonsMethods[CallbackQueryStorage.Teacher.AddHomework] = teacherService.ProcessButtonSetHomework;
         _staticButtonsMethods[CallbackQueryStorage.Teacher.AddNextLessonDate] = teacherService.ProcessButtonDateNextLesson;
+        
+        _staticButtonsMethods[CallbackQueryStorage.Teacher.Profile] = teacherService.ProcessButtonProfile;
+        _staticButtonsMethods[CallbackQueryStorage.Teacher.ProfileLogOut] = teacherService.ProcessButtonDateNextLesson;     //
+        _staticButtonsMethods[CallbackQueryStorage.Teacher.EditName] = teacherService.ProcessButtonDateNextLesson;          //
         #endregion
     }
     

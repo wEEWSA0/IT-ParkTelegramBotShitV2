@@ -83,18 +83,30 @@ public class States
 
         #region AddHomework
 
-        InputHomework = 30,
-        ChooseGroupForHomework = 300,
-        HomeworkFinalStep = 3000,
+        InputHomework = 20,
+        ChooseGroupForHomework = 200,
+        HomeworkFinalStep = 2000,
 
         #endregion
 
         #region DateNextLesson
 
-        InputNextLesson = 40,
-        ChooseGroupForNextLesson = 400,
-        InputNextLessonFinalStep = 4000
+        InputNextLesson = 30,
+        InputNextLessonTime = 300,
+        ChooseGroupForNextLesson = 3000,
+        InputNextLessonFinalStep = 30000,
 
+        #endregion
+        
+        #region Profile
+
+        Profile = 40,
+        
+        EditProfile = 400,
+        EditProfileFinalStep = 4000,
+        LogOut = 401,
+        LogOutFinalStep = 4010
+        
         #endregion
     }
     

@@ -27,6 +27,9 @@ public class ConstantsStorage
     public static string NextLessonDate =
         "next_lesson_date_data";
     
+    public static string NextLessonDateFull =
+        "next_lesson_date_data";
+    
     public static string StudentCourseId =
         "student_course_id_data";
 }
