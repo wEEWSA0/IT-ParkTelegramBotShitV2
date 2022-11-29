@@ -1,4 +1,5 @@
 using IT_ParkTelegramBotShit.DataBase.Entities;
+using NLog;
 using Npgsql;
 
 namespace IT_ParkTelegramBotShit.DataBase.Tables;
@@ -57,16 +58,25 @@ public class TableStudents
 
             return false;
         }
-        
-        long chat_id = dataReader.GetInt64(dataReader.GetOrdinal("chat_id"));
-        int course_id = dataReader.GetInt32(dataReader.GetOrdinal("course_id"));
-        string name = dataReader.GetString(dataReader.GetOrdinal("name"));
 
-        student = new Student(chat_id, course_id, name);
-        
-        dataReader.Close();
+        if (dataReader.Read())
+        {
+            long chat_id = dataReader.GetInt64(dataReader.GetOrdinal("chat_id"));
+            int course_id = dataReader.GetInt32(dataReader.GetOrdinal("course_id"));
+            string name = dataReader.GetString(dataReader.GetOrdinal("name"));
 
-        return true;
+            student = new Student(chat_id, course_id, name);
+            
+            dataReader.Close();
+            
+            return true;
+        }
+        else
+        {
+            dataReader.Close();
+            
+            throw new Exception();
+        }
     }
     
     public void SetStudent(Student student)
@@ -90,6 +100,17 @@ public class TableStudents
     private void UpdateNameByChatId(int chatId, string name)
     {
         string sqlRequest = $"UPDATE students set name = '{name}' where chat_id = {chatId}";
+        
+        NpgsqlCommand command = new NpgsqlCommand(sqlRequest, _connection);
+
+        command.ExecuteNonQuery();
+    }
+    
+    public void CreateStudentAccount(long chatId, int courseId, string name)
+    {
+        // todo проверить в будущем
+        
+        string sqlRequest = $"INSERT INTO students (chat_id, course_id, name) VALUES ({chatId}, {courseId}, '{name}')";
         
         NpgsqlCommand command = new NpgsqlCommand(sqlRequest, _connection);
 

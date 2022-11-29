@@ -23,21 +23,28 @@ public class StudentStateManager
     {
         StudentService studentService = new StudentService();
         #region Messages
+        
         _messageMethods =
             new Dictionary<States.StudentStates, Func<long, TransmittedData, string, MessageToSend>>();
-
-        // _messageMethods[States.StudentStates.] = teacherService.ProcessInputGroupName;
+        
+        #endregion
+        #region Callbacks
         
         _callbackMethods =
             new Dictionary<States.StudentStates, Func<long, TransmittedData, string, MessageToSend>>();
-        #endregion
-        #region Callbacks
-        // _callbackMethods[States.Student.MainMenu] = ProcessStaticButtons;
+        
+        _callbackMethods[States.StudentStates.MainMenu] = ProcessStaticButtons;
+        
         #endregion
         #region StaticButtons
         _staticButtonsMethods = new Dictionary<string, Func<long, TransmittedData, MessageToSend>>();
         
-        //_staticButtonsMethods[CallbackQueryStorage.Student.] = teacherService.ProcessButtonGroups;
+        _staticButtonsMethods[CallbackQueryStorage.MainMenu] = studentService.ProcessButtonMainMenu;
+        _staticButtonsMethods[CallbackQueryStorage.Student.Homework] = studentService.ProcessButtonHomework;
+        _staticButtonsMethods[CallbackQueryStorage.Student.NextLesson] = studentService.ProcessButtonNextLesson;
+        // _staticButtonsMethods[CallbackQueryStorage.Yes] = teacherService.ProcessButtonYes;
+        // _staticButtonsMethods[CallbackQueryStorage.No] = teacherService.ProcessButtonNo;
+        
         #endregion
     }
     

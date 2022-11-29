@@ -13,10 +13,12 @@ public class CallbackQueryServiceManager
     private static ILogger Logger = LogManager.GetCurrentClassLogger();
     
     private TeacherStateManager _teacherStateManager;
+    private StudentStateManager _studentStateManager;
 
     public CallbackQueryServiceManager()
     {
         _teacherStateManager = new TeacherStateManager();
+        _studentStateManager = new StudentStateManager();
     }
 
     public MessageToSend ProcessBotCallback(long chatId, TransmittedData transmittedData, CallbackQuery callback)
@@ -32,9 +34,7 @@ public class CallbackQueryServiceManager
         
         if (state.StudentState != States.StudentStates.None)
         {
-            Logger.Debug(LoggerTextsStorage.LostServiceMethod(chatId, transmittedData));
-            
-            return MessageToSend.Empty();
+            return _studentStateManager.ProcessCallback(chatId, transmittedData, callback.Data);
         }
         
         if (state.TeacherState != States.TeacherStates.None)

@@ -59,6 +59,8 @@ public class StartedService
         }
         else if (DbManager.GetInstance().TableCourses.TryGetCourseByStudentInviteCode(out Course course, request))
         {
+            DbManager.GetInstance().TableStudents.CreateStudentAccount(chatId, course.Id, "Default name");
+            
             response = ReplyTextsStorage.MainMenu;
             
             transmittedData.State.GlobalState = States.GlobalStates.Other;

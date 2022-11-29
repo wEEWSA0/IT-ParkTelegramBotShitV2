@@ -15,11 +15,13 @@ public class MessageServiceManager
     
     private GlobalStateManager _globalStateManager;
     private TeacherStateManager _teacherStateManager;
+    private StudentStateManager _studentStateManager;
 
     public MessageServiceManager()
     {
         _globalStateManager = new GlobalStateManager();
         _teacherStateManager = new TeacherStateManager();
+        _studentStateManager = new StudentStateManager();
     }
 
     public MessageToSend ProcessBotMessage(long chatId, TransmittedData transmittedData, Message message)
@@ -33,9 +35,7 @@ public class MessageServiceManager
         
         if (state.StudentState != States.StudentStates.None)
         {
-            Logger.Debug(LoggerTextsStorage.LostServiceMethod(chatId, transmittedData));
-            
-            return MessageToSend.Empty();
+            return _studentStateManager.ProcessMessage(chatId, transmittedData, message.Text);
         }
         
         if (state.TeacherState != States.TeacherStates.None)
