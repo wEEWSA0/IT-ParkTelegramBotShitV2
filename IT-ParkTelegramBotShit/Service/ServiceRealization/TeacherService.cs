@@ -500,9 +500,22 @@ public class TeacherService
                 
                 bool isTeacherIdEnab = storage.TryGet(ConstantsStorage.TeacherId, out Object teacherId);
                 
-                messageToSend = new MessageToSend(ReplyTextsStorage.Teacher.LogOut, false);
+                if (!isTeacherIdEnab)
+                {
+                    Logger.Error(LoggerTextsStorage.FatalLogicError("ProcessInputHomework"));
+                }
                 
+                transmittedData.State.Reset();
+
+                var quitAccountMessageToSend = new MessageToSend(ReplyTextsStorage.Teacher.QuitAccount, false);
+            
+                //BotMessageManager.GetInstance().GetSender(chatId).AddMessageToStack(quitAccountMessageToSend);
                 tableCourses.TeacherLogOut((int)teacherId);
+
+                return quitAccountMessageToSend;
+                
+                //messageToSend = new MessageToSend(ReplyTextsStorage.Teacher.LogOut, false);
+                /*return new MessageToSend(ReplyTextsStorage.CmdStart, false);*/ // todo что за хуйня (проверить)
             }
                 break;
             default:

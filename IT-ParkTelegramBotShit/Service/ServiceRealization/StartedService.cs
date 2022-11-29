@@ -59,6 +59,7 @@ public class StartedService
         }
         else if (DbManager.GetInstance().TableCourses.TryGetCourseByStudentInviteCode(out Course course, request))
         {
+            // todo проверка на уникальность
             DbManager.GetInstance().TableStudents.CreateStudentAccount(chatId, course.Id, "Default name");
             
             response = ReplyTextsStorage.MainMenu;

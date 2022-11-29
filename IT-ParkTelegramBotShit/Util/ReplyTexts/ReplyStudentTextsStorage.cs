@@ -15,5 +15,5 @@ public class ReplyStudentTextsStorage
         "Следущее занятие не назначено";
     
     public readonly string QuitAccount =
-        "Вы вошли из аккаунта ученика";
+        "Вы вышли из аккаунта ученика";
 }

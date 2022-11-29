@@ -31,6 +31,9 @@ public class ReplyTeacherTextsStorage
     public readonly string GroupNotCreated =
         "Группа не создана";
     
+    public readonly string QuitAccount =
+        "Вы вышли из аккаунта учителя";
+    
     public string GetGroupFinalStateView(string name, string inviteCode)
     {
         return $"Группа '{name}'" +

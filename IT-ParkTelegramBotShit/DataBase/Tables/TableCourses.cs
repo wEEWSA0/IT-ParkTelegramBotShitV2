@@ -195,7 +195,7 @@ public class TableCourses
             
             return false;
         }
-
+        
         if (dataReader.Read())
         {
             int id = dataReader.GetInt32(dataReader.GetOrdinal("id"));
