@@ -489,7 +489,7 @@ public class TeacherService
                     Logger.Error(LoggerTextsStorage.FatalLogicError("ProcessInputHomework"));
                 }
                 
-                tableCourses.UpdateTeacherName((string)teacherName, (int)teacherId);
+                tableCourses.UpdateTeacherName((string)teacherName, (int)teacherId); //
                 
                 messageToSend = new MessageToSend(ReplyTextsStorage.Teacher.NameEdited, false);
             }
