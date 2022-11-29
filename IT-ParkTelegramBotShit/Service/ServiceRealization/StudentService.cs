@@ -67,6 +67,21 @@ public class StudentService
         return new MessageToSend(response, keyboard, false);
     }
     
+    public MessageToSend ProcessButtonQuitAccount(long chatId, TransmittedData transmittedData)
+    {
+        string response = ReplyTextsStorage.CmdStart;
+        
+        DbManager.GetInstance().TableStudents.DeleteStudentByChatId(chatId);
+        
+        transmittedData.State.Reset();
+        
+        var quitAccountMessageToSend = new MessageToSend(ReplyTextsStorage.Student.QuitAccount, false);
+            
+        BotMessageManager.GetInstance().GetSender(chatId).AddMessageToStack(quitAccountMessageToSend);
+        
+        return new MessageToSend(response, false);
+    }
+    
     public MessageToSend ProcessButtonMainMenu(long chatId, TransmittedData transmittedData)
     {
         string response = ReplyTextsStorage.MainMenu;

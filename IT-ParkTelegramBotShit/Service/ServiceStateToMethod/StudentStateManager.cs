@@ -42,6 +42,7 @@ public class StudentStateManager
         _staticButtonsMethods[CallbackQueryStorage.MainMenu] = studentService.ProcessButtonMainMenu;
         _staticButtonsMethods[CallbackQueryStorage.Student.Homework] = studentService.ProcessButtonHomework;
         _staticButtonsMethods[CallbackQueryStorage.Student.NextLesson] = studentService.ProcessButtonNextLesson;
+        _staticButtonsMethods[CallbackQueryStorage.Student.QuitAccount] = studentService.ProcessButtonQuitAccount;
         // _staticButtonsMethods[CallbackQueryStorage.Yes] = teacherService.ProcessButtonYes;
         // _staticButtonsMethods[CallbackQueryStorage.No] = teacherService.ProcessButtonNo;
         

@@ -88,6 +88,15 @@ public class TableStudents
         command.ExecuteNonQuery();
     }
     
+    public void DeleteStudentByChatId(long chatId)
+    {
+        string sqlRequest = $"DELETE FROM students WHERE chat_id = {chatId}";
+        
+        NpgsqlCommand command = new NpgsqlCommand(sqlRequest, _connection);
+
+        command.ExecuteNonQuery();
+    }
+    
     public void SetStudent(long chatId, int courseId, string name)
     {
         string sqlRequest = $"INSERT INTO students (chat_id, course_id, name) VALUES ({chatId}, {courseId}, '{name}')";
