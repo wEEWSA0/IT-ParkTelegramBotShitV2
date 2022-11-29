@@ -36,7 +36,9 @@ public class TeacherStateManager
         _messageMethods[States.TeacherStates.InputHomework] = teacherService.ProcessInputHomework;
         _messageMethods[States.TeacherStates.InputNextLesson] = teacherService.ProcessInputNextLessonDate;
         _messageMethods[States.TeacherStates.InputNextLessonTime] = teacherService.ProcessInputNextLessonTime;
-        
+        _messageMethods[States.TeacherStates.EditProfile] = teacherService.ProcessInputName;
+
+
         _callbackMethods =
             new Dictionary<States.TeacherStates, Func<long, TransmittedData, string, MessageToSend>>();
         #endregion
@@ -52,6 +54,8 @@ public class TeacherStateManager
         _callbackMethods[States.TeacherStates.HomeworkFinalStep] = ProcessStaticButtons;
         _callbackMethods[States.TeacherStates.ChooseGroupForNextLesson] = teacherService.ProcessChooseGroupForNextLesson;
         _callbackMethods[States.TeacherStates.InputNextLessonFinalStep] = ProcessStaticButtons;
+        _callbackMethods[States.TeacherStates.EditProfileFinalStep] = ProcessStaticButtons;
+        _callbackMethods[States.TeacherStates.LogOutFinalStep] = ProcessStaticButtons;
         #endregion
         #region StaticButtons
         _staticButtonsMethods = new Dictionary<string, Func<long, TransmittedData, MessageToSend>>();
@@ -69,8 +73,8 @@ public class TeacherStateManager
         _staticButtonsMethods[CallbackQueryStorage.Teacher.AddNextLessonDate] = teacherService.ProcessButtonDateNextLesson;
         
         _staticButtonsMethods[CallbackQueryStorage.Teacher.Profile] = teacherService.ProcessButtonProfile;
-        _staticButtonsMethods[CallbackQueryStorage.Teacher.ProfileLogOut] = teacherService.ProcessButtonDateNextLesson;     //
-        _staticButtonsMethods[CallbackQueryStorage.Teacher.EditName] = teacherService.ProcessButtonDateNextLesson;          //
+        _staticButtonsMethods[CallbackQueryStorage.Teacher.ProfileLogOut] = teacherService.ProcessButtonProfileLogOut;     //
+        _staticButtonsMethods[CallbackQueryStorage.Teacher.EditName] = teacherService.ProcessButtonEditProfile;          //
         #endregion
     }
     

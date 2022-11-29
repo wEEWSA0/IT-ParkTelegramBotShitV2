@@ -30,16 +30,7 @@ public class TableCourses
         
         command.ExecuteNonQuery();
     }
-    
-    public void UpdateTeacherName(string homework, int courseId)
-    {
-        string sqlRequest = $"UPDATE courses SET homework = '{homework}' WHERE id = {courseId}";
-        
-        NpgsqlCommand command = new NpgsqlCommand(sqlRequest, _connection);
-        
-        command.ExecuteNonQuery();
-    }
-    
+
     public void UpdateCourseNextLessonTime(DateTime nextLesson, int courseId)
     {
         string sqlFormattedDate = nextLesson.ToString("yyyy-MM-dd HH:mm:ss.fff");
@@ -51,6 +42,24 @@ public class TableCourses
         command.ExecuteNonQuery();
     }
 
+    public void TeacherLogOut(int teacherId)
+    {
+        string sqlRequest = $"UPDATE teachers SET chat_id = null WHERE id = {teacherId}";
+        
+        NpgsqlCommand command = new NpgsqlCommand(sqlRequest, _connection);
+        
+        command.ExecuteNonQuery();
+    }
+    
+    public void UpdateTeacherName(string newName, int teacherId)
+    {
+        string sqlRequest = $"UPDATE teachers SET name = '{newName}' WHERE id = {teacherId}";
+        
+        NpgsqlCommand command = new NpgsqlCommand(sqlRequest, _connection);
+        
+        command.ExecuteNonQuery();
+    }
+    
     public void UpdateCourseName(string courseName, int courseId)
     {
         string sqlRequest = $"UPDATE courses SET course_name = '{courseName}' WHERE id = {courseId}";

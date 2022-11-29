@@ -2,6 +2,7 @@ using IT_ParkTelegramBotShit.Bot;
 using IT_ParkTelegramBotShit.Bot.Buttons;
 using IT_ParkTelegramBotShit.DataBase;
 using IT_ParkTelegramBotShit.DataBase.Entities;
+using IT_ParkTelegramBotShit.DataBase.Tables;
 using IT_ParkTelegramBotShit.Router.Transmitted;
 using IT_ParkTelegramBotShit.Service.ServiceUpdateType;
 using IT_ParkTelegramBotShit.Util;
@@ -57,6 +58,19 @@ public class TeacherService
         transmittedData.State.TeacherState = States.TeacherStates.HomeworkFinalStep;
 
         var response = GetReplyFinalStepText(ReplyTextsStorage.Teacher.GetNewHomeworkView(request));
+        
+        var keyboard = ReplyKeyboardsStorage.FinalStep;
+
+        return new MessageToSend(response, keyboard, false);
+    }
+    
+    public MessageToSend ProcessInputName(long chatId, TransmittedData transmittedData, string request)
+    {
+        transmittedData.DataStorage.Add(ConstantsStorage.TeacherName, request);
+
+        transmittedData.State.TeacherState = States.TeacherStates.EditProfileFinalStep;
+
+        var response = GetReplyFinalStepText(ReplyTextsStorage.Teacher.ProfileNewNameView(request));
         
         var keyboard = ReplyKeyboardsStorage.FinalStep;
 
@@ -333,11 +347,9 @@ public class TeacherService
     {
         string response = ReplyTextsStorage.Teacher.EditName;
 
-        transmittedData.State.TeacherState = States.TeacherStates.ChooseGroupForHomework;
+        transmittedData.State.TeacherState = States.TeacherStates.EditProfile;
 
-        var keyboard = GetTeacherCoursesButtons(chatId, transmittedData.DataStorage);
-
-        return new MessageToSend(response, keyboard, false);
+        return new MessageToSend(response, false);
     }
     
     public MessageToSend ProcessButtonProfileLogOut(long chatId, TransmittedData transmittedData)
@@ -346,7 +358,7 @@ public class TeacherService
 
         transmittedData.State.TeacherState = States.TeacherStates.LogOutFinalStep;     //подтверждение а затем None
 
-        var keyboard = GetTeacherCoursesButtons(chatId, transmittedData.DataStorage);
+        var keyboard = ReplyKeyboardsStorage.FinalStep;
 
         return new MessageToSend(response, keyboard, false);
     }
@@ -465,6 +477,34 @@ public class TeacherService
                 messageToSend = new MessageToSend(ReplyTextsStorage.Teacher.NextLessonDateCreated, false);
             }
                 break;
+            case States.TeacherStates.EditProfileFinalStep:
+            {
+                var tableCourses = DbManager.GetInstance().TableCourses;
+                
+                bool isTeacherIdEnab = storage.TryGet(ConstantsStorage.TeacherId, out Object teacherId);
+                bool isNeacherNameEnab = storage.TryGet(ConstantsStorage.TeacherName, out Object teacherName);
+        
+                if (!isTeacherIdEnab || !isNeacherNameEnab)
+                {
+                    Logger.Error(LoggerTextsStorage.FatalLogicError("ProcessInputHomework"));
+                }
+                
+                tableCourses.UpdateTeacherName((string)teacherName, (int)teacherId);
+                
+                messageToSend = new MessageToSend(ReplyTextsStorage.Teacher.NameEdited, false);
+            }
+                break;
+            case States.TeacherStates.LogOutFinalStep:
+            {
+                var tableCourses = DbManager.GetInstance().TableCourses;
+                
+                bool isTeacherIdEnab = storage.TryGet(ConstantsStorage.TeacherId, out Object teacherId);
+                
+                messageToSend = new MessageToSend(ReplyTextsStorage.Teacher.LogOut, false);
+                
+                tableCourses.TeacherLogOut((int)teacherId);
+            }
+                break;
             default:
             {
                 Logger.Error(LoggerTextsStorage.FatalLogicError("ProcessButtonYes"));
@@ -508,6 +548,16 @@ public class TeacherService
             case States.TeacherStates.InputNextLessonFinalStep:
             {
                 messageToSend = new MessageToSend(ReplyTextsStorage.Teacher.NextLessonDateNotCreated, false);
+            }
+                break;
+            case States.TeacherStates.EditProfileFinalStep:
+            {
+                messageToSend = new MessageToSend(ReplyTextsStorage.Teacher.NameNotEdited, false);
+            }
+                break;
+            case States.TeacherStates.LogOutFinalStep:
+            {
+                messageToSend = new MessageToSend(ReplyTextsStorage.Teacher.NotLogOut, false);
             }
                 break;
             default:

@@ -104,8 +104,8 @@ public class States
         
         EditProfile = 400,
         EditProfileFinalStep = 4000,
-        LogOut = 401,
-        LogOutFinalStep = 4010
+        //LogOut = 401,
+        LogOutFinalStep = 401
         
         #endregion
     }

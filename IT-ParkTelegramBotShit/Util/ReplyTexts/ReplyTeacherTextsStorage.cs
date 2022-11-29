@@ -136,6 +136,13 @@ public class ReplyTeacherTextsStorage
     public readonly string NameNotEdited =
         "ФИО остались прежними";
     
+    public readonly string NotLogOut =
+        "Вы решили остаться";
+    
+    public readonly string LogOut =
+        $"Вы вышли из профиля, введите /start" +
+        $"\nчтобы начать работу";
+    
     public readonly string ProfileLogOut =
         "Вы действительно хотите выйти?";
     

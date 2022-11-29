@@ -12,6 +12,9 @@ public class ConstantsStorage
     public static string TeacherId =
         "teacher_id_data";
     
+    public static string TeacherName =
+        "teacher_name";
+    
     public static string GroupName =
         "group_name_data";
     
