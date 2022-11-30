@@ -67,7 +67,7 @@ public class BotNotificationSender
         
         BotMessageManager.GetInstance().GetHistory(chatId).AddAnchoredMessagesId(message.MessageId);
         
-        await Task.Run(() => Thread.Sleep(ConstantsStorage.ThreadSleepBetweenSendMessages));
+        await Task.Run(() => Thread.Sleep(ConstantsStorage.ThreadSleepBetweenSendMessages)); // todo привязать новое значение
         
         return task.Result;
     }

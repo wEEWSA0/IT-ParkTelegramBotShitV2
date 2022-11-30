@@ -1,9 +1,9 @@
 namespace IT_ParkTelegramBotShit.Bot.Notifications;
 
-public enum NotificationType // todo notification type functional realization
+public enum NotificationType
 {
     OneTime,
-    Regular,
-    UntilAction, // актуально только сегодня до 8:30 (после просто удаляется), а вызов назначен на 5:00
-    WhileAction // актуально в течение 1 часа
+    Regular, // todo зачем тип regular
+    ExpiredOneTime,
+    ExpiredRegular
 }

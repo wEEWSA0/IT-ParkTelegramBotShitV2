@@ -80,12 +80,17 @@ public class BotNotificationSystem
         for (int i = 0; i < _notifications.Count; i++)
         {
             var notification = _notifications[i];
+
+            if (IsNotificationExpired(notification))
+            {
+                _notifications.Remove(notification);
+            }
             
-            if (notification.Date <= DateTime.Now)
+            if (IsNotificationReadyToSend(notification))
             {
                 notification.Send();
 
-                if (notification.Type == NotificationType.OneTime)
+                if (IsNotificationDeplete(notification))
                 {
                     _notifications.Remove(notification);
                 }
@@ -107,5 +112,25 @@ public class BotNotificationSystem
 
             Logger.Debug("CheckingNotifications finished");
         });
+    }
+
+    private bool IsNotificationExpired(Notification notification)
+    {
+        if (notification.Type == NotificationType.Regular || notification.Type == NotificationType.OneTime)
+        {
+            return false;
+        }
+        
+        return notification.ExpiredDate <= DateTime.Now;
+    }
+    
+    private bool IsNotificationReadyToSend(Notification notification)
+    {
+        return notification.Date <= DateTime.Now;
+    }
+    
+    private bool IsNotificationDeplete(Notification notification)
+    {
+        return notification.Type == NotificationType.OneTime || notification.Type == NotificationType.ExpiredOneTime;
     }
 }

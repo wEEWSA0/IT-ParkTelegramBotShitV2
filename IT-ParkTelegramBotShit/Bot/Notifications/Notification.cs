@@ -8,16 +8,18 @@ public class Notification
 {
     private static ILogger Logger = LogManager.GetCurrentClassLogger();
 
-    private List<long> _recieverList = new List<long>();
-    
+    private List<long> _recieverList;
     private MessageToSend _message;
+    
     public NotificationType Type { get; private set; }
     public DateTime Date { get; private set; }
+    public DateTime ExpiredDate { get; private set; }
 
     public Notification(MessageToSend message)
     {
         Type = NotificationType.OneTime;
         _message = message;
+        _recieverList = new List<long>();
         Date = DateTime.Now;
     }
     
@@ -25,10 +27,36 @@ public class Notification
     {
         Date = date;
     }
+    
+    public Notification(MessageToSend message, DateTime date, DateTime expiredDate) : this(message, date)
+    {
+        ExpiredDate = expiredDate;
+    }
 
     public Notification(MessageToSend message, DateTime date, NotificationType type) : this(message, date)
     {
         Type = type;
+
+        if (type == NotificationType.ExpiredRegular || type == NotificationType.ExpiredOneTime)
+        {
+            Logger.Warn($"Can't be {type} type. ExpiredDate not assigned");
+        }
+    }
+    
+    public Notification(MessageToSend message, DateTime date, DateTime expiredDate, NotificationType type) : this(message, date)
+    {
+        Type = type;
+        ExpiredDate = expiredDate;
+        
+        if (type == NotificationType.Regular || type == NotificationType.OneTime)
+        {
+            Logger.Warn($"Can't be {type} type. ExpiredDate is useless");
+        }
+    }
+    
+    public Notification(MessageToSend message, DateTime date, DateTime expiredDate, NotificationType type, List<long> recievers) : this(message, date, expiredDate, type)
+    {
+        AddRecieverList(recievers);
     }
 
     public void AddReciever(long chatId)

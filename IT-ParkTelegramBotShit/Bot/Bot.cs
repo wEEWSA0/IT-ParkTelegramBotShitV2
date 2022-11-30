@@ -15,7 +15,8 @@ public class Bot
 {
     private static ILogger Logger = LogManager.GetCurrentClassLogger();
     private const int CheckNotificationsDelay = 60000;
-    
+    // todo решить проблему с дублированием закрепленного сообщения
+    // Пусть сразу посылается сообщение с вводом кода (приходится писать /start)
     private TelegramBotClient _botClient;
     private CancellationTokenSource _cancellationTokenSource;
 
@@ -107,7 +108,16 @@ public class Bot
         
         var studentsChatId = DbManager.GetInstance().TableStudents.GetAllStudentsChatId();
         AuthorizationStudents(studentsChatId, chatsRouter);
+        /*
+        // test
+        MessageToSend mes = new MessageToSend($"Проверка {DateTime.Now}");
+        var date = DateTime.Now;
+        date = date.AddMinutes(1);
+        Notification not = new Notification(mes, DateTime.Now, date, NotificationType.ExpiredRegular);
+        not.AddReciever(1036970909);
         
+        BotNotificationSystem.GetInstance().AddNotification(not);
+        */
         BotNotificationSystem.GetInstance().StartNotificationSystem(CheckNotificationsDelay);
     }
 

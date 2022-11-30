@@ -16,4 +16,16 @@
       <PackageReference Include="Telegram.Bot" Version="18.0.0" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Compile Remove="Bot\Notifications\Types\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Remove="Bot\Notifications\Types\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="Bot\Notifications\Types\**" />
+    </ItemGroup>
+
 </Project>
