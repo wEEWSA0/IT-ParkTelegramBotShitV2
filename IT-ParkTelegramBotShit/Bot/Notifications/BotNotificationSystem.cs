@@ -90,7 +90,7 @@ public class BotNotificationSystem
             {
                 notification.Send();
 
-                if (IsNotificationDeplete(notification))
+                if (notification.Type == NotificationType.OneTime)
                 {
                     _notifications.Remove(notification);
                 }
@@ -127,10 +127,5 @@ public class BotNotificationSystem
     private bool IsNotificationReadyToSend(Notification notification)
     {
         return notification.Date <= DateTime.Now;
-    }
-    
-    private bool IsNotificationDeplete(Notification notification)
-    {
-        return notification.Type == NotificationType.OneTime || notification.Type == NotificationType.ExpiredOneTime;
     }
 }

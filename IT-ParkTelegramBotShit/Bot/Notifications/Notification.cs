@@ -18,6 +18,7 @@ public class Notification
     public Notification(MessageToSend message)
     {
         Type = NotificationType.OneTime;
+        ExpiredDate = DateTime.MinValue;
         _message = message;
         _recieverList = new List<long>();
         Date = DateTime.Now;
@@ -36,22 +37,12 @@ public class Notification
     public Notification(MessageToSend message, DateTime date, NotificationType type) : this(message, date)
     {
         Type = type;
-
-        if (type == NotificationType.ExpiredRegular || type == NotificationType.ExpiredOneTime)
-        {
-            Logger.Warn($"Can't be {type} type. ExpiredDate not assigned");
-        }
     }
     
     public Notification(MessageToSend message, DateTime date, DateTime expiredDate, NotificationType type) : this(message, date)
     {
         Type = type;
         ExpiredDate = expiredDate;
-        
-        if (type == NotificationType.Regular || type == NotificationType.OneTime)
-        {
-            Logger.Warn($"Can't be {type} type. ExpiredDate is useless");
-        }
     }
     
     public Notification(MessageToSend message, DateTime date, DateTime expiredDate, NotificationType type, List<long> recievers) : this(message, date, expiredDate, type)
