@@ -20,6 +20,7 @@ public class BotStatisticManager
         if (_statisticManager == null)
         {
             _statisticManager = new BotStatisticManager();
+            Logger.Error("BotStatisticManager is initialized");
         }
         
         return _statisticManager;

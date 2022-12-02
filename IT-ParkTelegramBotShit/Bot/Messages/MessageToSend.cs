@@ -8,6 +8,7 @@ public class MessageToSend
     public string Text { get; }
     public InlineKeyboardMarkup? InlineKeyboardMarkup;
     public bool IsLastMessagesHistoryNeeded { get; }
+    // todo add work with images and stickers
     
     public MessageToSend(string text)
     {
