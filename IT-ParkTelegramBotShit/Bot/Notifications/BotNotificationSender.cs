@@ -54,7 +54,8 @@ public class BotNotificationSender
         
         BotMessageManager.GetInstance().GetHistory(chatId).AddMessageId(message.MessageId);
         
-        await Task.Run(() => Thread.Sleep(ConstantsStorage.ThreadSleepBetweenSendMessages));
+        var sleepValue = BotStatisticManager.GetInstance().SleepValue;
+        await Task.Run(() => Thread.Sleep(sleepValue));
         
         return task.Result;
     }
@@ -66,14 +67,17 @@ public class BotNotificationSender
         Message message = task.Result;
         
         BotMessageManager.GetInstance().GetHistory(chatId).AddAnchoredMessagesId(message.MessageId);
-        
-        await Task.Run(() => Thread.Sleep(ConstantsStorage.ThreadSleepBetweenSendMessages)); // todo привязать новое значение
+
+        var sleepValue = BotStatisticManager.GetInstance().SleepValue;
+        await Task.Run(() => Thread.Sleep(sleepValue));
         
         return task.Result;
     }
     
     private Task<Message> SendMessage(MessageToSend message, long chatId)
     {
+        BotStatisticManager.GetInstance().AddWorkLoad();
+        
         return _botClient.SendTextMessageAsync(
             chatId: chatId,
             text: message.Text,

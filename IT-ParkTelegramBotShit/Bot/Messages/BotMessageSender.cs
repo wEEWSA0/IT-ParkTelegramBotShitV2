@@ -70,6 +70,8 @@ public class BotMessageSender
     
     private Message SendMessage(MessageToSend message)
     { 
+        BotStatisticManager.GetInstance().AddWorkLoad();
+        
         Task<Message> task = _botClient.SendTextMessageAsync(
             chatId: _chatId,
             text: message.Text,

@@ -15,6 +15,8 @@ public class Bot
 {
     private static ILogger Logger = LogManager.GetCurrentClassLogger();
     private const int CheckNotificationsDelay = 60000;
+    private const int CheckStatisticDelay = 10000;
+    
     // todo решить проблему с дублированием закрепленного сообщения
     // Пусть сразу посылается сообщение с вводом кода (приходится писать /start)
     private TelegramBotClient _botClient;
@@ -60,6 +62,7 @@ public class Bot
         Logger.Debug("Выполнена инициализация ReceiverOptions и BotRequestHandlers и выполнен TelegramBotClient StartReceiving");
         
         SetupNotifications(chatsRouter);
+        BotStatisticManager.GetInstance().StartCollectStatistic(CheckStatisticDelay);
 
         Logger.Info("Выполнен запуск бота");
     }
