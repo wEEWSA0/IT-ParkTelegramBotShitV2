@@ -5,10 +5,6 @@ public class ConstantsStorage
     public static string EmptyMessageToSend =
         "empty_message_to_send";
     
-    public static long LockNotificationValueLong = 9; // переделать
-    
-    public static int StandartThreadSleepBetweenSendMessages = 160; // todo можно перенести в const in StatisticManager
-    
     public static string TeacherId =
         "teacher_id_data";
     

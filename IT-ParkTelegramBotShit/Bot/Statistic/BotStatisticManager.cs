@@ -6,6 +6,7 @@ public class BotStatisticManager
     private static ILogger Logger = LogManager.GetCurrentClassLogger();
     
     private static BotStatisticManager _statisticManager;
+    private const int StandartThreadSleepBetweenSendMessages = 160;
     private const int StandartMessageWeight = 4;
 
     private Task _collectingStatistic;
@@ -18,7 +19,7 @@ public class BotStatisticManager
 
     private BotStatisticManager()
     {
-        SleepValue = ConstantsStorage.StandartThreadSleepBetweenSendMessages;
+        SleepValue = StandartThreadSleepBetweenSendMessages;
     }
     
     public static BotStatisticManager GetInstance()
@@ -51,7 +52,7 @@ public class BotStatisticManager
         }
 
         _messageWeight = StandartMessageWeight;
-        _minSleepValue = ConstantsStorage.StandartThreadSleepBetweenSendMessages / 2;
+        _minSleepValue = StandartThreadSleepBetweenSendMessages / 2;
         _isStarted = true;
 
         if (_collectingStatistic != null)
@@ -97,7 +98,7 @@ public class BotStatisticManager
             
             while (_isStarted)
             {
-                UpdateSleepValue(_messageWeight, _minSleepValue);
+                UpdateSleepValue(_messageWeight, _minSleepValue, checkRateInMiliseconds);
                 Thread.Sleep(checkRateInMiliseconds);
             }
 
@@ -105,22 +106,22 @@ public class BotStatisticManager
         });
     }
     
-    private void UpdateSleepValue(int messageWeight, int minSleepValue)
+    private void UpdateSleepValue(int messageWeight, int minSleepValue, int checkRate)
     {
-        // в зависимости от workLoad будет задаваться значение SleepValue
-        // SleepValue связан с ConstantsStorage.ThreadSleepBetweenSendMessages
         var newSleep = minSleepValue;
-
-        newSleep += _workLoad * messageWeight;
         
+        newSleep += _workLoad * messageWeight;
+
+        Logger.Debug($"Нагрузка: {_workLoad} сообщений за {Math.Round(checkRate / 1000f)} секунд");
+
         SleepValue = newSleep;
         _workLoad = 0;
     }
     
     /*
-     * Класс не обязателен, но его можно реализовать для большей безопасности отправки сообщений
-     * Он будет менять переменную, отвечащую за задержку между отправкой сообщений
+     * Класс для большей безопасности отправки сообщений типа "уведомление"
+     * Он меняет переменную, отвечащую за задержку между отправкой сообщений
      * Большая нагрузка => большая задержка
-     * Малая нагрузка => маленькая задержка, или без задержек
+     * Малая нагрузка => маленькая задержка
      */
 }

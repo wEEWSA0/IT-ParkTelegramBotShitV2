@@ -15,7 +15,7 @@ public class BotNotificationSender
     
     private TelegramBotClient _botClient;
     private CancellationTokenSource _cancellationTokenSource;
-
+    // todo regualr notification type is useless
     private BotNotificationSender(TelegramBotClient client, CancellationTokenSource token)
     {
         _botClient = client;
@@ -32,7 +32,6 @@ public class BotNotificationSender
         
         return _notificationSender;
     }
-
 
     public static bool Create(TelegramBotClient client, CancellationTokenSource token)
     {

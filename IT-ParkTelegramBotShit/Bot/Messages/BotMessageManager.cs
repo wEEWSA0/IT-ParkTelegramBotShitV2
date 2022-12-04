@@ -70,4 +70,8 @@ public class BotMessageManager
     {
         return new List<long>(_messageHistorie.Keys.ToList());
     }
+    
+    /*
+     * Класс для доступа к истории сообщений и возможности отправлять сообщения лично для каждого chatId
+     */
 }
