@@ -6,18 +6,26 @@ namespace IT_ParkTelegramBotShit.Bot.Notifications;
 
 public class Notification
 {
-    private static ILogger Logger = LogManager.GetCurrentClassLogger();
+    protected static ILogger Logger = LogManager.GetCurrentClassLogger();
 
-    private List<long> _recieverList;
-    private MessageToSend _message;
+    protected List<long> _recieverList;
+    protected MessageToSend _message;
     
-    public NotificationType Type { get; private set; }
+    //public NotificationType Type { get; private set; }
     public DateTime Date { get; private set; }
     public DateTime ExpiredDate { get; private set; }
 
+    protected Notification()
+    {
+        ExpiredDate = DateTime.MinValue;
+        _message = MessageToSend.Empty();
+        _recieverList = new List<long>();
+        Date = DateTime.Now;
+    }
+    
     public Notification(MessageToSend message)
     {
-        Type = NotificationType.OneTime;
+        //Type = NotificationType.OneTime;
         ExpiredDate = DateTime.MinValue;
         _message = message;
         _recieverList = new List<long>();
@@ -34,21 +42,21 @@ public class Notification
         ExpiredDate = expiredDate;
     }
 
-    public Notification(MessageToSend message, DateTime date, NotificationType type) : this(message, date)
-    {
-        Type = type;
-    }
+    // public Notification(MessageToSend message, DateTime date, NotificationType type) : this(message, date)
+    // {
+    //     Type = type;
+    // }
     
-    public Notification(MessageToSend message, DateTime date, DateTime expiredDate, NotificationType type) : this(message, date)
-    {
-        Type = type;
-        ExpiredDate = expiredDate;
-    }
-    
-    public Notification(MessageToSend message, DateTime date, DateTime expiredDate, NotificationType type, List<long> recievers) : this(message, date, expiredDate, type)
-    {
-        AddRecieverList(recievers);
-    }
+    // public Notification(MessageToSend message, DateTime date, DateTime expiredDate, NotificationType type) : this(message, date)
+    // {
+    //     Type = type;
+    //     ExpiredDate = expiredDate;
+    // }
+    //
+    // public Notification(MessageToSend message, DateTime date, DateTime expiredDate, NotificationType type, List<long> recievers) : this(message, date, expiredDate, type)
+    // {
+    //     AddRecieverList(recievers);
+    // }
 
     public void AddReciever(long chatId)
     {
@@ -70,7 +78,7 @@ public class Notification
         }
     }
     
-    public async void Send()
+    public virtual async void Send()
     {
         if (_recieverList.Count == 0)
         {
@@ -85,4 +93,10 @@ public class Notification
             await notificationSender.SendNotificationMessage(_message, _recieverList[i]);
         }
     }
+    
+    /*
+     * Класс, хранящий содержание сообщения-уведомления, которое будет отправлено
+     * У уведомления имеется срок годности (до отправки)
+     * Уведомление может быть как одноразовым, так и постоянным
+     */
 }

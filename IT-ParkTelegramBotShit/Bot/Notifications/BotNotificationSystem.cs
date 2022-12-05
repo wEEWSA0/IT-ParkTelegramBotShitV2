@@ -90,10 +90,10 @@ public class BotNotificationSystem
             {
                 notification.Send();
 
-                if (notification.Type == NotificationType.OneTime)
-                {
-                    _notifications.Remove(notification);
-                }
+                // if (notification.Type == NotificationType.OneTime)
+                // {
+                //     _notifications.Remove(notification);
+                // }
             }
         }
     }
@@ -116,11 +116,11 @@ public class BotNotificationSystem
 
     private bool IsNotificationExpired(Notification notification)
     {
-        if (notification.Type == NotificationType.Regular || notification.Type == NotificationType.OneTime)
-        {
-            return false;
-        }
-        
+        // if (notification.Type == NotificationType.Regular || notification.Type == NotificationType.OneTime)
+        // {
+        //     return false;
+        // }
+        //
         return notification.ExpiredDate <= DateTime.Now;
     }
     
