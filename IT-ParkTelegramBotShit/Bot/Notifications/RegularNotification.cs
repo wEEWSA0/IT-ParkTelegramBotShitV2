@@ -32,4 +32,8 @@ public class RegularNotification : Notification
             await notificationSender.SendNotificationMessage(_message, _recieverList[i]);
         }
     }
+    
+    /*
+     * Класс постоянного уведомления
+     */
 }
