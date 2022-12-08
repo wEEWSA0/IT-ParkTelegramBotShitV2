@@ -2,6 +2,7 @@ namespace IT_ParkTelegramBotShit.Bot.Notifications;
 
 public class RegularNotification : Notification
 {
+    // Класс не работает, будет реализован позже
     public int PeriodInDays { get; private set; }
     public Func<MessageToSend> _messageToSendGiver;
     
@@ -22,7 +23,7 @@ public class RegularNotification : Notification
         }
         
         _message = _messageToSendGiver.Invoke(); // todo invoke => ?invoke
-
+    
         Date.AddDays(PeriodInDays);
         
         var notificationSender = BotNotificationSender.GetInstance();
