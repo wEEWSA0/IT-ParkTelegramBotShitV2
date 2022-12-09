@@ -25,7 +25,7 @@ public class Bot
 
     public Bot()
     {
-        _botClient = new TelegramBotClient("5655889814:AAEdVK___v3pjwLwxycXJaYsFtdFnMOvMyA");
+        _botClient = new TelegramBotClient("5655889814:AAEdVK___v3pjwLwxycXJaYsFtdFnMOvMyA"); // todo перенести в более защищенное место (высокий)
         _cancellationTokenSource = new CancellationTokenSource();
 
         var botResponder = new BotResponder(_botClient, _cancellationTokenSource);
@@ -114,16 +114,7 @@ public class Bot
         
         var studentsChatId = DbManager.GetInstance().TableStudents.GetAllStudentsChatId();
         AuthorizationStudents(studentsChatId, chatsRouter);
-        /*
-        // test
-        MessageToSend mes = new MessageToSend($"Проверка {DateTime.Now}");
-        var date = DateTime.Now;
-        date = date.AddMinutes(1);
-        Notification not = new Notification(mes, DateTime.Now, date, NotificationType.ExpiredRegular);
-        not.AddReciever(1036970909);
         
-        BotNotificationSystem.GetInstance().AddNotification(not);
-        */
         BotNotificationSystem.GetInstance().StartNotificationSystem(CheckNotificationsDelay);
     }
 
