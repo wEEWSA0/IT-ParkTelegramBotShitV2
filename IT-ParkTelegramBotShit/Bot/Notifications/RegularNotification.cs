@@ -6,7 +6,7 @@ public class RegularNotification : Notification
     public int PeriodInDays { get; private set; }
     public Func<MessageToSend> _messageToSendGiver;
     
-    // todo заменить NotificationType на класс RegularNotification
+    // todo реализовать регулярные уведомления (приоритет: малый)
     
     public RegularNotification(Func<MessageToSend> messageToSendGiver, int periodInDays)
     {

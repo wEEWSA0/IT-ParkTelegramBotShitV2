@@ -9,20 +9,18 @@ public class BotMessageHistory
     private static BotMessageHistory _messageHistory;
     private List<int> _ordinaryMessagesIds;
     private List<int> _anchoredMessagesIds;
-    
-    private TelegramBotClient _botClient;
-    private CancellationTokenSource _cancellationTokenSource;
+
+    private BotResponder _botResponder;
 
     private long _chatId;
 
-    public BotMessageHistory(TelegramBotClient client, CancellationTokenSource token, long chatId)
+    public BotMessageHistory(BotResponder botResponder, long chatId)
     {
         _ordinaryMessagesIds = new List<int>();
         _anchoredMessagesIds = new List<int>();
 
         _chatId = chatId;
-        _botClient = client;
-        _cancellationTokenSource = token;
+        _botResponder = botResponder;
     }
 
     public void AddMessageId(int messageId)
@@ -80,19 +78,13 @@ public class BotMessageHistory
         int lastMessageId = _ordinaryMessagesIds[_ordinaryMessagesIds.Count - 1];
         
         _ordinaryMessagesIds.Remove(lastMessageId);
-        
-        return _botClient.DeleteMessageAsync(
-            messageId: lastMessageId,
-            chatId: _chatId,
-            cancellationToken: _cancellationTokenSource.Token);
+
+        return DeleteMessage(lastMessageId);
     }
     
     private Task DeleteMessage(int messageId)
     {
-        return _botClient.DeleteMessageAsync(
-            messageId: messageId,
-            chatId: _chatId,
-            cancellationToken: _cancellationTokenSource.Token);
+        return _botResponder.DeleteMessage(messageId, _chatId);
     }
 
     private async Task DeleteMessages(List<int> messageIdList)

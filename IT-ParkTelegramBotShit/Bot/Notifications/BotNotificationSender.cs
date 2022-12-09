@@ -12,14 +12,12 @@ public class BotNotificationSender
     private static ILogger Logger = LogManager.GetCurrentClassLogger();
     
     private static BotNotificationSender _notificationSender;
+
+    private BotResponder _botResponder;
     
-    private TelegramBotClient _botClient;
-    private CancellationTokenSource _cancellationTokenSource;
-    // todo regualr notification type is useless
-    private BotNotificationSender(TelegramBotClient client, CancellationTokenSource token)
+    private BotNotificationSender(BotResponder botResponder)
     {
-        _botClient = client;
-        _cancellationTokenSource = token;
+        _botResponder = botResponder;
     }
 
     public static BotNotificationSender GetInstance()
@@ -33,11 +31,11 @@ public class BotNotificationSender
         return _notificationSender;
     }
 
-    public static bool Create(TelegramBotClient client, CancellationTokenSource token)
+    public static bool Create(BotResponder botResponder)
     {
         if (_notificationSender == null)
         {
-            _notificationSender = new BotNotificationSender(client, token);
+            _notificationSender = new BotNotificationSender(botResponder);
             Logger.Debug("BotNotificationSender is initialized");
             return true;
         }
@@ -77,10 +75,6 @@ public class BotNotificationSender
     {
         BotStatisticManager.GetInstance().AddWorkLoad();
         
-        return _botClient.SendTextMessageAsync(
-            chatId: chatId,
-            text: message.Text,
-            replyMarkup: message.InlineKeyboardMarkup,
-            cancellationToken: _cancellationTokenSource.Token);
+        return _botResponder.SendText(message, chatId);
     }
 }

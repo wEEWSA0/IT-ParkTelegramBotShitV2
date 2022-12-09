@@ -10,7 +10,7 @@ public class MessageToSend
     public InlineKeyboardMarkup? InlineKeyboardMarkup;
     public InputOnlineFile OnlineFile;
     public bool IsLastMessagesHistoryNeeded { get; }
-    // todo add work with images and stickers
+    // todo add work with images and stickers (приоритет: малый; связанное с BotResponder)
     
     public MessageToSend(string text)
     {

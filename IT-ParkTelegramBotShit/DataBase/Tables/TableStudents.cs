@@ -117,7 +117,7 @@ public class TableStudents
     
     public void CreateStudentAccount(long chatId, int courseId, string name)
     {
-        // todo проверить в будущем
+        // todo проверить в будущем (приоритет: высокий)
         
         string sqlRequest = $"INSERT INTO students (chat_id, course_id, name) VALUES ({chatId}, {courseId}, '{name}')";
         

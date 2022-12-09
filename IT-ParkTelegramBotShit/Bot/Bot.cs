@@ -17,8 +17,9 @@ public class Bot
     private const int CheckNotificationsDelay = 60000;
     private const int CheckStatisticDelay = 10000;
     
-    // todo решить проблему с дублированием закрепленного сообщения
+    // todo решить проблему с дублированием закрепленного сообщения (приоритет: средний)
     // Пусть сразу посылается сообщение с вводом кода (приходится писать /start)
+    
     private TelegramBotClient _botClient;
     private CancellationTokenSource _cancellationTokenSource;
 
@@ -27,13 +28,15 @@ public class Bot
         _botClient = new TelegramBotClient("5655889814:AAEdVK___v3pjwLwxycXJaYsFtdFnMOvMyA");
         _cancellationTokenSource = new CancellationTokenSource();
 
-        if (!BotMessageManager.Create(_botClient, _cancellationTokenSource))
+        var botResponder = new BotResponder(_botClient, _cancellationTokenSource);
+        
+        if (!BotMessageManager.Create(botResponder))
         {
             Logger.Error("Problems with BotMessageManager.Create");
             throw new Exception("Not working, error");
         }
         
-        if (!BotNotificationSender.Create(_botClient, _cancellationTokenSource))
+        if (!BotNotificationSender.Create(botResponder))
         {
             Logger.Error("Problems with BotNotificationSender.Create");
             throw new Exception("Not working, error");

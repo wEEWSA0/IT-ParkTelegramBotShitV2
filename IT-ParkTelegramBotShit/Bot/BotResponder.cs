@@ -3,18 +3,18 @@ using Telegram.Bot.Types;
 
 namespace IT_ParkTelegramBotShit.Bot;
 
-public class BotSender
+public class BotResponder
 {
     private TelegramBotClient _botClient;
     private CancellationTokenSource _cancellationTokenSource;
 
-    public BotSender(TelegramBotClient botClient, CancellationTokenSource tokenSource)
+    public BotResponder(TelegramBotClient botClient, CancellationTokenSource tokenSource)
     {
         _botClient = botClient;
-        _cancellationTokenSource = tokenSource; // todo реализовать класс, использовать его
+        _cancellationTokenSource = tokenSource;
     }
     
-    private Task<Message> SendTextMessage(MessageToSend message, long chatId)
+    public Task<Message> SendText(MessageToSend message, long chatId)
     {
         return _botClient.SendTextMessageAsync(
             chatId: chatId,
@@ -23,7 +23,7 @@ public class BotSender
             cancellationToken: _cancellationTokenSource.Token);
     }
     
-    private Task<Message> SendPhoto(MessageToSend message, long chatId)
+    public Task<Message> SendPhoto(MessageToSend message, long chatId)
     {
         return _botClient.SendPhotoAsync(
             chatId: chatId,
@@ -32,14 +32,22 @@ public class BotSender
             replyMarkup: message.InlineKeyboardMarkup,
             cancellationToken: _cancellationTokenSource.Token);
     }
-    // todo найти различия между фото и файлом
-    private Task<Message> SendFile(MessageToSend message, long chatId)
+    // todo найти различия между фото и файлом (приоритет: малый)
+    public Task<Message> SendFile(MessageToSend message, long chatId)
     {
         return _botClient.SendDocumentAsync(
             chatId: chatId,
             caption: message.Text,
             document: message.OnlineFile,
             replyMarkup: message.InlineKeyboardMarkup,
+            cancellationToken: _cancellationTokenSource.Token);
+    }
+    
+    public Task DeleteMessage(int messageId, long chatId)
+    {
+        return _botClient.DeleteMessageAsync(
+            messageId: messageId,
+            chatId: chatId,
             cancellationToken: _cancellationTokenSource.Token);
     }
 }

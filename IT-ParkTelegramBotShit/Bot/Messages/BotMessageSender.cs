@@ -9,21 +9,19 @@ public class BotMessageSender
 {
     private Queue<MessageToSend> _messagesToSend;
     
-    private TelegramBotClient _botClient;
-    private CancellationTokenSource _cancellationTokenSource;
+    private BotResponder _botResponder;
 
     private BotMessageHistory _history;
     private long _chatId;
     
-    public BotMessageSender(TelegramBotClient client, CancellationTokenSource token, long chatId)
+    public BotMessageSender(BotResponder botResponder, long chatId)
     {
         _messagesToSend = new Queue<MessageToSend>();
         
         _history = BotMessageManager.GetInstance().GetHistory(chatId);
 
         _chatId = chatId;
-        _botClient = client;
-        _cancellationTokenSource = token;
+        _botResponder = botResponder;
     }
 
     public void AddMessageToStack(string text)
@@ -71,12 +69,8 @@ public class BotMessageSender
     private Message SendMessage(MessageToSend message)
     { 
         BotStatisticManager.GetInstance().AddWorkLoad();
-        
-        Task<Message> task = _botClient.SendTextMessageAsync(
-            chatId: _chatId,
-            text: message.Text,
-            replyMarkup: message.InlineKeyboardMarkup,
-            cancellationToken: _cancellationTokenSource.Token);
+
+        Task<Message> task = _botResponder.SendText(message, _chatId);
 
         return task.Result;
     }

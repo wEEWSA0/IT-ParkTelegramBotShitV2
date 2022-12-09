@@ -10,14 +10,12 @@ public class BotMessageManager
     private static BotMessageManager _messageManager = null;
     private Dictionary<long, BotMessageSender> _messageSender;
     private Dictionary<long, BotMessageHistory> _messageHistorie;
+
+    private BotResponder _botResponder;
     
-    private TelegramBotClient _botClient;
-    private CancellationTokenSource _cancellationTokenSource;
-    
-    private BotMessageManager(TelegramBotClient client, CancellationTokenSource token)
+    private BotMessageManager(BotResponder botResponder)
     {
-        _botClient = client;
-        _cancellationTokenSource = token;
+        _botResponder = botResponder;
 
         _messageSender = new Dictionary<long, BotMessageSender>();
         _messageHistorie = new Dictionary<long, BotMessageHistory>();
@@ -34,11 +32,11 @@ public class BotMessageManager
         return _messageManager;
     }
 
-    public static bool Create(TelegramBotClient client, CancellationTokenSource token)
+    public static bool Create(BotResponder botResponder)
     {
         if (_messageManager == null)
         {
-            _messageManager = new BotMessageManager(client, token);
+            _messageManager = new BotMessageManager(botResponder);
             Logger.Debug("BotMessageManager is initialized");
             return true;
         }
@@ -50,7 +48,7 @@ public class BotMessageManager
     {
         if (!_messageSender.ContainsKey(chatId))
         {
-            _messageSender[chatId] = new BotMessageSender(_botClient, _cancellationTokenSource, chatId);
+            _messageSender[chatId] = new BotMessageSender(_botResponder, chatId);
         }
         
         return _messageSender[chatId];
@@ -60,7 +58,7 @@ public class BotMessageManager
     {
         if (!_messageHistorie.ContainsKey(chatId))
         {
-            _messageHistorie[chatId] = new BotMessageHistory(_botClient, _cancellationTokenSource, chatId);
+            _messageHistorie[chatId] = new BotMessageHistory(_botResponder, chatId);
         }
         
         return _messageHistorie[chatId];
