@@ -1,9 +1,5 @@
-using IT_ParkTelegramBotShit.Util;
 using NLog;
-using NLog.Fluent;
-using Telegram.Bot;
 using Telegram.Bot.Types;
-using Telegram.Bot.Types.ReplyMarkups;
 
 namespace IT_ParkTelegramBotShit.Bot;
 

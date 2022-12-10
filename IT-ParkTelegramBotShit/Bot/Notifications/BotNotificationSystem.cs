@@ -1,7 +1,5 @@
-using IT_ParkTelegramBotShit.Bot;
 using IT_ParkTelegramBotShit.Bot.Notifications;
 using NLog;
-using NLog.Fluent;
 
 public class BotNotificationSystem
 {

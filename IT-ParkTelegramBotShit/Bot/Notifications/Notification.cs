@@ -1,5 +1,3 @@
-using IT_ParkTelegramBotShit.DataBase;
-using IT_ParkTelegramBotShit.Util;
 using NLog;
 
 namespace IT_ParkTelegramBotShit.Bot.Notifications;
@@ -11,7 +9,6 @@ public class Notification
     protected List<long> _recieverList;
     protected MessageToSend _message;
     
-    //public NotificationType Type { get; private set; }
     public DateTime Date { get; private set; }
     public DateTime ExpiredDate { get; private set; }
 
@@ -25,7 +22,6 @@ public class Notification
     
     public Notification(MessageToSend message)
     {
-        //Type = NotificationType.OneTime;
         ExpiredDate = DateTime.MinValue;
         _message = message;
         _recieverList = new List<long>();
@@ -41,22 +37,11 @@ public class Notification
     {
         ExpiredDate = expiredDate;
     }
-
-    // public Notification(MessageToSend message, DateTime date, NotificationType type) : this(message, date)
-    // {
-    //     Type = type;
-    // }
     
-    // public Notification(MessageToSend message, DateTime date, DateTime expiredDate, NotificationType type) : this(message, date)
-    // {
-    //     Type = type;
-    //     ExpiredDate = expiredDate;
-    // }
-    //
-    // public Notification(MessageToSend message, DateTime date, DateTime expiredDate, NotificationType type, List<long> recievers) : this(message, date, expiredDate, type)
-    // {
-    //     AddRecieverList(recievers);
-    // }
+    public Notification(MessageToSend message, DateTime date, DateTime expiredDate, List<long> recievers) : this(message, date, expiredDate)
+    {
+        AddRecieverList(recievers);
+    }
 
     public void AddReciever(long chatId)
     {

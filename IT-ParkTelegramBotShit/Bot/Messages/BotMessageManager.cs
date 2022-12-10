@@ -1,5 +1,4 @@
 using NLog;
-using Telegram.Bot;
 
 namespace IT_ParkTelegramBotShit.Bot;
 
