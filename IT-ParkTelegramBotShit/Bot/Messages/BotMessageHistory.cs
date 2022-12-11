@@ -1,9 +1,13 @@
+using NLog;
+using NLog.Fluent;
 using Telegram.Bot.Types;
 
 namespace IT_ParkTelegramBotShit.Bot;
 
 public class BotMessageHistory
 {
+    private static ILogger Logger = LogManager.GetCurrentClassLogger();
+    
     private static BotMessageHistory _messageHistory;
     private List<int> _ordinaryMessagesIds;
     private List<int> _anchoredMessagesIds;
@@ -59,11 +63,13 @@ public class BotMessageHistory
     
     public async Task DeleteAllMessages()
     {
-        await DeleteAllOrdinaryMessages();
-        
-        await DeleteMessages(_anchoredMessagesIds);
+        var anchoredMessagesIds = new List<int>(_anchoredMessagesIds);
         
         _anchoredMessagesIds.Clear();
+        
+        await DeleteAllOrdinaryMessages();
+        
+        await DeleteMessages(anchoredMessagesIds);
     }
     
     public Task DeleteLastMessage()
@@ -91,6 +97,13 @@ public class BotMessageHistory
         
         for (int i = 0; i < messageIdsToDelete.Count; i++)
         {
+            if (messageIdsToDelete[i] == null)
+            {
+                Logger.Error("Message to delete equals null! Perhaps that message was deleted earlier");
+                
+                continue;
+            }
+            
             await DeleteMessage(messageIdsToDelete[i]);
         }
     }

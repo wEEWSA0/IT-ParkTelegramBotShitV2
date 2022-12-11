@@ -114,7 +114,7 @@ public class States
 
     public void Reset()
     {
-        GlobalState = GlobalStates.CmdStart;
+        GlobalState = GlobalStates.EnterCode;
         StudentState = StudentStates.None;
         TeacherState = TeacherStates.None;
     }

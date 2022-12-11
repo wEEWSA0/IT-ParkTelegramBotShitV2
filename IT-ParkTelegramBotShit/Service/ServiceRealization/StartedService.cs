@@ -6,6 +6,7 @@ using IT_ParkTelegramBotShit.DataBase.Entities;
 using IT_ParkTelegramBotShit.Router.Transmitted;
 using IT_ParkTelegramBotShit.Util;
 using NLog;
+using NLog.Fluent;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.ReplyMarkups;
@@ -26,9 +27,7 @@ public class StartedService
         {
             transmittedData.State.GlobalState = States.GlobalStates.EnterCode;
             
-            var message = new MessageToSend(ReplyTextsStorage.OfficialITParkBot);
-            
-            BotNotificationSender.GetInstance().SendAnchoredNotificationMessage(message, chatId);
+            SendOfficialArchoredMessage(chatId);
             
             return new MessageToSend(ReplyTextsStorage.CmdStart, false);
         }
@@ -42,6 +41,8 @@ public class StartedService
         
         if (DbManager.GetInstance().TableTeachers.TryJoinTeacherAccountByInviteCode(out Teacher teacher, chatId, request))
         {
+            // SendOfficialArchoredMessage(chatId);
+            
             response = ReplyTextsStorage.MainMenu;
             
             transmittedData.State.GlobalState = States.GlobalStates.Other;
@@ -61,6 +62,8 @@ public class StartedService
         {
             // todo проверка на уникальность
             DbManager.GetInstance().TableStudents.CreateStudentAccount(chatId, course.Id, "Default name");
+            
+            // SendOfficialArchoredMessage(chatId);
             
             response = ReplyTextsStorage.MainMenu;
             
@@ -83,5 +86,19 @@ public class StartedService
         }
 
         return new MessageToSend(response, keyboard);
+    }
+
+    public static async void Logout(long chatId)
+    {
+        await BotMessageManager.GetInstance().GetHistory(chatId).DeleteAllMessages();
+        
+        SendOfficialArchoredMessage(chatId);
+    }
+
+    private static async void SendOfficialArchoredMessage(long chatId)
+    {
+        var message = new MessageToSend(ReplyTextsStorage.OfficialITParkBot);
+        
+        await BotNotificationSender.GetInstance().SendAnchoredNotificationMessage(message, chatId);
     }
 }

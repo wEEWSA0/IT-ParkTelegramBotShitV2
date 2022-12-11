@@ -16,9 +16,6 @@ public class Bot
     private const int CheckNotificationsDelay = 60000;
     private const int CheckStatisticDelay = 10000;
     
-    // todo решить проблему с дублированием закрепленного сообщения (приоритет: средний)
-    // Пусть сразу посылается сообщение с вводом кода (приходится писать /start)
-    
     private TelegramBotClient _botClient;
     private CancellationTokenSource _cancellationTokenSource;
 

@@ -75,11 +75,13 @@ public class StudentService
         
         transmittedData.State.Reset();
         
-        var quitAccountMessageToSend = new MessageToSend(ReplyTextsStorage.Student.QuitAccount, false);
+        var quitAccountMessageToSend = new MessageToSend(ReplyTextsStorage.Student.QuitAccount);
             
         BotMessageManager.GetInstance().GetSender(chatId).AddMessageToStack(quitAccountMessageToSend);
         
-        return new MessageToSend(response, false);
+        StartedService.Logout(chatId);
+        
+        return new MessageToSend(response);
     }
     
     public MessageToSend ProcessButtonMainMenu(long chatId, TransmittedData transmittedData)

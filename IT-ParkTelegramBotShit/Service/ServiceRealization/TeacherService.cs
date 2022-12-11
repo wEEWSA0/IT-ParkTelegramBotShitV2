@@ -506,16 +506,16 @@ public class TeacherService
                 }
                 
                 transmittedData.State.Reset();
-
-                var quitAccountMessageToSend = new MessageToSend(ReplyTextsStorage.Teacher.QuitAccount, false);
-            
-                //BotMessageManager.GetInstance().GetSender(chatId).AddMessageToStack(quitAccountMessageToSend);
-                tableCourses.TeacherLogOut((int)teacherId);
-
-                return quitAccountMessageToSend;
                 
-                //messageToSend = new MessageToSend(ReplyTextsStorage.Teacher.LogOut, false);
-                /*return new MessageToSend(ReplyTextsStorage.CmdStart, false);*/ // todo что за хуйня (проверить)
+                var quitAccountMessageToSend = new MessageToSend(ReplyTextsStorage.Teacher.QuitAccount);
+                
+                BotMessageManager.GetInstance().GetSender(chatId).AddMessageToStack(quitAccountMessageToSend);
+                
+                tableCourses.TeacherLogOut((int)teacherId);
+                
+                StartedService.Logout(chatId);
+                
+                return new MessageToSend(ReplyTextsStorage.CmdStart);
             }
                 break;
             default:
