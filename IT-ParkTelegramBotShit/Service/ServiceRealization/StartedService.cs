@@ -41,8 +41,6 @@ public class StartedService
         
         if (DbManager.GetInstance().TableTeachers.TryJoinTeacherAccountByInviteCode(out Teacher teacher, chatId, request))
         {
-            // SendOfficialArchoredMessage(chatId);
-            
             response = ReplyTextsStorage.MainMenu;
             
             transmittedData.State.GlobalState = States.GlobalStates.Other;
@@ -55,30 +53,26 @@ public class StartedService
             var logIntoAccountMessageToSend = new MessageToSend(ReplyTextsStorage.Teacher.LogIntoAccount, false);
             
             BotMessageManager.GetInstance().GetSender(chatId).AddMessageToStack(logIntoAccountMessageToSend);
-            
-            return new MessageToSend(response, keyboard);
         }
         else if (DbManager.GetInstance().TableCourses.TryGetCourseByStudentInviteCode(out Course course, request))
         {
             // todo проверка на уникальность
-            DbManager.GetInstance().TableStudents.CreateStudentAccount(chatId, course.Id, "Default name");
+            // DbManager.GetInstance().TableStudents.CreateStudentAccount(chatId, course.Id, "Default name");
             
-            // SendOfficialArchoredMessage(chatId);
-            
-            response = ReplyTextsStorage.MainMenu;
+            // response = ReplyTextsStorage.MainMenu;
+            response = ReplyTextsStorage.Student.InputName;
             
             transmittedData.State.GlobalState = States.GlobalStates.Other;
-            transmittedData.State.StudentState = States.StudentStates.MainMenu;
+            // transmittedData.State.StudentState = States.StudentStates.MainMenu;
+            transmittedData.State.StudentState = States.StudentStates.InputName;
             
             transmittedData.DataStorage.Add(ConstantsStorage.StudentCourseId, course.Id); // записываем course id
 
-            keyboard = ReplyKeyboardsStorage.Student.MainMenu;
-
-            var logIntoAccountMessageToSend = new MessageToSend(ReplyTextsStorage.Student.LogIntoAccount, false);
-            
-            BotMessageManager.GetInstance().GetSender(chatId).AddMessageToStack(logIntoAccountMessageToSend);
-            
-            return new MessageToSend(response, keyboard);
+            // keyboard = ReplyKeyboardsStorage.Student.MainMenu;
+            //
+            // var logIntoAccountMessageToSend = new MessageToSend(ReplyTextsStorage.Student.LogIntoAccount, false);
+            //
+            // BotMessageManager.GetInstance().GetSender(chatId).AddMessageToStack(logIntoAccountMessageToSend);
         }
         else
         {

@@ -14,7 +14,8 @@ public class States
     public enum StudentStates
     {
         None = 0,
-        MainMenu = 1,
+        InputName = 1,
+        MainMenu = 2,
         
         #region NextLesson
         

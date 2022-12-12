@@ -31,7 +31,7 @@ public class StudentReplyKeyboardsStorage
     private static StudentReplyButtonsStorage _replyButtons = ReplyButtonsStorage.Student;
     
     public readonly InlineKeyboardMarkup MainMenu = _creator
-        .GetKeyboardMarkup(_replyButtons.NextLesson, _replyButtons.Homework, _replyButtons.QuitAccount, /*_replyButtons.Profile, */_replyButtons.Payment); // todo Profile button временное решение
+        .GetKeyboardMarkup(_replyButtons.NextLesson, _replyButtons.Homework, _replyButtons.Profile, _replyButtons.Payment);
     
     public readonly InlineKeyboardMarkup Profile = _creator
         .GetKeyboardMarkup(_replyButtons.ChangeName, _replyButtons.QuitAccount, ReplyButtonsStorage.MainMenu);

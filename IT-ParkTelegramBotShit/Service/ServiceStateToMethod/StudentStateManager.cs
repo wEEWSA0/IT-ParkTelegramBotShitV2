@@ -26,6 +26,9 @@ public class StudentStateManager
         
         _messageMethods =
             new Dictionary<States.StudentStates, Func<long, TransmittedData, string, MessageToSend>>();
+
+        _messageMethods[States.StudentStates.InputName] = studentService.ProcessInputName;
+        _messageMethods[States.StudentStates.InputNewName] = studentService.ProcessInputNewName;
         
         #endregion
         #region Callbacks
@@ -34,6 +37,8 @@ public class StudentStateManager
             new Dictionary<States.StudentStates, Func<long, TransmittedData, string, MessageToSend>>();
         
         _callbackMethods[States.StudentStates.MainMenu] = ProcessStaticButtons;
+        _callbackMethods[States.StudentStates.ChangeNameFinalStep] = ProcessStaticButtons;
+        _callbackMethods[States.StudentStates.QuitAccountFinalStep] = ProcessStaticButtons;
         
         #endregion
         #region StaticButtons
@@ -42,9 +47,12 @@ public class StudentStateManager
         _staticButtonsMethods[CallbackQueryStorage.MainMenu] = studentService.ProcessButtonMainMenu;
         _staticButtonsMethods[CallbackQueryStorage.Student.Homework] = studentService.ProcessButtonHomework;
         _staticButtonsMethods[CallbackQueryStorage.Student.NextLesson] = studentService.ProcessButtonNextLesson;
+        _staticButtonsMethods[CallbackQueryStorage.Student.Profile] = studentService.ProcessButtonProfile;
+        _staticButtonsMethods[CallbackQueryStorage.Student.ChangeName] = studentService.ProcessButtonChangeName;
         _staticButtonsMethods[CallbackQueryStorage.Student.QuitAccount] = studentService.ProcessButtonQuitAccount;
-        // _staticButtonsMethods[CallbackQueryStorage.Yes] = teacherService.ProcessButtonYes;
-        // _staticButtonsMethods[CallbackQueryStorage.No] = teacherService.ProcessButtonNo;
+        
+        _staticButtonsMethods[CallbackQueryStorage.Yes] = studentService.ProcessButtonYes;
+        _staticButtonsMethods[CallbackQueryStorage.No] = studentService.ProcessButtonNo;
         
         #endregion
     }

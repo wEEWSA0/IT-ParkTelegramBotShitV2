@@ -17,26 +17,6 @@ public class TeacherService
 {
     private static ILogger Logger = LogManager.GetCurrentClassLogger();
 
-    private Dictionary<string, Func<long, TransmittedData, MessageToSend>>
-        _requestMethodsPairs;
-
-    public TeacherService()
-    {
-        _requestMethodsPairs = new Dictionary<string, Func<long, TransmittedData, MessageToSend>>();
-        
-        _requestMethodsPairs[CallbackQueryStorage.Teacher.Groups] = ProcessButtonGroups;
-        _requestMethodsPairs[CallbackQueryStorage.Teacher.CreateGroup] = ProcessButtonCreateGroup;
-        _requestMethodsPairs[CallbackQueryStorage.MainMenu] = ProcessButtonMainMenu;
-        _requestMethodsPairs[CallbackQueryStorage.Yes] = ProcessButtonYes;
-        _requestMethodsPairs[CallbackQueryStorage.No] = ProcessButtonNo;
-        _requestMethodsPairs[CallbackQueryStorage.Teacher.EditGroup] = ProcessButtonEditGroup;
-        _requestMethodsPairs[CallbackQueryStorage.Teacher.EditGroupName] = ProcessButtonEditGroupName;
-        _requestMethodsPairs[CallbackQueryStorage.Teacher.EditGroupInviteCode] = ProcessButtonEditGroupInviteCode;
-
-        _requestMethodsPairs[CallbackQueryStorage.Teacher.AddHomework] = ProcessButtonSetHomework;
-        _requestMethodsPairs[CallbackQueryStorage.Teacher.AddNextLessonDate] = ProcessButtonDateNextLesson;
-    }
-    
     #region InputAndChooseMethods
 
     public MessageToSend ProcessInputGroupName(long chatId, TransmittedData transmittedData, string request)
@@ -77,18 +57,14 @@ public class TeacherService
         return new MessageToSend(response, keyboard, false);
     }
     
-    public MessageToSend ProcessInputNextLessonDate(long chatId, TransmittedData transmittedData, string request)   //из ввода к финалу
+    public MessageToSend ProcessInputNextLessonDate(long chatId, TransmittedData transmittedData, string request)
     {
-        DateTime dateTime = DateTime.Parse(request);
-        //DateTime dateTime/* = DateTime.Parse()*/;
+        if (!DateOnly.TryParse(request, out DateOnly date))
+        {
+            return new MessageToSend(ReplyTextsStorage.Teacher.ErrorDateTimeInput);
+        }
         
-        // todo Разбить метод на два:
-        // Ввод даты с примером (следующий день)
-        // Ввод точного времени (20:45)
-        // 
-        // В конце заключение
-        
-        transmittedData.DataStorage.Add(ConstantsStorage.NextLessonDate, dateTime);
+        transmittedData.DataStorage.Add(ConstantsStorage.NextLessonDate, date);
 
         transmittedData.State.TeacherState = States.TeacherStates.InputNextLessonTime;
 
@@ -97,24 +73,27 @@ public class TeacherService
         return new MessageToSend(response, false);
     }
     
-    public MessageToSend ProcessInputNextLessonTime(long chatId, TransmittedData transmittedData, string request)   //из ввода к финалу
+    public MessageToSend ProcessInputNextLessonTime(long chatId, TransmittedData transmittedData, string request)
     {
-        transmittedData.DataStorage.TryGet(ConstantsStorage.NextLessonDate, out Object lessonDate); //lessonDate - нужная дата (и ненужное время)
+        if (!TimeOnly.TryParse(request, out TimeOnly time))
+        {
+            return new MessageToSend(ReplyTextsStorage.Teacher.ErrorDateTimeInput);
+        }
 
-        #region DateTime
+        if (!transmittedData.DataStorage.TryGet(ConstantsStorage.NextLessonDate, out Object lessonDateObj))
+        {
+            Logger.Error(LoggerTextsStorage.FatalLogicError("ProcessInputNextLessonTime"));
+        }
         
-        string lessonDateString = lessonDate.ToString();
-        DateTime dateDate = DateTime.Parse(lessonDateString);
-        DateTime dateTime = DateTime.Parse(request);    //datetime - введенное время (и ненужная дата)
-        //DateTime fullDateTime = new DateTime(dateDate.Year, dateDate.Month, dateDate.Day, dateTime.Hour, dateTime.Minute, 00);
+        DateOnly date = (DateOnly)lessonDateObj;
+
+        var fullDate = new DateTime(date.Year, date.Month, date.Day, time.Hour, time.Minute, time.Second);
         
-        #endregion
-        
-        transmittedData.DataStorage.Add(ConstantsStorage.NextLessonDateFull, dateTime);
+        transmittedData.DataStorage.Add(ConstantsStorage.NextLessonDateFull, fullDate);
 
         transmittedData.State.TeacherState = States.TeacherStates.InputNextLessonFinalStep;
-
-        var response = GetReplyFinalStepText(ReplyTextsStorage.Teacher.GetNewNextLessonDateView(request));
+        
+        var response = GetReplyFinalStepText(ReplyTextsStorage.Teacher.GetNewNextLessonDateView(fullDate.ToString()));
         
         var keyboard = ReplyKeyboardsStorage.FinalStep;
 
@@ -175,7 +154,7 @@ public class TeacherService
         return new MessageToSend(response, false);
     }
     
-    public MessageToSend ProcessChooseGroupForNextLesson(long chatId, TransmittedData transmittedData, string request)    //
+    public MessageToSend ProcessChooseGroupForNextLesson(long chatId, TransmittedData transmittedData, string request)
     {
         string response = ReplyTextsStorage.Teacher.InputNextLessonDate(request);
 
@@ -192,7 +171,7 @@ public class TeacherService
         return new MessageToSend(response, false);
     }
 
-    public MessageToSend ProcessEditGroupName(long chatId, TransmittedData transmittedData, string request)         //
+    public MessageToSend ProcessEditGroupName(long chatId, TransmittedData transmittedData, string request)
     {
         string response = GetReplyFinalStepText(ReplyTextsStorage.Teacher.GetNewGroupNameView(request));
         
@@ -336,7 +315,7 @@ public class TeacherService
         InlineKeyboardMarkup keyboard;
 
         keyboard = BotKeyboardCreator.GetInstance()
-            .GetKeyboardMarkup(ReplyButtonsStorage.Teacher.EditName, ReplyButtonsStorage.Teacher.ProfileLogOut);
+            .GetKeyboardMarkup(ReplyButtonsStorage.Teacher.EditName, ReplyButtonsStorage.Teacher.ProfileLogOut, ReplyButtonsStorage.MainMenu);
         
         transmittedData.State.TeacherState = States.TeacherStates.Groups;
         
@@ -460,11 +439,11 @@ public class TeacherService
                 messageToSend = new MessageToSend(ReplyTextsStorage.Teacher.HomeworkCreated, false);
             }
                 break;
-            case States.TeacherStates.InputNextLessonFinalStep:                     //ответ на да и главное меню
+            case States.TeacherStates.InputNextLessonFinalStep:
             {
                 var tableCourses = DbManager.GetInstance().TableCourses;
                 
-                bool isDateNextLessonEnab = storage.TryGet(ConstantsStorage.NextLessonDateFull, out Object dateNextLesson); //homework исправить
+                bool isDateNextLessonEnab = storage.TryGet(ConstantsStorage.NextLessonDateFull, out Object nextLessonObj);
                 bool isCourseEnab = storage.TryGet(ConstantsStorage.Course, out Object course);
         
                 if (!isDateNextLessonEnab || !isCourseEnab)
@@ -472,7 +451,7 @@ public class TeacherService
                     Logger.Error(LoggerTextsStorage.FatalLogicError("ProcessInputNextLessonTime либо ProcessInputNextLessonDate"));
                 }
 
-                tableCourses.UpdateCourseNextLessonTime((DateTime)dateNextLesson, ((Course)course).Id);
+                tableCourses.UpdateCourseNextLessonTime((DateTime)nextLessonObj, ((Course)course).Id);
                 
                 messageToSend = new MessageToSend(ReplyTextsStorage.Teacher.NextLessonDateCreated, false);
             }
@@ -532,7 +511,7 @@ public class TeacherService
         string response = ReplyTextsStorage.MainMenu;
         var keyboard = ReplyKeyboardsStorage.Teacher.MainMenu;
         
-        return new MessageToSend(response, keyboard); // todo: возможно переделать логику перекидывания MessageToSend для всех методов
+        return new MessageToSend(response, keyboard);
     }
     
     public MessageToSend ProcessButtonNo(long chatId, TransmittedData transmittedData)
@@ -680,7 +659,7 @@ public class TeacherService
         return true;
     }
 
-    private string GetReplyFinalStepText(string value)
+    private string GetReplyFinalStepText(string value) // todo возможно перенести некоторые HelpMethods в StartedService (like public static)
     {
         return ReplyTextsStorage.FinalStep + "\n" + value;
     }

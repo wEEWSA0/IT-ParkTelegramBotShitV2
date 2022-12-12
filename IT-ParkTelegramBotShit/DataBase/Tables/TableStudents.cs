@@ -96,17 +96,17 @@ public class TableStudents
 
         command.ExecuteNonQuery();
     }
+    //
+    // public void SetStudent(long chatId, int courseId, string name)
+    // {
+    //     string sqlRequest = $"INSERT INTO students (chat_id, course_id, name) VALUES ({chatId}, {courseId}, '{name}')";
+    //     
+    //     NpgsqlCommand command = new NpgsqlCommand(sqlRequest, _connection);
+    //
+    //     command.ExecuteNonQuery();
+    // }
     
-    public void SetStudent(long chatId, int courseId, string name)
-    {
-        string sqlRequest = $"INSERT INTO students (chat_id, course_id, name) VALUES ({chatId}, {courseId}, '{name}')";
-        
-        NpgsqlCommand command = new NpgsqlCommand(sqlRequest, _connection);
-
-        command.ExecuteNonQuery();
-    }
-    
-    private void UpdateNameByChatId(int chatId, string name)
+    public void UpdateNameByChatId(long chatId, string name)
     {
         string sqlRequest = $"UPDATE students set name = '{name}' where chat_id = {chatId}";
         
@@ -117,8 +117,6 @@ public class TableStudents
     
     public void CreateStudentAccount(long chatId, int courseId, string name)
     {
-        // todo проверить в будущем (приоритет: высокий)
-        
         string sqlRequest = $"INSERT INTO students (chat_id, course_id, name) VALUES ({chatId}, {courseId}, '{name}')";
         
         NpgsqlCommand command = new NpgsqlCommand(sqlRequest, _connection);

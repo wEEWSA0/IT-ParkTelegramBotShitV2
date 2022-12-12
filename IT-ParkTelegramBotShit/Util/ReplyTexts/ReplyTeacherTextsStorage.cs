@@ -34,6 +34,9 @@ public class ReplyTeacherTextsStorage
     public readonly string QuitAccount =
         "Вы вышли из аккаунта учителя";
     
+    public readonly string ErrorDateTimeInput =
+        "Введено некорректно";
+    
     public string GetGroupFinalStateView(string name, string inviteCode)
     {
         return $"Группа '{name}'" +

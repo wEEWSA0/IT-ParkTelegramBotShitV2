@@ -220,6 +220,30 @@ public class TableCourses
         return !IsExists(name, "course_name");
     }
     
+    public bool IsStudentNameInCourseStudentGroupUnique(string name, int courseId)
+    {
+        string sqlRequest = $"SELECT EXISTS(SELECT * FROM students WHERE course_id = {courseId} AND name = '{name}')";
+        
+        NpgsqlCommand command = new NpgsqlCommand(sqlRequest, _connection);
+
+        NpgsqlDataReader dataReader = command.ExecuteReader();
+
+        bool isExist;
+        
+        if (dataReader.Read())
+        {
+            isExist = dataReader.GetBoolean(dataReader.GetOrdinal("exists"));
+        }
+        else
+        {
+            throw new Exception();
+        }
+        
+        dataReader.Close();
+
+        return !isExist;
+    }
+    
     public bool IsCourseInviteCodeUnique(string courseName)
     {
         return !IsExists(courseName, "student_invite_code");

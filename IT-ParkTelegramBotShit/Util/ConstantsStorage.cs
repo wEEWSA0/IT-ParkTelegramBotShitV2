@@ -9,7 +9,7 @@ public class ConstantsStorage
         "teacher_id_data";
     
     public static string TeacherName =
-        "teacher_name";
+        "teacher_name_data";
     
     public static string GroupName =
         "group_name_data";
@@ -31,4 +31,7 @@ public class ConstantsStorage
     
     public static string StudentCourseId =
         "student_course_id_data";
+    
+    public static string StudentName =
+        "student_name_data";
 }
