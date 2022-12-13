@@ -16,12 +16,12 @@ public class DbConnector
     }
 
     private static DbConnector _dbConnector = null;
-
-    public static DbConnector GetInstance()
+    
+    public static DbConnector GetInstance() // параметры
     {
         if (_dbConnector == null)
         {
-            _dbConnector = new DbConnector();
+            _dbConnector = new DbConnector(); // todo List для Connection
         }
 
         return _dbConnector;

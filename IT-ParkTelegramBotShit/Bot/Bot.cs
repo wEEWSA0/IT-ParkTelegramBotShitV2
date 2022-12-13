@@ -10,7 +10,7 @@ using Telegram.Bot.Types.Enums;
 
 namespace IT_ParkTelegramBotShit.Bot;
 
-public class Bot
+public class Bot // todo TO INTERFACES!!!
 {
     private static ILogger Logger = LogManager.GetCurrentClassLogger();
     private const int CheckNotificationsDelay = 60000;

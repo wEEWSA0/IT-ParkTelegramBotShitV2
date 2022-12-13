@@ -9,10 +9,10 @@ using Telegram.Bot.Types.ReplyMarkups;
 
 namespace IT_ParkTelegramBotShit.Service.ServiceRealization;
 
-public class StudentService
+public class StudentService // TODO GetInstance classes in _var
 {
     private static ILogger Logger = LogManager.GetCurrentClassLogger();
-    // todo DateTime в бз записывается без времени!! (наивысший)
+    
     #region InputAndChooseMethods
 
     public MessageToSend ProcessInputName(long chatId, TransmittedData transmittedData, string request)

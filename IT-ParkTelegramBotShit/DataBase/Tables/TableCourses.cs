@@ -4,7 +4,7 @@ using Npgsql;
 
 namespace IT_ParkTelegramBotShit.DataBase.Tables;
 
-public class TableCourses
+public class TableCourses : ITables.ITableCourses
 {
     private NpgsqlConnection _connection;
 

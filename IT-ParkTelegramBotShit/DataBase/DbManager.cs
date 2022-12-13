@@ -16,7 +16,7 @@ public class DbManager
 
         TableTeachers = new TableTeachers(connection);
         TableStudents = new TableStudents(connection);
-        TableCourses = new TableCourses(connection);
+        TableCourses = new TableCourses(connection); // todo возможно переделать структуру
     }
 
     private static DbManager _dbManager = null;
