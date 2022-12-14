@@ -26,6 +26,9 @@ public class ReplyStudentTextsStorage
     public readonly string QuitAccountFinalStep =
         "Вы точно собираетесь выйти из аккаунта ученика? Данные будут стерты";
     
+    public readonly string HomeworkNotAssigned =
+        "Домашнее задание не назначено";
+    
     public string GetNewNameView(string name)
     {
         return $"Новое имя '{name}'" +

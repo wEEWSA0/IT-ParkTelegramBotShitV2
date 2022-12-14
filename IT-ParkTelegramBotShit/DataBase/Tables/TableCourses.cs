@@ -6,7 +6,8 @@ namespace IT_ParkTelegramBotShit.DataBase.Tables;
 
 public class TableCourses : ITables.ITableCourses
 {
-    private NpgsqlConnection _connection;
+    private NpgsqlConnection _connection; // todo optimaze code (add help methods)
+    // можно добавить класс со статическимим методами (общими для всех Tables)
 
     public TableCourses(NpgsqlConnection connection)
     {
@@ -88,10 +89,10 @@ public class TableCourses : ITables.ITableCourses
         
         NpgsqlDataReader dataReader = command.ExecuteReader();
         
+        homework = "";
+        
         if (!dataReader.HasRows)
         {
-            homework = "";
-            
             dataReader.Close();
             
             return false;
@@ -99,7 +100,16 @@ public class TableCourses : ITables.ITableCourses
         
         if (dataReader.Read())
         {
-            homework = dataReader.GetString(dataReader.GetOrdinal("homework"));
+            int ordinal = dataReader.GetOrdinal("homework");
+            
+            if (TableHelpMethods.IsOrdinalValueNull(dataReader, ordinal))
+            {
+                dataReader.Close();
+                
+                return false;
+            }
+            
+            homework = dataReader.GetString(ordinal);
         }
         else
         {
@@ -121,10 +131,10 @@ public class TableCourses : ITables.ITableCourses
         
         NpgsqlDataReader dataReader = command.ExecuteReader();
         
+        nextLesson = new DateTime();
+        
         if (!dataReader.HasRows)
         {
-            nextLesson = new DateTime();
-            
             dataReader.Close();
             
             return false;
@@ -132,7 +142,16 @@ public class TableCourses : ITables.ITableCourses
 
         if (dataReader.Read())
         {
-            nextLesson = dataReader.GetDateTime(dataReader.GetOrdinal("next_lesson"));
+            int ordinal = dataReader.GetOrdinal("next_lesson");
+            
+            if (TableHelpMethods.IsOrdinalValueNull(dataReader, ordinal))
+            {
+                dataReader.Close();
+                
+                return false;
+            }
+
+            nextLesson = dataReader.GetDateTime(ordinal);
         }
         else
         {

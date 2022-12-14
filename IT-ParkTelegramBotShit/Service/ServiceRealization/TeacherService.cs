@@ -312,10 +312,14 @@ public class TeacherService
     {
         string response = ReplyTextsStorage.Teacher.Profile;
         
-        InlineKeyboardMarkup keyboard;
-
-        keyboard = BotKeyboardCreator.GetInstance()
-            .GetKeyboardMarkup(ReplyButtonsStorage.Teacher.EditName, ReplyButtonsStorage.Teacher.ProfileLogOut, ReplyButtonsStorage.MainMenu);
+        if (!DbManager.GetInstance().TableTeachers.TryGetTeacherByChatId(out Teacher teacher, chatId))
+        {
+            Logger.Error(LoggerTextsStorage.FatalLogicError("ProcessButtonProfile"));
+        }
+        
+        response += "\n" + $"Учитель: {teacher.Name}";
+        
+        InlineKeyboardMarkup keyboard = ReplyKeyboardsStorage.Teacher.Profile;
         
         transmittedData.State.TeacherState = States.TeacherStates.Groups;
         

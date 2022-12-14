@@ -1,10 +1,13 @@
 using IT_ParkTelegramBotShit.DataBase.Entities;
+using NLog;
 using Npgsql;
 
 namespace IT_ParkTelegramBotShit.DataBase.Tables;
 
 public class TableTeachers
 {
+    private static ILogger Logger = LogManager.GetCurrentClassLogger();
+    
     private NpgsqlConnection _connection;
 
     public TableTeachers(NpgsqlConnection connection)
@@ -100,15 +103,26 @@ public class TableTeachers
             return false;
         }
 
-        while (dataReader.Read())
+        if (dataReader.Read())
         {
             int id = dataReader.GetInt32(dataReader.GetOrdinal("id"));
             string name = dataReader.GetString(dataReader.GetOrdinal("name"));
             string code = dataReader.GetString(dataReader.GetOrdinal("invite_code"));
             
-            teacher = new Teacher(id, name, chatId, code);
-        
-            break;
+            int chatIdOrdinal = dataReader.GetOrdinal("chat_id");
+            
+            if (!TableHelpMethods.IsOrdinalValueNull(dataReader, chatIdOrdinal))
+            {
+                long dbChatId = dataReader.GetInt64(chatIdOrdinal);
+                
+                Logger.Warn($"Teacher is already authorized by {dbChatId}. But {chatId} try to authorize");
+                
+                dataReader.Close();
+                
+                return false;
+            }
+
+            teacher = new Teacher(id, name, chatId, code);;
         }
         
         dataReader.Close();

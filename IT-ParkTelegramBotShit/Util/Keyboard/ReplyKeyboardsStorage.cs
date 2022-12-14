@@ -23,6 +23,9 @@ public class TeacherReplyKeyboardsStorage
     
     public readonly InlineKeyboardMarkup EditGroup = _creator
         .GetKeyboardMarkup(_replyButtons.EditGroupName, _replyButtons.EditGroupInviteCode/*, _replyButtons.DeleteGroup*/, ReplyButtonsStorage.MainMenu); // todo DeleteGroup
+    
+    public readonly InlineKeyboardMarkup Profile = _creator.
+        GetKeyboardMarkup(_replyButtons.EditName, _replyButtons.ProfileLogOut, ReplyButtonsStorage.MainMenu);
 }
 
 public class StudentReplyKeyboardsStorage

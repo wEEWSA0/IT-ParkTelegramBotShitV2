@@ -161,11 +161,13 @@ public class StudentService // TODO GetInstance classes in _var
 
         if (!DbManager.GetInstance().TableCourses.TryGetCourseHomework(out string homework, (int)courseId))
         {
-            Logger.Error(LoggerTextsStorage.FatalLogicError("ProcessButtonHomework"));
+            response = ReplyTextsStorage.Student.HomeworkNotAssigned;
+        }
+        else
+        {
+            response += "\n" + homework;
         }
 
-        response += "\n" + homework;
-        
         InlineKeyboardMarkup keyboard = BotKeyboardCreator
             .GetInstance().GetKeyboardMarkup(ReplyButtonsStorage.MainMenu, ReplyButtonsStorage.Student.NextLesson);
         
@@ -183,7 +185,7 @@ public class StudentService // TODO GetInstance classes in _var
 
         if (!DbManager.GetInstance().TableCourses.TryGetCourseNextLessonTime(out DateTime date, (int)courseId))
         {
-            response += ReplyTextsStorage.Student.NextLessonNotAssigned;
+            response = ReplyTextsStorage.Student.NextLessonNotAssigned;
         }
         else
         {
@@ -202,6 +204,13 @@ public class StudentService // TODO GetInstance classes in _var
 
         InlineKeyboardMarkup keyboard = ReplyKeyboardsStorage.Student.Profile;
 
+        if (!DbManager.GetInstance().TableStudents.TryGetStudentByChatId(out Student student, chatId))
+        {
+            Logger.Error(LoggerTextsStorage.FatalLogicError("ProcessButtonProfile"));
+        }
+
+        response += "\n" + $"Ученик: {student.Name}";
+        
         return new MessageToSend(response, keyboard, false);
     }
     

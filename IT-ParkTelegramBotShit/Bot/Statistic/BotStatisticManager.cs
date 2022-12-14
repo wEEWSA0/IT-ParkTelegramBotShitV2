@@ -12,7 +12,7 @@ public class BotStatisticManager
     private Task _collectingStatistic;
     private bool _isStarted;
     
-    private int _workLoad;
+    private int _workLoad; // todo add ban for spam (on 1 hour for example)
     private int _messageWeight;
     private int _minSleepValue;
     public int SleepValue { get; private set; }
