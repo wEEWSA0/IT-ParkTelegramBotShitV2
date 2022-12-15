@@ -266,11 +266,6 @@ public class StudentService // TODO GetInstance classes in _var
         return name;
     }
 
-    private MessageToSend GetReplyFinalStepMessageToSend()
-    {
-        return GetReplyFinalStepMessageToSend("");
-    }
-    
     private MessageToSend GetReplyFinalStepMessageToSend(string value)
     {
         var response = ReplyTextsStorage.FinalStep + "\n" + value;
