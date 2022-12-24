@@ -1,26 +1,34 @@
-﻿using IT_ParkTelegramBotShit.Bot;
-using IT_ParkTelegramBotShit.Shutdown;
+﻿// using IT_ParkTelegramBotShit.Bot;
+// using IT_ParkTelegramBotShit.Shutdown;
+//
+// ShutdownProgram shutdownProgram = new ShutdownProgram();
+// shutdownProgram.Start();
 
-ShutdownProgram shutdownProgram = new ShutdownProgram();
-shutdownProgram.Start();
+var tcs = new TaskCompletionSource();
 
-ManualResetEvent exitEvent = new ManualResetEvent(false);
+File.WriteAllText("start.txt","start");
 
-Console.CancelKeyPress += (sender, eventArgs) =>
+AppDomain.CurrentDomain.ProcessExit += (_, _) =>
 {
-    eventArgs.Cancel = true;
-    exitEvent.Set();
+    File.WriteAllText("SIGTERM.txt","SIGTERM");
+    tcs.SetResult();
 };
 
-BotsManager botsManager = BotsManager.GetInstance();
-Bot bot = new Bot();
+await tcs.Task;
 
-botsManager.AddBot(bot);
-bot.Start();
+File.WriteAllText("finish.txt","finish");
 
-Console.WriteLine("Press enter for stop");
 
-// todo разбираться
-exitEvent.WaitOne();
 
-Console.WriteLine("Bot stopped");
+// BotsManager botsManager = BotsManager.GetInstance();
+// Bot bot = new Bot();
+//
+// botsManager.AddBot(bot);
+// bot.Start();
+//
+// Console.WriteLine("Press enter for stop");
+//
+// // todo разбираться
+// exitEvent.WaitOne();
+//
+// Console.WriteLine("Bot stopped");
