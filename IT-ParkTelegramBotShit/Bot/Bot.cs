@@ -21,7 +21,7 @@ public class Bot // todo TO INTERFACES!!!
 
     public Bot()
     {
-        _botClient = new TelegramBotClient("5655889814:AAEdVK___v3pjwLwxycXJaYsFtdFnMOvMyA"); // todo перенести в более защищенное место (высокий)
+        _botClient = new TelegramBotClient("5655889814:AAEdVK___v3pjwLwxycXJaYsFtdFnMOvMyA");
         _cancellationTokenSource = new CancellationTokenSource();
 
         var botResponder = new BotResponder(_botClient, _cancellationTokenSource);
